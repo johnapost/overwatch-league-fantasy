@@ -5,6 +5,7 @@
   "scripts": {
     "build": "next build src/app",
     "dev": "next src/app",
+    "firebase": "firebase",
     "sort": "sort-package-json"
   },
   "dependencies": {
