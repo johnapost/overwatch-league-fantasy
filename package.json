@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
+    "dev": "next src/app",
     "sort": "sort-package-json"
   },
   "dependencies": {
