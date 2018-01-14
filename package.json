@@ -3,9 +3,15 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "next build src/app",
+    "build-app": "next build src/app",
+    "build-fns": "babel \"src/functions\" --out-dir \"dist/functions\"",
+    "build-public": "cpx \"src/public/**/*.*\" \"dist/public\" -C",
+    "clean": "rimraf dist",
+    "copy-deps": "cpx \"*{package.json,yarn.lock}\" \"dist/functions\"",
+    "deploy": "firebase deploy",
     "dev": "next src/app",
-    "firebase": "firebase",
+    "firebase-login": "firebase login",
+    "install-deps": "cd \"dist/functions\" && yarn",
     "sort": "sort-package-json"
   },
   "dependencies": {
