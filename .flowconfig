@@ -1,0 +1,9 @@
+[libs]
+flow-typed
+flow-overrides
+
+[options]
+module.file_ext=.js
+module.file_ext=.json
+
+[ignore]
