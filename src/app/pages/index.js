@@ -2,9 +2,11 @@
 
 import React from 'react';
 import { Row, Col } from 'antd';
+import withRedux from 'next-redux-wrapper';
+import makeStore from '../shared/makeStore';
 import Layout from '../components/layout';
 
-export default () => (
+const Index = () => (
   <Layout>
     <Row>
       <Col span={8} offset={8}>
@@ -13,3 +15,5 @@ export default () => (
     </Row>
   </Layout>
 );
+
+export default withRedux(makeStore)(Index);

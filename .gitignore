@@ -2,4 +2,5 @@
 .firebaserc
 *.log
 dist
+env.json
 node_modules
