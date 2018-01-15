@@ -6,7 +6,7 @@ import { reduxFirestore, firestoreReducer } from 'redux-firestore';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import thunk from 'redux-thunk';
-import { apiKey, authDomain, projectId } from '../../../env.json';
+import { apiKey, authDomain, projectId } from '../secrets';
 
 // Firebase setup
 const firebaseConfig = {
@@ -20,30 +20,43 @@ const rrfConfig = {
   useFirestoreForProfile: true,
 };
 
-firebase.initializeApp(firebaseConfig);
-firebase.firestore();
-
 // Redux setup
 const middleware = [thunk];
 const reducers = combineReducers({
   firestore: firestoreReducer,
 });
 
-const composeEnhancers = (
-  typeof window !== 'undefined' &&
-  // eslint-disable-next-line no-underscore-dangle, no-undef
-  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
-  // eslint-disable-next-line no-underscore-dangle, no-undef
-  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
-) || compose;
+let enhancers;
+
+// Client Only
+if (typeof window !== 'undefined') {
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  firebase.firestore();
+
+  const composeFn = (
+    // eslint-disable-next-line no-underscore-dangle, no-undef
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
+    // eslint-disable-next-line no-underscore-dangle, no-undef
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+  ) || compose;
+
+  enhancers = composeFn(
+    applyMiddleware(...middleware),
+    // Only make the firebase connection on the client side
+    reactReduxFirebase(firebase, rrfConfig),
+    reduxFirestore(firebase),
+  );
+
+// Server Only
+} else {
+  enhancers = applyMiddleware(...middleware);
+}
 
 export default (state: Object) =>
   createStore(
     reducers,
     state,
-    composeEnhancers(
-      applyMiddleware(...middleware),
-      reactReduxFirebase(firebase, rrfConfig),
-      reduxFirestore(firebase),
-    ),
+    enhancers,
   );

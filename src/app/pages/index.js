@@ -10,7 +10,7 @@ const Index = () => (
   <Layout>
     <Row>
       <Col span={8} offset={8}>
-        Overwatch League Fantasy
+        Overwatch League Fantasy?
       </Col>
     </Row>
   </Layout>
