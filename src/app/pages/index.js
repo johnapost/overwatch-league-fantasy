@@ -1,10 +1,12 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Row, Col, Form, Input, Timeline } from 'antd';
+import { Row, Col, Form, Input, Timeline, Card } from 'antd';
 import withRedux from 'next-redux-wrapper';
 import { compose } from 'redux';
 import { get } from 'lodash';
+import { v4 } from 'uuid';
+import firebase from 'firebase';
 import store from '../shared/store';
 import withFirestore from '../shared/withFirestore';
 import Layout from '../components/layout';
@@ -16,6 +18,7 @@ type Props = {
   messages: {
     id: string,
     message: string,
+    timestamp: Date,
   }[]
 }
 
@@ -23,8 +26,14 @@ class Index extends Component<Props> {
   sendMessage = () => {
     const { form, firestore } = this.props;
     const message = form.getFieldValue('message');
-    firestore.add('leagues/first/messages', { message });
-    // firestore.add('leagues', { message });
+    firestore.set({
+      collection: 'leagues',
+      doc: 'first',
+      subcollections: [{ collection: 'messages', doc: v4() }],
+    }, {
+      message,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
   }
 
   render() {
@@ -35,26 +44,55 @@ class Index extends Component<Props> {
         <Row>
           <Col sm={6} md={4} />
           <Col sm={12} md={16}>
-            <h1>
-              {leagueName}
-            </h1>
-            <Timeline>
-              {
-                messages && messages.map(({ id, message }) => (
-                  <Timeline.Item key={id}>{message}</Timeline.Item>
-                ))
-              }
-            </Timeline>
-            <Form>
-              {
-                getFieldDecorator('message')(<Input
-                  addonBefore="Draft Chat"
-                  onPressEnter={this.sendMessage}
-                />)
-              }
-            </Form>
+            <div className="wrapper">
+              <Card title={leagueName}>
+                <Timeline>
+                  <div
+                    className="timeline"
+                    onFocus={() => {}}
+                    onBlur={() => {}}
+                    onMouseOver={() => {
+                      if (document && document.body) {
+                        document.body.style.overflow = 'hidden';
+                      }
+                    }}
+                    onMouseOut={() => {
+                      if (document && document.body) {
+                        document.body.style.overflow = 'initial';
+                      }
+                    }}
+                  >
+                    {
+                      messages &&
+                      ((Object.values(messages): any): Object).map(({ message }) => (
+                        <Timeline.Item>{message}</Timeline.Item>
+                      ))
+                    }
+                  </div>
+                </Timeline>
+                <Form>
+                  {
+                    getFieldDecorator('message')(<Input
+                      addonBefore="Draft Chat"
+                      onPressEnter={this.sendMessage}
+                    />)
+                  }
+                </Form>
+              </Card>
+            </div>
           </Col>
         </Row>
+        <style jsx>{`
+          .wrapper {
+            margin-top: 50px;
+          }
+
+          .timeline {
+            max-height: 300px;
+            overflow-y: scroll;
+          }
+        `}
+        </style>
       </Layout>
     );
   }
@@ -69,6 +107,16 @@ export default compose(
       messages: get(firestore.data, 'leagues.first.messages'),
     }),
   ),
-  withFirestore(() => [{ collection: 'leagues', doc: 'first' }]),
+  withFirestore(() => [
+    {
+      collection: 'leagues',
+      doc: 'first',
+    },
+    {
+      collection: 'leagues',
+      doc: 'first',
+      subcollections: [{ collection: 'messages', orderBy: ['timestamp'] }],
+    },
+  ]),
   Form.create(),
 )(Index);
