@@ -16,6 +16,7 @@ const Layout = ({ children, title }: Props) => (
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta charSet="utf-8" />
       <link href="https://fonts.googleapis.com/css?family=Catamaran:400,700" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" />
       <link rel="stylesheet" href="https://unpkg.com/antd@3/dist/antd.min.css" />
     </Head>
     <main>
@@ -24,13 +25,25 @@ const Layout = ({ children, title }: Props) => (
     <Footer />
     <style jsx>{`
       main {
+        background-image: url(static/diamond_upholstery.png);
+        background-attachment: fixed;
         min-height: 100vh;
+      }
+
+      @media (min-device-pixel-ratio: 2) {
+        main {
+          background-image: url(static/diamond_upholstery_@2x.png);
+        }
       }
     `}
     </style>
     <style global jsx>{`
       body {
         font-family: 'Catamaran', sans-serif;
+      }
+
+      p {
+        font-family: 'Montserrat', sans-serif;
       }
 
       /* minireset.css v0.0.3 | MIT License | github.com/jgthms/minireset.css */

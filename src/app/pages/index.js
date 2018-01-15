@@ -1,7 +1,7 @@
 // @flow
 
-import React from 'react';
-import { Row, Col } from 'antd';
+import React, { Component } from 'react';
+import { Row, Col, Form, Input, Timeline } from 'antd';
 import withRedux from 'next-redux-wrapper';
 import { compose } from 'redux';
 import { get } from 'lodash';
@@ -10,26 +10,65 @@ import withFirestore from '../shared/withFirestore';
 import Layout from '../components/layout';
 
 type Props = {
-  name: string
+  firestore: Object,
+  form: Object,
+  leagueName: string,
+  messages: {
+    id: string,
+    message: string,
+  }[]
 }
 
-const Index = ({ name }: Props) => (
-  <Layout>
-    <Row>
-      <Col span={8} offset={8}>
-        Overwatch League Fantasy
-        <p>
-          {name}
-        </p>
-      </Col>
-    </Row>
-  </Layout>
-);
+class Index extends Component<Props> {
+  sendMessage = () => {
+    const { form, firestore } = this.props;
+    const message = form.getFieldValue('message');
+    firestore.add('leagues/first/messages', { message });
+    // firestore.add('leagues', { message });
+  }
+
+  render() {
+    const { leagueName, messages, form: { getFieldDecorator } } = this.props;
+
+    return (
+      <Layout>
+        <Row>
+          <Col sm={6} md={4} />
+          <Col sm={12} md={16}>
+            <h1>
+              {leagueName}
+            </h1>
+            <Timeline>
+              {
+                messages && messages.map(({ id, message }) => (
+                  <Timeline.Item key={id}>{message}</Timeline.Item>
+                ))
+              }
+            </Timeline>
+            <Form>
+              {
+                getFieldDecorator('message')(<Input
+                  addonBefore="Draft Chat"
+                  onPressEnter={this.sendMessage}
+                />)
+              }
+            </Form>
+          </Col>
+        </Row>
+      </Layout>
+    );
+  }
+}
+
 
 export default compose(
   withRedux(
     store,
-    ({ firestore }) => ({ name: get(firestore.data, 'leagues.first.name') }),
+    ({ firestore }) => ({
+      leagueName: get(firestore.data, 'leagues.first.name'),
+      messages: get(firestore.data, 'leagues.first.messages'),
+    }),
   ),
-  withFirestore([{ collection: 'leagues', doc: 'first' }]),
+  withFirestore(() => [{ collection: 'leagues', doc: 'first' }]),
+  Form.create(),
 )(Index);
