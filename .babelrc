@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    [
+      "lodash",
+      {
+        "id": [
+          "lodash"
+        ]
+      }
+    ]
+  ],
+  "presets": "next/babel"
+}
