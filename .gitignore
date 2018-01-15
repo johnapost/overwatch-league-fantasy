@@ -1,4 +1,6 @@
+.DS_Store
 .firebaserc
+*.log
 dist
 node_modules
-yarn-error.log
+secrets.js
