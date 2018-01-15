@@ -24,9 +24,9 @@ if (typeof window !== 'undefined') {
   firebase.firestore();
 
   const composeFn = (
-    // eslint-disable-next-line no-underscore-dangle, no-undef
+    // eslint-disable-next-line no-underscore-dangle
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
-    // eslint-disable-next-line no-underscore-dangle, no-undef
+    // eslint-disable-next-line no-underscore-dangle
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
   ) || compose;
 
