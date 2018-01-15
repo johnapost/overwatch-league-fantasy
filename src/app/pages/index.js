@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Input, Timeline, Card } from 'antd';
 import withRedux from 'next-redux-wrapper';
 import { compose } from 'redux';
-import { get } from 'lodash';
+import get from 'lodash/get';
 import { v4 } from 'uuid';
 import firebase from 'firebase';
 import store from '../shared/store';
@@ -16,10 +16,12 @@ type Props = {
   form: Object,
   leagueName: string,
   messages: {
-    id: string,
-    message: string,
-    timestamp: Date,
-  }[]
+    [string]: {
+      id: string,
+      message: string,
+      timestamp: Date,
+    }
+  }
 }
 
 class Index extends Component<Props> {
@@ -47,25 +49,11 @@ class Index extends Component<Props> {
             <div className="wrapper">
               <Card title={leagueName}>
                 <Timeline>
-                  <div
-                    className="timeline"
-                    onFocus={() => {}}
-                    onBlur={() => {}}
-                    onMouseOver={() => {
-                      if (document && document.body) {
-                        document.body.style.overflow = 'hidden';
-                      }
-                    }}
-                    onMouseOut={() => {
-                      if (document && document.body) {
-                        document.body.style.overflow = 'initial';
-                      }
-                    }}
-                  >
+                  <div className="timeline">
                     {
                       messages &&
-                      ((Object.values(messages): any): Object).map(({ message }) => (
-                        <Timeline.Item>{message}</Timeline.Item>
+                      Object.keys(messages).map((key: string) => (
+                        <Timeline.Item>{messages[key].message}</Timeline.Item>
                       ))
                     }
                   </div>
@@ -97,7 +85,6 @@ class Index extends Component<Props> {
     );
   }
 }
-
 
 export default compose(
   withRedux(
