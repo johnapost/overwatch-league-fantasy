@@ -2,14 +2,20 @@
 
 import React from 'react';
 import { Row, Col } from 'antd';
-import Layout from '../components/layout';
 
 export default () => (
-  <Layout>
+  <footer>
     <Row>
       <Col span={8} offset={8}>
-        Overwatch League Fantasy
+        Footer here
       </Col>
     </Row>
-  </Layout>
+    <style jsx>{`
+      footer {
+        background: #212121;
+        color: #FFFFFF;
+      }
+    `}
+    </style>
+  </footer>
 );
