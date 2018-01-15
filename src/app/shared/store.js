@@ -1,30 +1,18 @@
 // @flow
 
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import { combineReducers, compose, createStore } from 'redux';
 import { reactReduxFirebase } from 'react-redux-firebase';
 import { reduxFirestore, firestoreReducer } from 'redux-firestore';
 import firebase from 'firebase';
 import 'firebase/firestore';
-import thunk from 'redux-thunk';
 import { apiKey, authDomain, projectId } from '../secrets';
 
 // Firebase setup
-const firebaseConfig = {
-  apiKey,
-  authDomain,
-  projectId,
-};
-
-const rrfConfig = {
-  userProfile: 'users',
-  useFirestoreForProfile: true,
-};
+const firebaseConfig = { apiKey, authDomain, projectId };
+const rrfConfig = { userProfile: 'users', useFirestoreForProfile: true };
 
 // Redux setup
-const middleware = [thunk];
-const reducers = combineReducers({
-  firestore: firestoreReducer,
-});
+const reducers = combineReducers({ firestore: firestoreReducer });
 
 let enhancers;
 
@@ -42,16 +30,11 @@ if (typeof window !== 'undefined') {
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
   ) || compose;
 
+  // Only make the firebase connection on the client side
   enhancers = composeFn(
-    applyMiddleware(...middleware),
-    // Only make the firebase connection on the client side
     reactReduxFirebase(firebase, rrfConfig),
     reduxFirestore(firebase),
   );
-
-// Server Only
-} else {
-  enhancers = applyMiddleware(...middleware);
 }
 
 export default (state: Object) =>
