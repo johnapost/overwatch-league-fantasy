@@ -25,12 +25,31 @@ type Props = {
 }
 
 type State = {
-  sendingMessage: boolean
+  sendingMessage: boolean,
 }
 
 class Index extends Component<Props, State> {
   state = {
     sendingMessage: false,
+  }
+
+  componentDidMount() {
+    this.scrollToLatest();
+  }
+
+  componentDidUpdate({ messages: prevMessages }) {
+    if (this.props.messages !== prevMessages) {
+      this.scrollToLatest();
+    }
+  }
+
+  timelineEl: ?HTMLElement = null
+
+  scrollToLatest = () => {
+    if (this.timelineEl) {
+      this.timelineEl.scrollTop =
+        this.timelineEl.scrollHeight - this.timelineEl.offsetHeight;
+    }
   }
 
   sendMessage = () => {
@@ -61,7 +80,10 @@ class Index extends Component<Props, State> {
             <div className="wrapper">
               <Card title={leagueName}>
                 <Timeline>
-                  <div className="timeline">
+                  <div
+                    className="timeline"
+                    ref={(el) => { this.timelineEl = el; }}
+                  >
                     {
                       messages &&
                       Object.keys(messages).map((key: string) => (
