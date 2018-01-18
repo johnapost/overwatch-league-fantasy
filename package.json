@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "build-app": "next build src/app",
+    "build-app": "NODE_ENV=production next build src/app",
     "build-fns": "babel \"src/functions\" --out-dir \"dist/functions\"",
     "build-public": "cpx \"src/public/**/*.*\" \"dist/public\" -C && cpx \"src/app/static/**/*.*\" \"dist/public/static\"",
     "clean": "rimraf dist",
