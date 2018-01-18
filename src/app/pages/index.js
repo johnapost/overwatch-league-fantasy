@@ -24,8 +24,36 @@ type Props = {
   }
 }
 
-class Index extends Component<Props> {
+type State = {
+  sendingMessage: boolean,
+}
+
+class Index extends Component<Props, State> {
+  state = {
+    sendingMessage: false,
+  }
+
+  componentDidMount() {
+    this.scrollToLatest();
+  }
+
+  componentDidUpdate({ messages: prevMessages }) {
+    if (this.props.messages !== prevMessages) {
+      this.scrollToLatest();
+    }
+  }
+
+  timelineEl: ?HTMLElement = null
+
+  scrollToLatest = () => {
+    if (this.timelineEl) {
+      this.timelineEl.scrollTop =
+        this.timelineEl.scrollHeight - this.timelineEl.offsetHeight;
+    }
+  }
+
   sendMessage = () => {
+    this.setState({ sendingMessage: true });
     const { form, firestore } = this.props;
     const message = form.getFieldValue('message');
     firestore.set({
@@ -35,6 +63,9 @@ class Index extends Component<Props> {
     }, {
       message,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    }).then(() => {
+      form.setFieldsValue({ message: '' });
+      this.setState({ sendingMessage: false });
     });
   }
 
@@ -49,7 +80,10 @@ class Index extends Component<Props> {
             <div className="wrapper">
               <Card title={leagueName}>
                 <Timeline>
-                  <div className="timeline">
+                  <div
+                    className="timeline"
+                    ref={(el) => { this.timelineEl = el; }}
+                  >
                     {
                       messages &&
                       Object.keys(messages).map((key: string) => (
@@ -63,6 +97,7 @@ class Index extends Component<Props> {
                     getFieldDecorator('message')(<Input
                       addonBefore="Draft Chat"
                       onPressEnter={this.sendMessage}
+                      disabled={this.state.sendingMessage}
                     />)
                   }
                 </Form>
