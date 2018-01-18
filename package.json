@@ -14,6 +14,7 @@
     "install-deps": "cd \"dist/functions\" && yarn",
     "sort": "sort-package-json",
     "type-check": "flow",
+    "type-coverage": "flow-coverage-report",
     "type-install": "flow-typed install"
   },
   "dependencies": {
@@ -59,8 +60,10 @@
   },
   "flow-coverage-report": {
     "concurrentFiles": 5,
-    "excludeGlob": [
-      "src/**/*.spec.js"
+    "includeGlob": [
+      "src/app/components/**/*.js",
+      "src/app/pages/**/*.js",
+      "src/app/shared/**/*.js"
     ],
     "threshold": 80
   },
