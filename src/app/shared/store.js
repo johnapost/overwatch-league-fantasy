@@ -37,9 +37,4 @@ if (typeof window !== 'undefined') {
   );
 }
 
-export default (state: Object) =>
-  createStore(
-    reducers,
-    state,
-    enhancers,
-  );
+export default (state: Object) => createStore(reducers, state, enhancers);
