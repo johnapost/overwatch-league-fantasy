@@ -1,3 +1,5 @@
+const env = process.env.NODE_ENV || 'development';
+
 module.exports = {
-  distDir: '../../dist/functions/next',
+  distDir: env === 'production' ? '../../dist/functions/next' : '.next',
 };

@@ -5,10 +5,9 @@ import { Input, Timeline, Card, Form } from 'antd';
 import { v4 } from 'uuid';
 import get from 'lodash/get';
 import firebase from 'firebase';
-import withRedux from 'next-redux-wrapper';
+import { connect } from 'react-redux';
 import { compose } from 'redux';
 import withFirestore from '../shared/withFirestore';
-import store from '../shared/store';
 
 type Props = {
   firestore: Object,
@@ -82,7 +81,7 @@ class Chat extends Component<Props, State> {
             {
               messages &&
               Object.keys(messages).map((key: string) => (
-                <Timeline.Item>{messages[key].message}</Timeline.Item>
+                <Timeline.Item key={key}>{messages[key].message}</Timeline.Item>
               ))
             }
           </div>
@@ -109,13 +108,12 @@ class Chat extends Component<Props, State> {
   }
 }
 
+const mapStateToProps = ({ firestore }) => ({
+  messages: get(firestore.data, 'leagues.first.messages'),
+});
+
 export default compose(
-  withRedux(
-    store,
-    ({ firestore }) => ({
-      messages: get(firestore.data, 'leagues.first.messages'),
-    }),
-  ),
+  connect(mapStateToProps, () => ({})),
   withFirestore(() => [
     {
       collection: 'leagues',
