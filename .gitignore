@@ -1,0 +1,6 @@
+.DS_Store
+.firebaserc
+*.log
+dist
+node_modules
+secrets.js

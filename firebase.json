@@ -1,0 +1,20 @@
+{
+  "firestore": {
+    "indexes": "firestore.indexes.json",
+    "rules": "firestore.rules"
+  },
+  "functions": {
+    "predeploy": "yarn build-fns && yarn build-app && yarn copy-deps && yarn install-deps",
+    "source": "dist/functions"
+  },
+  "hosting": {
+    "predeploy": "yarn build-public",
+    "public": "dist/public",
+    "rewrites": [
+      {
+        "source": "**/**",
+        "function": "nextApp"
+      }
+    ]
+  }
+}
