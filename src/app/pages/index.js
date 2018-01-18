@@ -53,9 +53,11 @@ class Index extends Component<Props, State> {
   }
 
   sendMessage = () => {
-    this.setState({ sendingMessage: true });
     const { form, firestore } = this.props;
     const message = form.getFieldValue('message');
+
+    this.setState({ sendingMessage: true });
+    form.setFieldsValue({ message: '' });
     firestore.set({
       collection: 'leagues',
       doc: 'first',
@@ -64,12 +66,12 @@ class Index extends Component<Props, State> {
       message,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     }).then(() => {
-      form.setFieldsValue({ message: '' });
       this.setState({ sendingMessage: false });
     });
   }
 
   render() {
+    const { sendingMessage } = this.state;
     const { leagueName, messages, form: { getFieldDecorator } } = this.props;
 
     return (
@@ -96,8 +98,9 @@ class Index extends Component<Props, State> {
                   {
                     getFieldDecorator('message')(<Input
                       addonBefore="Draft Chat"
-                      onPressEnter={this.sendMessage}
-                      disabled={this.state.sendingMessage}
+                      onPressEnter={
+                        sendingMessage ? () => {} : this.sendMessage
+                      }
                     />)
                   }
                 </Form>
