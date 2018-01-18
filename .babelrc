@@ -1,0 +1,25 @@
+{
+  "plugins": [
+    [
+      "lodash",
+      {
+        "id": [
+          "lodash"
+        ]
+      }
+    ],
+    "transform-class-properties",
+    "transform-runtime"
+  ],
+  "presets": [
+    "next/babel",
+    [
+      "env", {
+        "targets": {
+          "browsers": ["last 2 versions"],
+          "node": "6.11.5"
+        }
+      }
+    ]
+  ]
+}

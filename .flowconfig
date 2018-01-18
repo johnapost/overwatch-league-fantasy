@@ -1,0 +1,14 @@
+[libs]
+flow-typed
+flow-overrides
+
+[options]
+module.file_ext=.js
+module.file_ext=.json
+
+[ignore]
+.*/node_modules/config-chain
+.*/node_modules/google-gax
+.*/node_modules/npmconf
+.*/node_modules/protobufjs
+dist/**/*
