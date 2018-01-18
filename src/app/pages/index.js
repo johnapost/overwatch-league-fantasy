@@ -24,8 +24,17 @@ type Props = {
   }
 }
 
-class Index extends Component<Props> {
+type State = {
+  sendingMessage: boolean
+}
+
+class Index extends Component<Props, State> {
+  state = {
+    sendingMessage: false,
+  }
+
   sendMessage = () => {
+    this.setState({ sendingMessage: true });
     const { form, firestore } = this.props;
     const message = form.getFieldValue('message');
     firestore.set({
@@ -35,6 +44,9 @@ class Index extends Component<Props> {
     }, {
       message,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    }).then(() => {
+      form.setFieldsValue({ message: '' });
+      this.setState({ sendingMessage: false });
     });
   }
 
@@ -63,6 +75,7 @@ class Index extends Component<Props> {
                     getFieldDecorator('message')(<Input
                       addonBefore="Draft Chat"
                       onPressEnter={this.sendMessage}
+                      disabled={this.state.sendingMessage}
                     />)
                   }
                 </Form>
