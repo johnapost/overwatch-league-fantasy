@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { Input, Timeline, Card, Form } from 'antd';
-import { v4 } from 'uuid';
+import uuid from 'uuid/v4';
 import get from 'lodash/get';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
@@ -58,7 +58,7 @@ class Chat extends Component<Props, State> {
     firestore.set({
       collection: 'leagues',
       doc: 'first',
-      subcollections: [{ collection: 'messages', doc: v4() }],
+      subcollections: [{ collection: 'messages', doc: uuid() }],
     }, {
       message,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
