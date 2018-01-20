@@ -51,11 +51,11 @@ class Chat extends Component<Props, State> {
   }
 
   sendMessage = () => {
-    const { form, firestore } = this.props;
-    const message = form.getFieldValue('message');
+    const { form: { getFieldsValue, setFieldsValue }, firestore } = this.props;
+    const { message } = getFieldsValue();
 
     this.setState({ sendingMessage: true });
-    form.setFieldsValue({ message: '' });
+    setFieldsValue({ message: '' });
     firestore.set({
       collection: 'leagues',
       doc: 'first',
