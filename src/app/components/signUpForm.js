@@ -1,10 +1,12 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Card, Form, Input, Button } from 'antd';
+import { Card, Form, Input, Button, message } from 'antd';
 import { compose } from 'redux';
 import { isLoaded } from 'react-redux-firebase';
+import Router from 'next/router';
 import withFirestore from '../shared/withFirestore';
+import hasErrors from '../shared/hasErrors';
 
 type Props = {
   firestore: Object,
@@ -29,10 +31,16 @@ class Auth extends Component<Props, State> {
     }
 
     this.setState({ submittingForm: true });
+    const closeMessage = message.loading('Signing up..', 0);
+
+    const finishSubmitting = () => {
+      this.setState({ submittingForm: false });
+      closeMessage();
+    };
 
     validateFieldsAndScroll((err, { email, password }) => {
       if (err) {
-        this.setState({ submittingForm: false });
+        finishSubmitting();
         return;
       }
 
@@ -40,17 +48,25 @@ class Auth extends Component<Props, State> {
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then(() => {
-          this.setState({ submittingForm: false });
-        }).catch((error) => {
-          this.setState({ submittingForm: false });
+          finishSubmitting();
+          message.success('Successfully signed up!');
+          Router.push({
+            pathname: '/login',
+            query: { email },
+          });
+        })
+        .catch(({ code, message: errorMessage }) => {
+          finishSubmitting();
+          message.error(errorMessage);
           // eslint-disable-next-line no-console
-          console.error(error);
-        });
+          console.error(code, message);
+        })
+        .then(() => finishSubmitting());
     });
   }
 
   render() {
-    const { form: { getFieldDecorator } } = this.props;
+    const { form: { getFieldDecorator, getFieldsError } } = this.props;
     const { submittingForm } = this.state;
     const emailValidations = [
       { required: true, message: 'Email required!' },
@@ -60,7 +76,6 @@ class Auth extends Component<Props, State> {
       { required: true, message: 'Password required!' },
       { min: 6, message: 'Too short!' },
     ];
-    const submittable = !submittingForm;
 
     return (
       <Card>
@@ -78,12 +93,16 @@ class Auth extends Component<Props, State> {
               getFieldDecorator(
                 'password',
                 { rules: passwordValidations },
-              )(<Input placeholder="Password" />)
+              )(<Input placeholder="Password" type="password" />)
             }
           </Form.Item>
           <div style={{ marginTop: '10px' }}>
-            <Button type="primary" htmlType="submit" disabled={!submittable}>
-              Sign Up
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={submittingForm || hasErrors(getFieldsError())}
+            >
+                Sign Up
             </Button>
           </div>
         </Form>
