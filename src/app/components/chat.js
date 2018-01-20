@@ -7,6 +7,7 @@ import get from 'lodash/get';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { isLoaded } from 'react-redux-firebase';
 import withFirestore from '../shared/withFirestore';
 
 type Props = {
@@ -79,7 +80,7 @@ class Chat extends Component<Props, State> {
             ref={(el) => { this.timelineEl = el; }}
           >
             {
-              messages &&
+              isLoaded(messages) &&
               Object.keys(messages).map((key: string) => (
                 <Timeline.Item key={key}>{messages[key].message}</Timeline.Item>
               ))
@@ -114,12 +115,10 @@ const mapStateToProps = ({ firestore }) => ({
 
 export default compose(
   connect(mapStateToProps, () => ({})),
-  withFirestore(() => [
-    {
-      collection: 'leagues',
-      doc: 'first',
-      subcollections: [{ collection: 'messages', orderBy: ['timestamp'] }],
-    },
-  ]),
+  withFirestore(() => [{
+    collection: 'leagues',
+    doc: 'first',
+    subcollections: [{ collection: 'messages', orderBy: ['timestamp'] }],
+  }]),
   Form.create(),
 )(Chat);
