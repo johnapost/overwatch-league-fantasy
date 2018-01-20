@@ -1,22 +1,120 @@
 // @flow
+/* eslint-disable jsx-a11y/anchor-is-valid */
 
-import React from 'react';
-import { connect } from 'react-redux';
-import { Card } from 'antd';
+import React, { Component } from 'react';
+import { compose } from 'redux';
 import { isLoaded } from 'react-redux-firebase';
+import { Card, Form, Button, Input, message } from 'antd';
+import Link from 'next/link';
+import Router from 'next/router';
+import withFirestore from '../shared/withFirestore';
+import hasErrors from '../shared/hasErrors';
 
 type Props = {
-  firestore: Object
+  firestore: Object,
+  form: Object
 }
 
-const Auth = ({ firestore }: Props) => (
-  <Card>
-    {
-      isLoaded(firestore) && 'Login here!'
+type State = {
+  submittingForm: boolean
+}
+
+class LoginForm extends Component<Props, State> {
+  state = {
+    submittingForm: false,
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const { firestore, form: { validateFieldsAndScroll } } = this.props;
+
+    if (!isLoaded(firestore)) {
+      return;
     }
-  </Card>
-);
 
-const mapStateToProps = ({ firestore }) => ({ firestore });
+    this.setState({ submittingForm: true });
+    const closeMessage = message.loading('Logging in..', 0);
 
-export default connect(mapStateToProps, () => ({}))(Auth);
+    const finishSubmitting = () => {
+      this.setState({ submittingForm: false });
+      closeMessage();
+    };
+
+    validateFieldsAndScroll((err, { email, password }) => {
+      if (err) {
+        finishSubmitting();
+        return;
+      }
+
+      firestore
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => {
+          finishSubmitting();
+          Router.push('/');
+        })
+        .catch(({ code, message: errorMessage }) => {
+          finishSubmitting();
+          message.error(errorMessage);
+          // eslint-disable-next-line no-console
+          console.error(code, message);
+        });
+    });
+  }
+
+  render() {
+    const { form: { getFieldDecorator, getFieldsError } } = this.props;
+    const { submittingForm } = this.state;
+    const emailValidations = [
+      { required: true, message: 'Email required!' },
+      { type: 'email', message: 'Invalid email!' },
+    ];
+    const passwordValidations = [
+      { required: true, message: 'Password required!' },
+    ];
+
+    return (
+      <Card>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Item>
+            {
+              getFieldDecorator(
+                'email',
+                { rules: emailValidations },
+              )(<Input placeholder="Email" />)
+            }
+          </Form.Item>
+          <Form.Item>
+            {
+              getFieldDecorator(
+                'password',
+                { rules: passwordValidations },
+              )(<Input placeholder="Password" type="password" />)
+            }
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={submittingForm || hasErrors(getFieldsError())}
+            >
+              Login
+            </Button>
+          </Form.Item>
+          <div>
+            <Link href="/sign-up">
+              <a>
+                Sign up for an account
+              </a>
+            </Link>
+          </div>
+        </Form>
+      </Card>
+    );
+  }
+}
+
+export default compose(
+  withFirestore(),
+  Form.create(),
+)(LoginForm);

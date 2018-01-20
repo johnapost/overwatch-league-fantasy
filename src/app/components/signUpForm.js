@@ -17,7 +17,7 @@ type State = {
   submittingForm: boolean
 }
 
-class Auth extends Component<Props, State> {
+class SignUpForm extends Component<Props, State> {
   state = {
     submittingForm: false,
   }
@@ -60,8 +60,7 @@ class Auth extends Component<Props, State> {
           message.error(errorMessage);
           // eslint-disable-next-line no-console
           console.error(code, message);
-        })
-        .then(() => finishSubmitting());
+        });
     });
   }
 
@@ -102,7 +101,7 @@ class Auth extends Component<Props, State> {
               htmlType="submit"
               disabled={submittingForm || hasErrors(getFieldsError())}
             >
-                Sign Up
+              Sign Up
             </Button>
           </div>
         </Form>
@@ -114,4 +113,4 @@ class Auth extends Component<Props, State> {
 export default compose(
   withFirestore(),
   Form.create(),
-)(Auth);
+)(SignUpForm);
