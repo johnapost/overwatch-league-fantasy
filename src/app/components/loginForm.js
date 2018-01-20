@@ -21,7 +21,4 @@ const Auth = ({ firestore }: Props) => (
 
 const mapStateToProps = ({ firestore }) => ({ firestore });
 
-export default connect(
-  mapStateToProps,
-  () => ({}),
-)(Auth);
+export default connect(mapStateToProps, () => ({}))(Auth);

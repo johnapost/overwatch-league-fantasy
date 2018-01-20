@@ -1,10 +1,8 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Card, Form, Input } from 'antd';
+import { Card, Form, Input, Button } from 'antd';
 import { compose } from 'redux';
-import { get } from 'lodash';
-import { connect } from 'react-redux';
 import { isLoaded } from 'react-redux-firebase';
 import withFirestore from '../shared/withFirestore';
 
@@ -13,45 +11,88 @@ type Props = {
   form: Object,
 }
 
-class Auth extends Component<Props> {
-  handleSubmit = () => {}
+type State = {
+  submittingForm: boolean
+}
+
+class Auth extends Component<Props, State> {
+  state = {
+    submittingForm: false,
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const { firestore, form: { validateFieldsAndScroll } } = this.props;
+
+    if (!isLoaded(firestore)) {
+      return;
+    }
+
+    this.setState({ submittingForm: true });
+
+    validateFieldsAndScroll((err, { email, password }) => {
+      if (err) {
+        this.setState({ submittingForm: false });
+        return;
+      }
+
+      firestore
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          this.setState({ submittingForm: false });
+        }).catch((error) => {
+          this.setState({ submittingForm: false });
+          // eslint-disable-next-line no-console
+          console.error(error);
+        });
+    });
+  }
 
   render() {
-    const { firestore, form: { getFieldDecorator } } = this.props;
-
-    if (isLoaded(firestore)) {
-      console.log(firestore.auth());
-    }
+    const { form: { getFieldDecorator } } = this.props;
+    const { submittingForm } = this.state;
+    const emailValidations = [
+      { required: true, message: 'Email required!' },
+      { type: 'email', message: 'Invalid email!' },
+    ];
+    const passwordValidations = [
+      { required: true, message: 'Password required!' },
+      { min: 6, message: 'Too short!' },
+    ];
+    const submittable = !submittingForm;
 
     return (
       <Card>
         <Form onSubmit={this.handleSubmit}>
-          {
-            getFieldDecorator('email')(<Input
-              addonBefore="Email"
-            />)
-          }
-          {
-            getFieldDecorator('password')(<Input
-              addonBefore="Password"
-            />)
-          }
+          <Form.Item>
+            {
+              getFieldDecorator(
+                'email',
+                { rules: emailValidations },
+              )(<Input placeholder="Email" />)
+            }
+          </Form.Item>
+          <Form.Item>
+            {
+              getFieldDecorator(
+                'password',
+                { rules: passwordValidations },
+              )(<Input placeholder="Password" />)
+            }
+          </Form.Item>
+          <div style={{ marginTop: '10px' }}>
+            <Button type="primary" htmlType="submit" disabled={!submittable}>
+              Sign Up
+            </Button>
+          </div>
         </Form>
       </Card>
     );
   }
 }
 
-const mapStateToProps = ({ firestore }) => ({
-  messages: get(firestore.data, 'leagues.first.messages'),
-});
-
 export default compose(
-  connect(mapStateToProps, () => ({})),
-  withFirestore(() => [{
-    collection: 'leagues',
-    doc: 'first',
-    subcollections: [{ collection: 'messages', orderBy: ['timestamp'] }],
-  }]),
+  withFirestore(),
   Form.create(),
 )(Auth);
