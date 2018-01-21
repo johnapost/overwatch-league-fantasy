@@ -1,13 +1,13 @@
 // @flow
 
 import React from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, Form } from 'antd';
 import withRedux from 'next-redux-wrapper';
 import { compose } from 'redux';
 import store from '../shared/store';
 import withFirestore from '../shared/withFirestore';
 import Layout from '../components/layout';
-import VerifyAccount from '../components/verifyAccount';
+import Chat from '../components/chat';
 
 const Index = () => (
   <Layout>
@@ -15,9 +15,7 @@ const Index = () => (
       <Col sm={6} md={4} />
       <Col sm={12} md={16}>
         <div className="wrapper">
-          {
-            <VerifyAccount />
-          }
+          <Chat />
         </div>
       </Col>
     </Row>
@@ -32,5 +30,11 @@ const Index = () => (
 
 export default compose(
   withRedux(store),
-  withFirestore(),
+  withFirestore(() => [
+    {
+      collection: 'leagues',
+      doc: 'first',
+    },
+  ]),
+  Form.create(),
 )(Index);

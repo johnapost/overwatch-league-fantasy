@@ -78,7 +78,7 @@ class LoginForm extends Component<Props, State> {
     ];
 
     return (
-      <Card>
+      <Card title="Login to your account">
         <Form onSubmit={this.handleSubmit}>
           <Form.Item>
             {
