@@ -2,7 +2,7 @@
 // flow-typed version: 3c3546d42d/firebase_v4.x.x/flow_>=v0.34.x
 
 /* @flow */
-/** ** firebase *** */
+/** ** firebase ****/
 
 declare interface $npm$firebase$Config {
   apiKey: string;
@@ -14,7 +14,8 @@ declare interface $npm$firebase$Config {
 }
 
 declare interface $npm$firebase$auth$Error {
-  code: | "auth/app-deleted"
+  code:
+    | "auth/app-deleted"
     | "auth/app-not-authorized"
     | "auth/argument-error"
     | "auth/invalid-api-key"
@@ -62,7 +63,7 @@ declare interface $npm$firebase$Error {
   stack: ?string;
 }
 
-/** *** app **** */
+/** *** app *****/
 declare class $npm$firebase$App {
   name: string;
   +options: $npm$firebase$Config;
@@ -72,7 +73,7 @@ declare class $npm$firebase$App {
   delete(): Promise<void>;
 }
 
-/** **** auth ****** */
+/** **** auth *******/
 declare interface $npm$firebase$auth$ActionCodeInfo {
   data: { email: string };
 }
@@ -283,7 +284,7 @@ declare type $npm$firebase$auth$OAuthProvider =
   | $npm$firebase$auth$GoogleAuthProvider
   | $npm$firebase$auth$TwitterAuthProvider;
 
-/** **** database ***** */
+/** **** database ******/
 declare type $npm$firebase$database$Value = any;
 declare type $npm$firebase$database$OnCompleteCallback = (
   error: ?Object
@@ -434,7 +435,7 @@ declare class $npm$firebase$database$ServerValue {
 
 declare class $npm$firebase$database$ThenableReference extends $npm$firebase$database$Reference {}
 
-/** **** storage ***** */
+/** **** storage ******/
 declare type $npm$firebase$storage$StringFormat =
   | "raw"
   | "base64"
@@ -518,7 +519,8 @@ declare interface $npm$firebase$storage$Observer {
 declare type $npm$firebase$storage$Unsubscribe = () => void;
 
 declare type $npm$firebase$storage$Subscribe = (
-  observerOrNext: | $npm$firebase$storage$Observer
+  observerOrNext:
+    | $npm$firebase$storage$Observer
     | ((snapshot: $npm$firebase$storage$UploadTaskSnapshot) => void),
   onError?: (error: Error) => void,
   onComplete?: () => void
@@ -535,7 +537,8 @@ declare class $npm$firebase$storage$UploadTask extends Promise<
   ): $npm$firebase$storage$Subscribe;
   on(
     event: $npm$firebase$storage$TaskEvent,
-    observerOrNext: | $npm$firebase$storage$Observer
+    observerOrNext:
+      | $npm$firebase$storage$Observer
       | ((snapshot: $npm$firebase$storage$UploadTaskSnapshot) => void),
     onError?: (error: Error) => void,
     onComplete?: () => void
@@ -555,7 +558,7 @@ declare class $npm$firebase$storage$UploadTaskSnapshot {
 }
 
 // Exporting the types
-declare module 'firebase' {
+declare module "firebase" {
   declare module.exports: {
     +apps: Array<$npm$firebase$App>,
     initializeApp(
@@ -616,13 +619,13 @@ declare module 'firebase' {
     }
   };
 }
-declare module 'firebase/app' {
+declare module "firebase/app" {
   declare module.exports: {
     (name?: string): $npm$firebase$App,
     App: typeof $npm$firebase$App
   };
 }
-declare module 'firebase/auth' {
+declare module "firebase/auth" {
   declare module.exports: {
     (app?: $npm$firebase$App): $npm$firebase$auth$Auth,
     FirebaseAdditionalUserInfo: $npm$firebase$auth$AdditionalUserInfo,
@@ -642,7 +645,7 @@ declare module 'firebase/auth' {
     TwitterAuthProvider: typeof $npm$firebase$auth$TwitterAuthProvider
   };
 }
-declare module 'firebase/database' {
+declare module "firebase/database" {
   declare module.exports: {
     (app?: $npm$firebase$App): $npm$firebase$database$Database,
     enableLogging(
@@ -658,7 +661,7 @@ declare module 'firebase/database' {
     ThenableReference: typeof $npm$firebase$database$ThenableReference
   };
 }
-declare module 'firebase/storage' {
+declare module "firebase/storage" {
   declare module.exports: {
     (app?: $npm$firebase$App): $npm$firebase$storage$Storage,
     Storage: typeof $npm$firebase$storage$Storage,

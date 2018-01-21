@@ -4,13 +4,14 @@ import React, { Component } from 'react';
 import { Card, Form, Input, Button, message } from 'antd';
 import { compose } from 'redux';
 import { isLoaded } from 'react-redux-firebase';
-import Router from 'next/router';
+import { withRouter } from 'next/router';
 import withFirestore from '../shared/withFirestore';
 import hasErrors from '../shared/hasErrors';
 
 type Props = {
   firestore: Object,
   form: Object,
+  router: Object,
 }
 
 type State = {
@@ -24,7 +25,7 @@ class SignUpForm extends Component<Props, State> {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { firestore, form: { validateFieldsAndScroll } } = this.props;
+    const { firestore, form: { validateFieldsAndScroll }, router } = this.props;
 
     if (!isLoaded(firestore)) {
       return;
@@ -50,7 +51,7 @@ class SignUpForm extends Component<Props, State> {
         .then(() => {
           finishSubmitting();
           message.success('Successfully signed up!');
-          Router.push({
+          router.push({
             pathname: '/login',
             query: { email },
           });
@@ -111,6 +112,7 @@ class SignUpForm extends Component<Props, State> {
 }
 
 export default compose(
+  withRouter,
   withFirestore(),
   Form.create(),
 )(SignUpForm);
