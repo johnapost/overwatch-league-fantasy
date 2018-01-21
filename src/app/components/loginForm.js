@@ -6,13 +6,14 @@ import { compose } from 'redux';
 import { isLoaded } from 'react-redux-firebase';
 import { Card, Form, Button, Input, message } from 'antd';
 import Link from 'next/link';
-import Router from 'next/router';
+import { withRouter } from 'next/router';
 import withFirestore from '../shared/withFirestore';
 import hasErrors from '../shared/hasErrors';
 
 type Props = {
   firestore: Object,
-  form: Object
+  form: Object,
+  router: Object,
 }
 
 type State = {
@@ -26,7 +27,7 @@ class LoginForm extends Component<Props, State> {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { firestore, form: { validateFieldsAndScroll } } = this.props;
+    const { firestore, router, form: { validateFieldsAndScroll } } = this.props;
 
     if (!isLoaded(firestore)) {
       return;
@@ -51,7 +52,7 @@ class LoginForm extends Component<Props, State> {
         .signInWithEmailAndPassword(email, password)
         .then(() => {
           finishSubmitting();
-          Router.push('/');
+          router.push('/');
         })
         .catch(({ code, message: errorMessage }) => {
           finishSubmitting();
@@ -63,7 +64,10 @@ class LoginForm extends Component<Props, State> {
   }
 
   render() {
-    const { form: { getFieldDecorator, getFieldsError } } = this.props;
+    const {
+      form: { getFieldDecorator, getFieldsError },
+      router: { query: { email } },
+    } = this.props;
     const { submittingForm } = this.state;
     const emailValidations = [
       { required: true, message: 'Email required!' },
@@ -80,7 +84,7 @@ class LoginForm extends Component<Props, State> {
             {
               getFieldDecorator(
                 'email',
-                { rules: emailValidations },
+                { rules: emailValidations, initialValue: email },
               )(<Input placeholder="Email" />)
             }
           </Form.Item>
@@ -102,7 +106,7 @@ class LoginForm extends Component<Props, State> {
             </Button>
           </Form.Item>
           <div>
-            <Link href="/sign-up">
+            <Link prefetch href="/sign-up">
               <a>
                 Sign up for an account
               </a>
@@ -115,6 +119,7 @@ class LoginForm extends Component<Props, State> {
 }
 
 export default compose(
+  withRouter,
   withFirestore(),
   Form.create(),
 )(LoginForm);

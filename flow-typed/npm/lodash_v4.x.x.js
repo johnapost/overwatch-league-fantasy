@@ -1,5 +1,5 @@
-// flow-typed signature: 4ec6718fe549fa8effb81eee9c15770d
-// flow-typed version: 971505dcec/lodash_v4.x.x/flow_>=v0.55.x
+// flow-typed signature: ecb7b8a61ec89cf960fc7107c631a878
+// flow-typed version: 4bb4517f17/lodash_v4.x.x/flow_>=v0.63.x
 
 declare module "lodash" {
   declare type __CurriedFunction1<A, R, AA: A> = (...r: [AA]) => R;
@@ -742,8 +742,8 @@ declare module "lodash" {
     curry(func: Function, arity?: number): Function;
     curryRight(func: Function, arity?: number): Function;
     debounce<F: Function>(func: F, wait?: number, options?: DebounceOptions): F;
-    defer(func: Function, ...args?: Array<any>): number;
-    delay(func: Function, wait: number, ...args?: Array<any>): number;
+    defer(func: Function, ...args?: Array<any>): TimeoutID;
+    delay(func: Function, wait: number, ...args?: Array<any>): TimeoutID;
     flip(func: Function): Function;
     memoize<F: Function>(func: F, resolver?: Function): F;
     negate(predicate: Function): Function;
@@ -2308,9 +2308,9 @@ declare module "lodash/fp" {
     curryRightN(arity: number, func: Function): Function;
     debounce(wait: number): <F: Function>(func: F) => F;
     debounce<F: Function>(wait: number, func: F): F;
-    defer(func: Function): number;
-    delay(wait: number): (func: Function) => number;
-    delay(wait: number, func: Function): number;
+    defer(func: Function): TimeoutID;
+    delay(wait: number): (func: Function) => TimeoutID;
+    delay(wait: number, func: Function): TimeoutID;
     flip(func: Function): Function;
     memoize<F: Function>(func: F): F;
     negate(predicate: Function): Function;
