@@ -10,6 +10,7 @@ type Props = {
 }
 
 type State = {
+  emailSent: boolean,
   title: string,
   currentUser: {
     sendEmailVerification: () => Promise<*>
@@ -18,6 +19,7 @@ type State = {
 
 class VerifyAccount extends Component<Props, State> {
   state = {
+    emailSent: false,
     title: '',
     currentUser: null,
   }
@@ -38,7 +40,7 @@ class VerifyAccount extends Component<Props, State> {
   handleVerify = () => {
     if (this.state.currentUser) {
       this.state.currentUser.sendEmailVerification().then(() => {
-        message.success('Email sent, check your inbox!');
+        this.setState({ emailSent: true });
       }).catch(({ code, message: errorMessage }) => {
         message.error(errorMessage);
         // eslint-disable-next-line no-console
@@ -50,15 +52,25 @@ class VerifyAccount extends Component<Props, State> {
   render() {
     return (
       <Card title={this.state.title}>
-        Your email hasn&#39;t been verified. Please verify it to proceed.
-        <div style={{ marginTop: '10px' }}>
-          <Button
-            onClick={this.handleVerify}
-            disabled={!this.state.currentUser}
-          >
-            Send a verification email
-          </Button>
-        </div>
+        {
+          !this.state.emailSent ? (
+            <div>
+              Your email hasn&#39;t been verified. Please verify it to proceed.
+              <div style={{ marginTop: '10px' }}>
+                <Button
+                  onClick={this.handleVerify}
+                  disabled={!this.state.currentUser}
+                >
+                  Send a verification email
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              Email sent, check your inbox for an email!
+            </div>
+          )
+        }
       </Card>
     );
   }

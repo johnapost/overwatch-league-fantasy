@@ -33,6 +33,10 @@ class Index extends Component<Props, State> {
     }
 
     const auth = await firestore.auth();
+
+    // Use auth state change listener to replace below code
+    // https://firebase.google.com/docs/reference/node/firebase.auth.Auth#onAuthStateChanged
+
     const currentUser = get(auth, 'currentUser');
 
     // TODO: Fix race condition between currentUser and router.push()
