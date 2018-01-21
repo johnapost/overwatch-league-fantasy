@@ -8,7 +8,16 @@ const handle = app.getRequestHandler();
 const nextApp = https.onRequest((req, res) => {
   // eslint-disable-next-line no-console
   console.log(`File: ${req.originalUrl}`);
-  return app.prepare().then(() => handle(req, res));
+  switch (req.originalUrl) {
+    // Handle auth email actions
+    case '/auth': {
+      const { query: { mode, oobCode } } = req;
+      return app.prepare().then(() =>
+        handle(req, res, '/login', { mode, oobCode }));
+    }
+    default:
+      return app.prepare().then(() => handle(req, res));
+  }
 });
 
 // eslint-disable-next-line import/prefer-default-export
