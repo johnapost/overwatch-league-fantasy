@@ -13,6 +13,7 @@ import withFirestore from '../shared/withFirestore';
 type Props = {
   firestore: Object,
   form: Object,
+  leagueName: string,
   messages: {
     [string]: {
       id: string,
@@ -70,10 +71,10 @@ class Chat extends Component<Props, State> {
 
   render() {
     const { sendingMessage } = this.state;
-    const { messages, form: { getFieldDecorator } } = this.props;
+    const { messages, form: { getFieldDecorator }, leagueName } = this.props;
 
     return (
-      <Card>
+      <Card title={leagueName}>
         <Timeline>
           <div
             className="timeline"
@@ -110,6 +111,7 @@ class Chat extends Component<Props, State> {
 }
 
 const mapStateToProps = ({ firestore }) => ({
+  leagueName: get(firestore.data, 'leagues.first.name'),
   messages: get(firestore.data, 'leagues.first.messages'),
 });
 

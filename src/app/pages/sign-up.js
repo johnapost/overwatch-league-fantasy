@@ -12,7 +12,6 @@ const Login = () => (
     <Row>
       <Col sm={6} md={4} />
       <Col sm={12} md={16}>
-        <h1>Sign up for an account</h1>
         <div className="wrapper">
           <SignUpForm />
         </div>

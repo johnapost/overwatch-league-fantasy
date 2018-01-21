@@ -78,7 +78,7 @@ class SignUpForm extends Component<Props, State> {
     ];
 
     return (
-      <Card>
+      <Card title="Sign up for an account">
         <Form onSubmit={this.handleSubmit}>
           <Form.Item>
             {
