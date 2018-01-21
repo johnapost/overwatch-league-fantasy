@@ -23,6 +23,14 @@ class SignUpForm extends Component<Props, State> {
     submittingForm: false,
   }
 
+  componentDidMount() {
+    if (this.emailEl) {
+      this.emailEl.focus();
+    }
+  }
+
+  emailEl: ?HTMLElement = null
+
   handleSubmit = (e) => {
     e.preventDefault();
     const { firestore, form: { validateFieldsAndScroll }, router } = this.props;
@@ -85,7 +93,10 @@ class SignUpForm extends Component<Props, State> {
               getFieldDecorator(
                 'email',
                 { rules: emailValidations },
-              )(<Input placeholder="Email" />)
+              )(<Input
+                placeholder="Email"
+                ref={(el) => { this.emailEl = el; }}
+              />)
             }
           </Form.Item>
           <Form.Item>

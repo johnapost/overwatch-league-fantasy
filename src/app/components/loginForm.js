@@ -25,6 +25,14 @@ class LoginForm extends Component<Props, State> {
     submittingForm: false,
   }
 
+  componentDidMount() {
+    if (this.emailEl) {
+      this.emailEl.focus();
+    }
+  }
+
+  emailEl: ?HTMLElement = null
+
   handleSubmit = (e) => {
     e.preventDefault();
     const { firestore, router, form: { validateFieldsAndScroll } } = this.props;
@@ -58,7 +66,7 @@ class LoginForm extends Component<Props, State> {
           finishSubmitting();
           message.error(errorMessage);
           // eslint-disable-next-line no-console
-          console.error(code, message);
+          console.error(code, errorMessage);
         });
     });
   }
@@ -85,7 +93,10 @@ class LoginForm extends Component<Props, State> {
               getFieldDecorator(
                 'email',
                 { rules: emailValidations, initialValue: email },
-              )(<Input placeholder="Email" />)
+              )(<Input
+                placeholder="Email"
+                ref={(el) => { this.emailEl = el; }}
+              />)
             }
           </Form.Item>
           <Form.Item>
