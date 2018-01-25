@@ -26,28 +26,28 @@ class Index extends Component<Props, State> {
     renderVerify: false,
   }
 
-  async componentWillMount() {
-    const { firestore, router } = this.props;
-    if (!isLoaded(firestore)) {
-      return;
-    }
-
-    const auth = await firestore.auth();
-
-    // Use auth state change listener to replace below code
-    // https://firebase.google.com/docs/reference/node/firebase.auth.Auth#onAuthStateChanged
-
-    const currentUser = get(auth, 'currentUser');
-
-    // TODO: Fix race condition between currentUser and router.push()
-    if (!currentUser) {
-      router.push('/login');
-    } else if (get(currentUser, 'emailVerified')) {
-      router.push('/draft');
-    } else {
-      this.setState({ renderVerify: true });
-    }
-  }
+  // async componentWillMount() {
+  //   const { firestore, router } = this.props;
+  //   if (!isLoaded(firestore)) {
+  //     return;
+  //   }
+  //
+  //   const auth = await firestore.auth();
+  //
+  //   // Use auth state change listener to replace below code
+  //   // https://firebase.google.com/docs/reference/node/firebase.auth.Auth#onAuthStateChanged
+  //
+  //   const currentUser = get(auth, 'currentUser');
+  //
+  //   // TODO: Fix race condition between currentUser and router.push()
+  //   if (!currentUser) {
+  //     router.push('/login');
+  //   } else if (get(currentUser, 'emailVerified')) {
+  //     router.push('/draft');
+  //   } else {
+  //     this.setState({ renderVerify: true });
+  //   }
+  // }
 
   renderCard = () => {
     const { firestore } = this.props;
