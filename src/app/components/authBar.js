@@ -5,33 +5,43 @@ import { Form, Modal } from 'antd';
 import { compose } from 'redux';
 import { withRouter } from 'next/router';
 import LoginForm from './loginForm';
+import SignUpForm from './signUpForm';
 import withFirestore from '../shared/withFirestore';
 
 type State = {
+  disabled: boolean,
   showSignUpModal: boolean,
-  submittingForm: boolean
 }
 
 class AuthBar extends Component<{}, State> {
   state = {
+    disabled: false,
     showSignUpModal: false,
-    submittingForm: false,
   }
+
+  setDisabled = bool => this.setState({ disabled: bool })
+
+  hideSignUpModal = () => this.setState({ showSignUpModal: false })
 
   render() {
     return (
       <div className="container">
         <LoginForm
+          disabled={this.state.disabled || this.state.showSignUpModal}
           showSignUpModal={() => this.setState({ showSignUpModal: true })}
-          disabled={this.state.submittingForm || this.state.showSignUpModal}
+          setDisabled={this.setDisabled}
         />
         <Modal
-          okText="Sign up"
-          onCancel={() => { this.setState({ showSignUpModal: false }); }}
+          footer={null}
+          onCancel={this.hideSignUpModal}
           title="Create an account"
           visible={this.state.showSignUpModal}
         >
-          Yo
+          <SignUpForm
+            disabled={this.state.disabled}
+            hideSignUpModal={this.hideSignUpModal}
+            setDisabled={this.setDisabled}
+          />
         </Modal>
         <style jsx>{`
           .container {
