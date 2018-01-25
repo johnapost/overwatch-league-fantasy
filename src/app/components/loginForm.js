@@ -14,18 +14,11 @@ type Props = {
   firestore: Object,
   form: Object,
   router: Object,
+  setDisabled: (bool: boolean) => void,
   showSignUpModal: Function,
 }
 
-type State = {
-  submittingForm: boolean
-}
-
-class LoginForm extends Component<Props, State> {
-  state = {
-    submittingForm: false,
-  }
-
+class LoginForm extends Component<Props> {
   componentDidMount() {
     if (this.emailEl) {
       this.emailEl.focus();
@@ -36,21 +29,25 @@ class LoginForm extends Component<Props, State> {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { firestore, form: { validateFieldsAndScroll } } = this.props;
+    const {
+      firestore,
+      form: { validateFields },
+      setDisabled,
+    } = this.props;
 
     if (!isLoaded(firestore)) {
       return;
     }
 
-    this.setState({ submittingForm: true });
+    setDisabled(true);
     const closeMessage = message.loading('Logging in..', 0);
 
     const finishSubmitting = () => {
-      this.setState({ submittingForm: false });
+      setDisabled(false);
       closeMessage();
     };
 
-    validateFieldsAndScroll((err, { email, password }) => {
+    validateFields((err, { email, password }) => {
       if (err) {
         finishSubmitting();
         return;
@@ -77,17 +74,11 @@ class LoginForm extends Component<Props, State> {
       router: { query: { email } },
       showSignUpModal,
     } = this.props;
-    const { submittingForm } = this.state;
-    const emailValidations = [
-      { required: true },
-      { type: 'email' },
-    ];
-    const passwordValidations = [
-      { required: true },
-    ];
+    const emailValidations = [{ required: true }, { type: 'email' }];
+    const passwordValidations = [{ required: true }];
 
     return (
-      <Form layout="inline" onSubmit={this.handleSubmit} disabled={disabled}>
+      <Form layout="inline" onSubmit={this.handleSubmit}>
         <Form.Item help={false}>
           {
             getFieldDecorator(
@@ -111,7 +102,7 @@ class LoginForm extends Component<Props, State> {
           <Button
             type="primary"
             htmlType="submit"
-            disabled={submittingForm || hasErrors(getFieldsError())}
+            disabled={disabled || hasErrors(getFieldsError())}
           >
             Login
           </Button>
