@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "build-app": "next build src/app",
+    "build-app": "NODE_ENV=production next build src/app",
     "build-fns": "babel \"src/functions\" --out-dir \"dist/functions\"",
     "build-public": "cpx \"src/public/**/*.*\" \"dist/public\" -C && cpx \"src/app/static/**/*.*\" \"dist/public/static\"",
     "clean": "rimraf dist",
@@ -14,6 +14,7 @@
     "install-deps": "cd \"dist/functions\" && yarn",
     "sort": "sort-package-json",
     "type-check": "flow",
+    "type-coverage": "flow-coverage-report",
     "type-install": "flow-typed install"
   },
   "dependencies": {
@@ -59,8 +60,10 @@
   },
   "flow-coverage-report": {
     "concurrentFiles": 5,
-    "excludeGlob": [
-      "src/**/*.spec.js"
+    "includeGlob": [
+      "src/app/components/**/*.js",
+      "src/app/pages/**/*.js",
+      "src/app/shared/**/*.js"
     ],
     "threshold": 80
   },
