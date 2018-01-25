@@ -14,7 +14,7 @@ const nextApp = https.onRequest((req, res) => {
     case '/auth': {
       const { query: { mode, oobCode } } = req;
       return app.prepare().then(() =>
-        res.redirect(`/login?mode=${mode}&oobCode=${oobCode}`));
+        res.redirect(`/?mode=${mode}&oobCode=${oobCode}`));
     }
     default:
       return app.prepare().then(() => handle(req, res));
