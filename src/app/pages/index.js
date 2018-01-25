@@ -1,121 +1,87 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Row, Col, Form, Input, Timeline, Card } from 'antd';
+import { Row, Col, Spin, Card } from 'antd';
 import withRedux from 'next-redux-wrapper';
+import { isLoaded } from 'react-redux-firebase';
 import { compose } from 'redux';
 import get from 'lodash/get';
-import { v4 } from 'uuid';
-import firebase from 'firebase';
+import { withRouter } from 'next/router';
 import store from '../shared/store';
 import withFirestore from '../shared/withFirestore';
 import Layout from '../components/layout';
+import VerifyAccount from '../components/verifyAccount';
 
 type Props = {
   firestore: Object,
-  form: Object,
-  leagueName: string,
-  messages: {
-    [string]: {
-      id: string,
-      message: string,
-      timestamp: Date,
-    }
-  }
+  router: Object
 }
 
 type State = {
-  sendingMessage: boolean,
+  renderVerify: boolean
 }
 
 class Index extends Component<Props, State> {
   state = {
-    sendingMessage: false,
+    renderVerify: false,
   }
 
-  componentDidMount() {
-    this.scrollToLatest();
-  }
+  async componentWillMount() {
+    const { firestore, router } = this.props;
+    if (!isLoaded(firestore)) {
+      return;
+    }
 
-  componentDidUpdate({ messages: prevMessages }) {
-    if (this.props.messages !== prevMessages) {
-      this.scrollToLatest();
+    const auth = await firestore.auth();
+
+    // Use auth state change listener to replace below code
+    // https://firebase.google.com/docs/reference/node/firebase.auth.Auth#onAuthStateChanged
+
+    const currentUser = get(auth, 'currentUser');
+
+    // TODO: Fix race condition between currentUser and router.push()
+    if (!currentUser) {
+      router.push('/login');
+    } else if (get(currentUser, 'emailVerified')) {
+      router.push('/draft');
+    } else {
+      this.setState({ renderVerify: true });
     }
   }
 
-  timelineEl: ?HTMLElement = null
+  renderCard = () => {
+    const { firestore } = this.props;
+    const loading = (
+      <Card title="Loading..">
+        <Spin />
+      </Card>
+    );
 
-  scrollToLatest = () => {
-    if (this.timelineEl) {
-      this.timelineEl.scrollTop =
-        this.timelineEl.scrollHeight - this.timelineEl.offsetHeight;
+    if (!isLoaded(firestore)) {
+      return loading;
     }
-  }
 
-  sendMessage = () => {
-    const { form, firestore } = this.props;
-    const message = form.getFieldValue('message');
+    if (this.state.renderVerify) {
+      return <VerifyAccount />;
+    }
 
-    this.setState({ sendingMessage: true });
-    form.setFieldsValue({ message: '' });
-    firestore.set({
-      collection: 'leagues',
-      doc: 'first',
-      subcollections: [{ collection: 'messages', doc: v4() }],
-    }, {
-      message,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    }).then(() => {
-      this.setState({ sendingMessage: false });
-    });
+    return loading;
   }
 
   render() {
-    const { sendingMessage } = this.state;
-    const { leagueName, messages, form: { getFieldDecorator } } = this.props;
-
     return (
       <Layout>
         <Row>
           <Col sm={6} md={4} />
           <Col sm={12} md={16}>
             <div className="wrapper">
-              <Card title={leagueName}>
-                <Timeline>
-                  <div
-                    className="timeline"
-                    ref={(el) => { this.timelineEl = el; }}
-                  >
-                    {
-                      messages &&
-                      Object.keys(messages).map((key: string) => (
-                        <Timeline.Item>{messages[key].message}</Timeline.Item>
-                      ))
-                    }
-                  </div>
-                </Timeline>
-                <Form>
-                  {
-                    getFieldDecorator('message')(<Input
-                      addonBefore="Draft Chat"
-                      onPressEnter={
-                        sendingMessage ? () => {} : this.sendMessage
-                      }
-                    />)
-                  }
-                </Form>
-              </Card>
+              {this.renderCard()}
             </div>
           </Col>
         </Row>
         <style jsx>{`
           .wrapper {
-            margin-top: 50px;
-          }
-
-          .timeline {
-            max-height: 300px;
-            overflow-y: scroll;
+            margin: 50px 0;
           }
         `}
         </style>
@@ -124,24 +90,9 @@ class Index extends Component<Props, State> {
   }
 }
 
+
 export default compose(
-  withRedux(
-    store,
-    ({ firestore }) => ({
-      leagueName: get(firestore.data, 'leagues.first.name'),
-      messages: get(firestore.data, 'leagues.first.messages'),
-    }),
-  ),
-  withFirestore(() => [
-    {
-      collection: 'leagues',
-      doc: 'first',
-    },
-    {
-      collection: 'leagues',
-      doc: 'first',
-      subcollections: [{ collection: 'messages', orderBy: ['timestamp'] }],
-    },
-  ]),
-  Form.create(),
+  withRouter,
+  withRedux(store),
+  withFirestore(),
 )(Index);
