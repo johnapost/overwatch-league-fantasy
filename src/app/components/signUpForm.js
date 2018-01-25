@@ -44,9 +44,8 @@ class SignUpForm extends Component<Props> {
         return;
       }
 
-      firestore
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
+      firestore.auth().createUserWithEmailAndPassword(email, password)
+        .then(user => user.sendEmailVerification())
         .then(() => {
           finishSubmitting();
           message.success('Successfully signed up!');
