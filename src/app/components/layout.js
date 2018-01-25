@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Head from 'next/head';
 import Footer from './footer';
+import AuthBar from './authBar';
 
 type Props = {
   children: React.Node,
@@ -19,6 +20,7 @@ const Layout = ({ children, title }: Props) => (
       <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" />
       <link rel="stylesheet" href="https://unpkg.com/antd@3/dist/antd.min.css" />
     </Head>
+    <AuthBar />
     <main>
       {children}
     </main>
