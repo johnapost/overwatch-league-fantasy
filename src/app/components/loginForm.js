@@ -4,27 +4,21 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { isLoaded } from 'react-redux-firebase';
-import { Card, Form, Button, Input, message } from 'antd';
-import Link from 'next/link';
+import { Form, Button, Input, message } from 'antd';
 import { withRouter } from 'next/router';
 import withFirestore from '../shared/withFirestore';
 import hasErrors from '../shared/hasErrors';
 
 type Props = {
+  disabled: boolean,
   firestore: Object,
   form: Object,
   router: Object,
+  setDisabled: (bool: boolean) => void,
+  showSignUpModal: Function,
 }
 
-type State = {
-  submittingForm: boolean
-}
-
-class LoginForm extends Component<Props, State> {
-  state = {
-    submittingForm: false,
-  }
-
+class LoginForm extends Component<Props> {
   componentDidMount() {
     if (this.emailEl) {
       this.emailEl.focus();
@@ -35,21 +29,25 @@ class LoginForm extends Component<Props, State> {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { firestore, router, form: { validateFieldsAndScroll } } = this.props;
+    const {
+      firestore,
+      form: { validateFields },
+      setDisabled,
+    } = this.props;
 
     if (!isLoaded(firestore)) {
       return;
     }
 
-    this.setState({ submittingForm: true });
+    setDisabled(true);
     const closeMessage = message.loading('Logging in..', 0);
 
     const finishSubmitting = () => {
-      this.setState({ submittingForm: false });
+      setDisabled(false);
       closeMessage();
     };
 
-    validateFieldsAndScroll((err, { email, password }) => {
+    validateFields((err, { email, password }) => {
       if (err) {
         finishSubmitting();
         return;
@@ -58,73 +56,66 @@ class LoginForm extends Component<Props, State> {
       firestore
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(() => {
-          finishSubmitting();
-          router.push('/');
-        })
         .catch(({ code, message: errorMessage }) => {
-          finishSubmitting();
           message.error(errorMessage);
           // eslint-disable-next-line no-console
           console.error(code, errorMessage);
+        })
+        .then(() => {
+          finishSubmitting();
         });
     });
   }
 
   render() {
     const {
+      disabled,
       form: { getFieldDecorator, getFieldsError },
       router: { query: { email } },
+      showSignUpModal,
     } = this.props;
-    const { submittingForm } = this.state;
-    const emailValidations = [
-      { required: true, message: 'Email required!' },
-      { type: 'email', message: 'Invalid email!' },
-    ];
-    const passwordValidations = [
-      { required: true, message: 'Password required!' },
-    ];
+    const emailValidations = [{ required: true }, { type: 'email' }];
+    const passwordValidations = [{ required: true }];
 
     return (
-      <Card title="Login to your account">
-        <Form onSubmit={this.handleSubmit}>
-          <Form.Item>
-            {
-              getFieldDecorator(
-                'email',
-                { rules: emailValidations, initialValue: email },
-              )(<Input
-                placeholder="Email"
-                ref={(el) => { this.emailEl = el; }}
-              />)
-            }
-          </Form.Item>
-          <Form.Item>
-            {
-              getFieldDecorator(
-                'password',
-                { rules: passwordValidations },
-              )(<Input placeholder="Password" type="password" />)
-            }
-          </Form.Item>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={submittingForm || hasErrors(getFieldsError())}
-            >
-              Login
-            </Button>
-          </Form.Item>
-          <div>
-            <Link prefetch href="/sign-up">
-              <a>
-                Sign up for an account
-              </a>
-            </Link>
-          </div>
-        </Form>
-      </Card>
+      <Form layout="inline" onSubmit={this.handleSubmit}>
+        <Form.Item help={false}>
+          {
+            getFieldDecorator(
+              'email',
+              { rules: emailValidations, initialValue: email },
+            )(<Input
+              placeholder="Email"
+              ref={(el) => { this.emailEl = el; }}
+            />)
+          }
+        </Form.Item>
+        <Form.Item help={false}>
+          {
+            getFieldDecorator(
+              'password',
+              { rules: passwordValidations },
+            )(<Input placeholder="Password" type="password" />)
+          }
+        </Form.Item>
+        <Form.Item help={false}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={disabled || hasErrors(getFieldsError())}
+          >
+            Login
+          </Button>
+        </Form.Item>
+        <Form.Item help={false}>
+          <Button
+            type="secondary"
+            onClick={showSignUpModal}
+          >
+            Sign up
+          </Button>
+        </Form.Item>
+      </Form>
     );
   }
 }
