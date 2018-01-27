@@ -29,11 +29,6 @@ class AuthBar extends Component<Props, State> {
   async componentDidMount() {
     const { firestore, router: { query: { mode, oobCode }, push } } = this.props;
 
-    if (mode === 'verifyEmail' && oobCode) {
-      const closeMessage = message.loading('Verifying email..', 0);
-      this.verifyEmail(oobCode, closeMessage);
-    }
-
     // Add auth change listener
     const auth = await firestore.auth();
     this.authObserver = auth.onAuthStateChanged((user) => {
@@ -46,6 +41,11 @@ class AuthBar extends Component<Props, State> {
       this.setState({ loggedIn: false });
       return push('/');
     });
+
+    if (mode === 'verifyEmail' && oobCode) {
+      const closeMessage = message.loading('Verifying email..', 0);
+      this.verifyEmail(oobCode, closeMessage);
+    }
   }
 
   componentWillUnmount() {
@@ -69,12 +69,17 @@ class AuthBar extends Component<Props, State> {
         }, {
           displayName: null,
         })
-      )).catch(({ code, message: errorMessage }) => {
+      ))
+      .then(() => {
+        // Issues with nextjs reload, force a reload with this instead
+        window.location = window.location.pathname;
+      })
+      .catch(({ code, message: errorMessage }) => {
         message.error(errorMessage);
         // eslint-disable-next-line no-console
         console.error(code, message);
-      }).then(() => {
-        // If this fails, the user should still be creatable
+      })
+      .then(() => {
         closeMessage();
       });
   }
