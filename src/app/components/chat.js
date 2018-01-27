@@ -82,6 +82,7 @@ class Chat extends Component<Props, State> {
           >
             {
               isLoaded(messages) &&
+              messages &&
               Object.keys(messages).map((key: string) => (
                 <Timeline.Item key={key}>{messages[key].message}</Timeline.Item>
               ))

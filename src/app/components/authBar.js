@@ -15,17 +15,19 @@ type Props = {
 
 type State = {
   disabled: boolean,
+  loggedIn: boolean,
   showSignUpModal: boolean,
 }
 
 class AuthBar extends Component<Props, State> {
   state = {
     disabled: false,
+    loggedIn: false,
     showSignUpModal: false,
   }
 
-  componentDidMount() {
-    const { router: { query: { mode, oobCode } } } = this.props;
+  async componentDidMount() {
+    const { firestore, router: { query: { mode, oobCode }, push } } = this.props;
 
     if (mode === 'verifyEmail' && oobCode) {
       const closeMessage = message.loading('Verifying email..', 0);
@@ -33,22 +35,46 @@ class AuthBar extends Component<Props, State> {
     }
 
     // Add auth change listener
+    const auth = await firestore.auth();
+    this.authObserver = auth.onAuthStateChanged((user) => {
+      // TODO: Create a user resource if it does not exist
+      // TODO: Handle logged in and not verified
+      if (user && user.emailVerified) {
+        this.setState({ loggedIn: true });
+        return push('/draft');
+      }
+      this.setState({ loggedIn: false });
+      return push('/');
+    });
+  }
 
-    // logged in and verified
-    // route to draft chat
+  componentWillUnmount() {
+    if (this.authObserver) {
+      this.authObserver();
+    }
   }
 
   setDisabled = bool => this.setState({ disabled: bool })
+
+  authObserver = null
 
   verifyEmail = async (oobCode: string, closeMessage: Function) => {
     const { firestore } = this.props;
     const auth = await firestore.auth();
     auth.applyActionCode(oobCode)
-      .catch(({ code, message: errorMessage }) => {
+      .then(() => (
+        firestore.set({
+          collection: 'user',
+          doc: auth.currentUser.uid,
+        }, {
+          displayName: null,
+        })
+      )).catch(({ code, message: errorMessage }) => {
         message.error(errorMessage);
         // eslint-disable-next-line no-console
         console.error(code, message);
       }).then(() => {
+        // If this fails, the user should still be creatable
         closeMessage();
       });
   }
@@ -56,8 +82,14 @@ class AuthBar extends Component<Props, State> {
   hideSignUpModal = () => this.setState({ showSignUpModal: false })
 
   render() {
-    return (
-      <div className="container">
+    const renderLoggedIn = (
+      <div>
+        yolo
+      </div>
+    );
+
+    const renderLoggedOut = (
+      <div>
         {/* TODO: Handle resending verification email */}
         {/* TODO: Handle resetting password */}
         <LoginForm
@@ -77,11 +109,27 @@ class AuthBar extends Component<Props, State> {
             setDisabled={this.setDisabled}
           />
         </Modal>
+      </div>
+    );
+
+    return (
+      <div className="container">
+        {
+          this.state.loggedIn ?
+          renderLoggedIn :
+          renderLoggedOut
+        }
         <style jsx>{`
           .container {
+            background: #FFFFFF;
             display: flex;
+            height: 59px;
             justify-content: flex-end;
-            margin: 10px;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            width: 100vw;
+            z-index: 100;
           }
         `}
         </style>

@@ -20,20 +20,31 @@ const Layout = ({ children, title }: Props) => (
       <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" />
       <link rel="stylesheet" href="https://unpkg.com/antd@3/dist/antd.min.css" />
     </Head>
-    <AuthBar />
-    <main>
-      {children}
-    </main>
+    <div className="container">
+      <header>
+        <AuthBar />
+      </header>
+      <main>
+        {children}
+      </main>
+    </div>
     <Footer />
     <style jsx>{`
-      main {
+      .container {
         background-image: url(static/diamond_upholstery.png);
         background-attachment: fixed;
+      }
+
+      header {
+        height: 59px;
+      }
+
+      main {
         min-height: 100vh;
       }
 
       @media (min-device-pixel-ratio: 2) {
-        main {
+        .container {
           background-image: url(static/diamond_upholstery_@2x.png);
         }
       }
