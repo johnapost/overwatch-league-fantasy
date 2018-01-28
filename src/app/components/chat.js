@@ -4,21 +4,25 @@ import React, { Component } from 'react';
 import { Input, Timeline, Card, Form } from 'antd';
 import uuid from 'uuid/v4';
 import get from 'lodash/get';
-import firebase from 'firebase';
+import firebaseDep from 'firebase';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { isLoaded } from 'react-redux-firebase';
 import withFirestore from '../shared/withFirestore';
 
 type Props = {
+  firebase: Object,
   firestore: Object,
   form: Object,
   leagueName: string,
+  user: Object,
+  uid: string,
   messages: {
     [string]: {
       id: string,
       message: string,
       timestamp: Date,
+      user: Object
     }
   }
 }
@@ -52,7 +56,12 @@ class Chat extends Component<Props, State> {
   }
 
   sendMessage = () => {
-    const { form: { getFieldsValue, setFieldsValue }, firestore } = this.props;
+    const {
+      form: { getFieldsValue, setFieldsValue },
+      firebase,
+      firestore,
+      uid,
+    } = this.props;
     const { message } = getFieldsValue();
 
     this.setState({ sendingMessage: true });
@@ -63,7 +72,8 @@ class Chat extends Component<Props, State> {
       subcollections: [{ collection: 'messages', doc: uuid() }],
     }, {
       message,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      user: firebase.firestore().doc(`users/${uid}`),
+      timestamp: firebaseDep.firestore.FieldValue.serverTimestamp(),
     }).then(() => {
       this.setState({ sendingMessage: false });
     });
@@ -111,17 +121,22 @@ class Chat extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = ({ firestore }) => ({
+const mapStateToProps = ({ firestore, user: { uid } }) => ({
   leagueName: get(firestore.data, 'leagues.first.name'),
   messages: get(firestore.data, 'leagues.first.messages'),
+  user: get(firestore.data, `users.${uid}`),
+  uid,
 });
 
 export default compose(
   connect(mapStateToProps, () => ({})),
-  withFirestore(() => [{
+  withFirestore(({ uid }) => [{
     collection: 'leagues',
     doc: 'first',
     subcollections: [{ collection: 'messages', orderBy: ['timestamp'] }],
+  }, {
+    collection: 'users',
+    doc: uid,
   }]),
   Form.create(),
 )(Chat);
