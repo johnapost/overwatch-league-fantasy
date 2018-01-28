@@ -3,14 +3,18 @@
 import React, { Component } from 'react';
 import { Form, Modal, message } from 'antd';
 import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { withRouter } from 'next/router';
+import { userLogin, userLogout } from '../redux/user';
 import LoginForm from './loginForm';
 import SignUpForm from './signUpForm';
 import withFirestore from '../shared/withFirestore';
 
 type Props = {
   firestore: Object,
-  router: Object
+  router: Object,
+  login: (user: Object) => void,
+  logout: Function
 }
 
 type State = {
@@ -27,18 +31,25 @@ class AuthBar extends Component<Props, State> {
   }
 
   async componentDidMount() {
-    const { firestore, router: { query: { mode, oobCode }, push } } = this.props;
+    const {
+      firestore,
+      router: { query: { mode, oobCode }, push },
+      login,
+      logout,
+    } = this.props;
 
     // Add auth change listener
     const auth = await firestore.auth();
     this.authObserver = auth.onAuthStateChanged((user) => {
       // TODO: Create a user resource if it does not exist
       // TODO: Handle logged in and not verified
-      if (user && user.emailVerified) {
+      if (user && user.emailVerified && user.uid) {
         this.setState({ loggedIn: true });
+        login(user.uid);
         return push('/draft');
       }
       this.setState({ loggedIn: false });
+      logout();
       return push('/');
     });
 
@@ -64,7 +75,7 @@ class AuthBar extends Component<Props, State> {
     auth.applyActionCode(oobCode)
       .then(() => (
         firestore.set({
-          collection: 'user',
+          collection: 'users',
           doc: auth.currentUser.uid,
         }, {
           displayName: null,
@@ -143,7 +154,10 @@ class AuthBar extends Component<Props, State> {
   }
 }
 
+const mapDispatchToProps = { login: userLogin, logout: userLogout };
+
 export default compose(
+  connect(() => ({}), mapDispatchToProps),
   withRouter,
   withFirestore(),
   Form.create(),
