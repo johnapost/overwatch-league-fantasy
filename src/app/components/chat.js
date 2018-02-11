@@ -4,21 +4,26 @@ import React, { Component } from 'react';
 import { Input, Timeline, Card, Form } from 'antd';
 import uuid from 'uuid/v4';
 import get from 'lodash/get';
-import firebase from 'firebase';
+import firebaseDep from 'firebase';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { isLoaded } from 'react-redux-firebase';
 import withFirestore from '../shared/withFirestore';
 
 type Props = {
+  firebase: Object,
   firestore: Object,
   form: Object,
   leagueName: string,
+  uniqueUserIds: string[] | null,
+  user: Object,
   messages: {
     [string]: {
-      id: string,
-      message: string,
+      message: any,
       timestamp: Date,
+      user: Object,
+      userId: string,
+      userName: string
     }
   }
 }
@@ -36,11 +41,27 @@ class Chat extends Component<Props, State> {
     this.scrollToLatest();
   }
 
+  componentWillReceiveProps({ uniqueUserIds: nextIds }) {
+    if (!this.props.uniqueUserIds && nextIds) {
+      this.setUserListeners(nextIds);
+    } else if (nextIds) {
+      this.setUserListeners(nextIds.filter(id => (
+        this.props.uniqueUserIds && !this.props.uniqueUserIds.includes(id)
+      )));
+    }
+  }
+
   componentDidUpdate({ messages: prevMessages }) {
     if (this.props.messages !== prevMessages) {
       this.scrollToLatest();
     }
   }
+
+  setUserListeners = (ids) => {
+    this.props.firestore.setListeners(ids.map(id => ({
+      collection: 'users', doc: id,
+    })));
+  };
 
   timelineEl: ?HTMLElement = null
 
@@ -52,7 +73,12 @@ class Chat extends Component<Props, State> {
   }
 
   sendMessage = () => {
-    const { form: { getFieldsValue, setFieldsValue }, firestore } = this.props;
+    const {
+      form: { getFieldsValue, setFieldsValue },
+      firebase,
+      firestore,
+      user,
+    } = this.props;
     const { message } = getFieldsValue();
 
     this.setState({ sendingMessage: true });
@@ -63,7 +89,9 @@ class Chat extends Component<Props, State> {
       subcollections: [{ collection: 'messages', doc: uuid() }],
     }, {
       message,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      userRef: firebase.firestore().doc(`users/${user.uid}`),
+      userId: user.uid,
+      timestamp: firebaseDep.firestore.FieldValue.serverTimestamp(),
     }).then(() => {
       this.setState({ sendingMessage: false });
     });
@@ -71,7 +99,19 @@ class Chat extends Component<Props, State> {
 
   render() {
     const { sendingMessage } = this.state;
-    const { messages, form: { getFieldDecorator }, leagueName } = this.props;
+    const {
+      messages,
+      form: { getFieldDecorator },
+      leagueName,
+      user: { displayName },
+    } = this.props;
+
+    const chat = (
+      getFieldDecorator('message')(<Input
+        addonBefore="Draft Chat"
+        onPressEnter={sendingMessage ? () => {} : this.sendMessage}
+      />)
+    );
 
     return (
       <Card title={leagueName}>
@@ -82,25 +122,21 @@ class Chat extends Component<Props, State> {
           >
             {
               isLoaded(messages) &&
-              Object.keys(messages).map((key: string) => (
-                <Timeline.Item key={key}>{messages[key].message}</Timeline.Item>
+              messages &&
+              Object.keys(messages).map(key => (
+                <Timeline.Item key={key}>
+                  {`${messages[key].userName} - ${messages[key].message}`}
+                </Timeline.Item>
               ))
             }
           </div>
         </Timeline>
         <Form>
-          {
-            getFieldDecorator('message')(<Input
-              addonBefore="Draft Chat"
-              onPressEnter={
-                sendingMessage ? () => {} : this.sendMessage
-              }
-            />)
-          }
+          {displayName && chat}
         </Form>
         <style jsx>{`
           .timeline {
-            max-height: 300px;
+            height: 300px;
             overflow-y: scroll;
           }
         `}
@@ -110,17 +146,45 @@ class Chat extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = ({ firestore }) => ({
-  leagueName: get(firestore.data, 'leagues.first.name'),
-  messages: get(firestore.data, 'leagues.first.messages'),
-});
+const mapMessagesToUsers = (users: Object, messages: Object) =>
+  // eslint-disable-next-line no-unused-vars
+  messages && Object.entries(messages).map(([key, values]) => ({
+    ...values,
+    // $FlowFixMe
+    userName: get(users, `${values.userId}.displayName`),
+  }));
+
+const filterUniqueUserIds = (messages: Object) =>
+  messages &&
+  [
+    ...new Set(Object.values(messages)
+      // $FlowFixMe
+      .map(({ userId }) => userId)),
+  ];
+
+const mapStateToProps = ({ firestore, user: { uid } }) => {
+  const rawMessages = get(firestore.data, 'leagues.first.messages');
+
+  return {
+    leagueName: get(firestore.data, 'leagues.first.name'),
+    messages: mapMessagesToUsers(firestore.data.users, rawMessages),
+    uniqueUserIds: filterUniqueUserIds(rawMessages),
+    user: {
+      ...get(firestore.data, `users.${uid}`),
+      uid,
+    },
+  };
+};
 
 export default compose(
   connect(mapStateToProps, () => ({})),
-  withFirestore(() => [{
+  withFirestore(({ user: { uid } }) => [{
     collection: 'leagues',
     doc: 'first',
     subcollections: [{ collection: 'messages', orderBy: ['timestamp'] }],
+  }, {
+    collection: 'users',
+    doc: uid,
   }]),
   Form.create(),
 )(Chat);
