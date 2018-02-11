@@ -29,9 +29,9 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
-    "react-redux-firebase": "^2.0.0",
+    "react-redux-firebase": "^2.0.4",
     "redux": "^3.7.2",
-    "redux-firestore": "^0.2.5",
+    "redux-firestore": "^0.2.8",
     "styled-jsx": "^2.2.1",
     "uuid": "^3.1.0"
   },

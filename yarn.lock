@@ -7901,9 +7901,9 @@ react-proxy@^3.0.0-alpha.0:
   dependencies:
     lodash "^4.6.1"
 
-react-redux-firebase@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-redux-firebase/-/react-redux-firebase-2.0.0.tgz#e26db2dcc4b270971d665387aaba4d7deaefe449"
+react-redux-firebase@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-redux-firebase/-/react-redux-firebase-2.0.4.tgz#12846c9a8deba7a66d8261d1cb3886f0056b4ee4"
   dependencies:
     hoist-non-react-statics "^2.3.1"
     lodash "^4.17.4"
@@ -8079,9 +8079,9 @@ redent@^1.0.0:
     indent-string "^2.1.0"
     strip-indent "^1.0.1"
 
-redux-firestore@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/redux-firestore/-/redux-firestore-0.2.5.tgz#c0c5ffdbb8759b2a3f61d7df48d61e29d9195377"
+redux-firestore@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/redux-firestore/-/redux-firestore-0.2.8.tgz#05712b372e186aae83dcee8b586a8d4e6903508c"
   dependencies:
     lodash "^4.17.4"
     prop-types "^15.6.0"
