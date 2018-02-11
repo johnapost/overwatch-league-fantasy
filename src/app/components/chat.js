@@ -15,14 +15,15 @@ type Props = {
   firestore: Object,
   form: Object,
   leagueName: string,
+  uniqueUserIds: string[] | null,
   user: Object,
-  uid: string,
   messages: {
     [string]: {
-      id: string,
-      message: string,
+      message: any,
       timestamp: Date,
-      user: Object
+      user: Object,
+      userId: string,
+      userName: string
     }
   }
 }
@@ -40,11 +41,27 @@ class Chat extends Component<Props, State> {
     this.scrollToLatest();
   }
 
+  componentWillReceiveProps({ uniqueUserIds: nextIds }) {
+    if (!this.props.uniqueUserIds && nextIds) {
+      this.setUserListeners(nextIds);
+    } else if (nextIds) {
+      this.setUserListeners(nextIds.filter(id => (
+        this.props.uniqueUserIds && !this.props.uniqueUserIds.includes(id)
+      )));
+    }
+  }
+
   componentDidUpdate({ messages: prevMessages }) {
     if (this.props.messages !== prevMessages) {
       this.scrollToLatest();
     }
   }
+
+  setUserListeners = (ids) => {
+    this.props.firestore.setListeners(ids.map(id => ({
+      collection: 'users', doc: id,
+    })));
+  };
 
   timelineEl: ?HTMLElement = null
 
@@ -60,7 +77,7 @@ class Chat extends Component<Props, State> {
       form: { getFieldsValue, setFieldsValue },
       firebase,
       firestore,
-      uid,
+      user,
     } = this.props;
     const { message } = getFieldsValue();
 
@@ -72,7 +89,8 @@ class Chat extends Component<Props, State> {
       subcollections: [{ collection: 'messages', doc: uuid() }],
     }, {
       message,
-      user: firebase.firestore().doc(`users/${uid}`),
+      userRef: firebase.firestore().doc(`users/${user.uid}`),
+      userId: user.uid,
       timestamp: firebaseDep.firestore.FieldValue.serverTimestamp(),
     }).then(() => {
       this.setState({ sendingMessage: false });
@@ -93,9 +111,11 @@ class Chat extends Component<Props, State> {
             {
               isLoaded(messages) &&
               messages &&
-              Object.keys(messages).map((key: string) => (
-                <Timeline.Item key={key}>{messages[key].message}</Timeline.Item>
-              ))
+              Object.keys(messages).map(key => (
+                <Timeline.Item key={key}>
+                  {`${messages[key].userName} - ${messages[key].message}`}
+                </Timeline.Item>
+                ))
             }
           </div>
         </Timeline>
@@ -103,9 +123,7 @@ class Chat extends Component<Props, State> {
           {
             getFieldDecorator('message')(<Input
               addonBefore="Draft Chat"
-              onPressEnter={
-                sendingMessage ? () => {} : this.sendMessage
-              }
+              onPressEnter={sendingMessage ? () => {} : this.sendMessage}
             />)
           }
         </Form>
@@ -121,16 +139,39 @@ class Chat extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = ({ firestore, user: { uid } }) => ({
-  leagueName: get(firestore.data, 'leagues.first.name'),
-  messages: get(firestore.data, 'leagues.first.messages'),
-  user: get(firestore.data, `users.${uid}`),
-  uid,
-});
+const mapMessagesToUsers = (users: Object, messages: Object) =>
+  // eslint-disable-next-line no-unused-vars
+  messages && Object.entries(messages).map(([key, values]) => ({
+    ...values,
+    // $FlowFixMe
+    userName: get(users[values.userId], 'displayName'),
+  }));
+
+const filterUniqueUserIds = (messages: Object) =>
+  messages &&
+  [
+    ...new Set(Object.values(messages)
+      // $FlowFixMe
+      .map(({ userId }) => userId)),
+  ];
+
+const mapStateToProps = ({ firestore, user: { uid } }) => {
+  const rawMessages = get(firestore.data, 'leagues.first.messages');
+
+  return {
+    leagueName: get(firestore.data, 'leagues.first.name'),
+    messages: mapMessagesToUsers(firestore.data.users, rawMessages),
+    uniqueUserIds: filterUniqueUserIds(rawMessages),
+    user: {
+      ...get(firestore.data, `users.${uid}`),
+      uid,
+    },
+  };
+};
 
 export default compose(
   connect(mapStateToProps, () => ({})),
-  withFirestore(({ uid }) => [{
+  withFirestore(({ user: { uid } }) => [{
     collection: 'leagues',
     doc: 'first',
     subcollections: [{ collection: 'messages', orderBy: ['timestamp'] }],
