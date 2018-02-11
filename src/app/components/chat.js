@@ -111,7 +111,7 @@ class Chat extends Component<Props, State> {
         </Form>
         <style jsx>{`
           .timeline {
-            max-height: 300px;
+            height: 300px;
             overflow-y: scroll;
           }
         `}

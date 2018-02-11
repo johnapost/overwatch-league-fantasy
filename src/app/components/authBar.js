@@ -8,6 +8,7 @@ import { withRouter } from 'next/router';
 import { userLogin, userLogout } from '../redux/user';
 import LoginForm from './loginForm';
 import SignUpForm from './signUpForm';
+import ProfileMenu from './profileMenu';
 import withFirestore from '../shared/withFirestore';
 
 type Props = {
@@ -98,12 +99,6 @@ class AuthBar extends Component<Props, State> {
   hideSignUpModal = () => this.setState({ showSignUpModal: false })
 
   render() {
-    const renderLoggedIn = (
-      <div>
-        yolo
-      </div>
-    );
-
     const renderLoggedOut = (
       <div>
         {/* TODO: Handle resending verification email */}
@@ -132,12 +127,12 @@ class AuthBar extends Component<Props, State> {
       <div className="container">
         {
           this.state.loggedIn ?
-          renderLoggedIn :
+            <ProfileMenu /> :
           renderLoggedOut
         }
         <style jsx>{`
           .container {
-            background: #FFFFFF;
+            background: ${this.state.loggedIn ? 'transparent' : '#FFFFFF'};
             display: flex;
             height: 59px;
             justify-content: flex-end;
