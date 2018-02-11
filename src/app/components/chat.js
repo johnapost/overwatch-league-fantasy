@@ -151,7 +151,7 @@ const mapMessagesToUsers = (users: Object, messages: Object) =>
   messages && Object.entries(messages).map(([key, values]) => ({
     ...values,
     // $FlowFixMe
-    userName: get(users[values.userId], 'displayName'),
+    userName: get(users, `${values.userId}.displayName`),
   }));
 
 const filterUniqueUserIds = (messages: Object) =>

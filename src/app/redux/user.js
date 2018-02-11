@@ -16,8 +16,10 @@ type UserLogout = {
 }
 
 type UserSetName = {
-  type: 'SET_NAME',
-  displayName: string
+  type: '@@reactReduxFirebase/SET_PROFILE',
+  profile: {
+    displayName: string
+  }
 }
 
 type UserAction = UserLogin | UserLogout | UserSetName
@@ -32,10 +34,6 @@ export const userLogout = (): UserLogout => ({
   type: 'LOGOUT',
 });
 
-export const userSetName = (displayName: string): UserSetName => ({
-  type: 'SET_NAME', displayName,
-});
-
 // Reducer
 const defaultState = { uid: null, displayName: null };
 
@@ -46,7 +44,7 @@ export default (
   switch (action.type) {
     case 'LOGIN': return { ...state, uid: action.uid };
     case 'LOGOUT': return defaultState;
-    case 'SET_NAME': return { ...state, displayName: action.displayName };
+    case '@@reactReduxFirebase/SET_PROFILE': return { ...state, displayName: action.profile.displayName };
     default: return state;
   }
 };
