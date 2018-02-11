@@ -3,7 +3,7 @@
 import React from 'react';
 import { Row, Col, Card } from 'antd';
 import withRedux from 'next-redux-wrapper';
-import store from '../shared/store';
+import store from '../shared/makeStore';
 import Layout from '../components/layout';
 
 const Index = () => (

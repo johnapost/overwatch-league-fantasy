@@ -21,8 +21,9 @@ class SignUpForm extends Component<Props> {
     e.preventDefault();
     const {
       firestore,
-      form: { validateFields }, setDisabled,
+      form: { validateFields },
       hideSignUpModal,
+      setDisabled,
     } = this.props;
 
     if (!isLoaded(firestore)) {
@@ -52,6 +53,7 @@ class SignUpForm extends Component<Props> {
         })
         .catch(({ code, message: errorMessage }) => {
           finishSubmitting();
+          // TODO: Handle if the user already exists, maybe reset password?
           message.error(errorMessage);
           // eslint-disable-next-line no-console
           console.error(code, message);

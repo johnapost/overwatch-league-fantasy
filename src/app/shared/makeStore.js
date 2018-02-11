@@ -5,6 +5,7 @@ import { reactReduxFirebase } from 'react-redux-firebase';
 import { reduxFirestore, firestoreReducer } from 'redux-firestore';
 import firebase from 'firebase';
 import 'firebase/firestore';
+import user from '../redux/user';
 import { apiKey, authDomain, projectId } from '../secrets';
 
 // Firebase setup
@@ -12,7 +13,10 @@ const firebaseConfig = { apiKey, authDomain, projectId };
 const rrfConfig = { userProfile: 'users', useFirestoreForProfile: true };
 
 // Redux setup
-const reducers = combineReducers({ firestore: firestoreReducer });
+const reducers = combineReducers({
+  firestore: firestoreReducer,
+  user,
+});
 
 let enhancers;
 
