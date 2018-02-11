@@ -21,8 +21,9 @@ class SignUpForm extends Component<Props> {
     e.preventDefault();
     const {
       firestore,
-      form: { validateFields }, setDisabled,
+      form: { validateFields },
       hideSignUpModal,
+      setDisabled,
     } = this.props;
 
     if (!isLoaded(firestore)) {
