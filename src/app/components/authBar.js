@@ -125,11 +125,7 @@ class AuthBar extends Component<Props, State> {
 
     return (
       <div className="container">
-        {
-          this.state.loggedIn ?
-            <ProfileMenu /> :
-          renderLoggedOut
-        }
+        {this.state.loggedIn ? <ProfileMenu /> : renderLoggedOut}
         <style jsx>{`
           .container {
             background: ${this.state.loggedIn ? 'transparent' : '#FFFFFF'};
