@@ -115,7 +115,7 @@ class Chat extends Component<Props, State> {
                 <Timeline.Item key={key}>
                   {`${messages[key].userName} - ${messages[key].message}`}
                 </Timeline.Item>
-                ))
+              ))
             }
           </div>
         </Timeline>
