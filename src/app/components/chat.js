@@ -99,7 +99,19 @@ class Chat extends Component<Props, State> {
 
   render() {
     const { sendingMessage } = this.state;
-    const { messages, form: { getFieldDecorator }, leagueName } = this.props;
+    const {
+      messages,
+      form: { getFieldDecorator },
+      leagueName,
+      user: { displayName },
+    } = this.props;
+
+    const chat = (
+      getFieldDecorator('message')(<Input
+        addonBefore="Draft Chat"
+        onPressEnter={sendingMessage ? () => {} : this.sendMessage}
+      />)
+    );
 
     return (
       <Card title={leagueName}>
@@ -120,12 +132,7 @@ class Chat extends Component<Props, State> {
           </div>
         </Timeline>
         <Form>
-          {
-            getFieldDecorator('message')(<Input
-              addonBefore="Draft Chat"
-              onPressEnter={sendingMessage ? () => {} : this.sendMessage}
-            />)
-          }
+          {displayName && chat}
         </Form>
         <style jsx>{`
           .timeline {
