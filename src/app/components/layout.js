@@ -70,5 +70,4 @@ Layout.defaultProps = {
   title: 'Overwatch League Fantasy',
 };
 
-
 export default Layout;
