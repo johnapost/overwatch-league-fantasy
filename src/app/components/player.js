@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-import { Card } from 'antd';
 
 type Props = {
   givenName: string,
@@ -15,9 +14,10 @@ type Props = {
 
 export default ({ headshot, name }: Props) => (
   <div className="container">
-    <Card cover={<img src={headshot} alt={name} />} />
+    <img src={headshot} alt={name} title={name} />
     <style jsx>{`
       .container {
+        margin: 10px;
         max-width: 300px;
       }
     `}
