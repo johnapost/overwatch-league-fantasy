@@ -6,10 +6,16 @@
   },
   "extends": [
     "airbnb",
-    "plugin:flowtype/recommended"
+    "plugin:flowtype/recommended",
+    "plugin:prettier/recommended",
+    "prettier",
+    "prettier/flowtype",
+    "prettier/react"
   ],
   "plugins": [
-    "flowtype"
+    "flowtype",
+    "react",
+    "prettier"
   ],
   "rules": {
     "react/jsx-filename-extension": [
