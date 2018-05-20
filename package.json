@@ -14,7 +14,6 @@
     "install-deps": "cd \"dist/functions\" && yarn",
     "sort": "sort-package-json",
     "type-check": "flow",
-    "type-coverage": "flow-coverage-report",
     "type-install": "flow-typed install"
   },
   "dependencies": {
@@ -59,15 +58,6 @@
     "prettier": "^1.12.1",
     "rimraf": "^2.6.2",
     "sort-package-json": "^1.7.1"
-  },
-  "flow-coverage-report": {
-    "concurrentFiles": 5,
-    "includeGlob": [
-      "src/app/components/**/*.js",
-      "src/app/pages/**/*.js",
-      "src/app/shared/**/*.js"
-    ],
-    "threshold": 80
   },
   "jest": {
     "collectCoverageFrom": [

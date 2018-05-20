@@ -1,14 +1,14 @@
 // @flow
 
-import React, { Component } from 'react';
-import { Input, Timeline, Card, Form } from 'antd';
-import uuid from 'uuid/v4';
-import get from 'lodash/get';
-import firebaseDep from 'firebase';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { isLoaded } from 'react-redux-firebase';
-import withFirestore from '../shared/withFirestore';
+import React, { Component } from "react";
+import { Input, Timeline, Card, Form } from "antd";
+import uuid from "uuid/v4";
+import get from "lodash/get";
+import firebaseDep from "firebase";
+import { connect } from "react-redux";
+import { compose } from "redux";
+import { isLoaded } from "react-redux-firebase";
+import withFirestore from "../shared/withFirestore";
 
 type Props = {
   firebase: Object,
@@ -26,16 +26,16 @@ type Props = {
       userName: string
     }
   }
-}
+};
 
 type State = {
-  sendingMessage: boolean,
-}
+  sendingMessage: boolean
+};
 
 class Chat extends Component<Props, State> {
   state = {
-    sendingMessage: false,
-  }
+    sendingMessage: false
+  };
 
   componentDidMount() {
     this.scrollToLatest();
@@ -45,9 +45,12 @@ class Chat extends Component<Props, State> {
     if (!this.props.uniqueUserIds && nextIds) {
       this.setUserListeners(nextIds);
     } else if (nextIds) {
-      this.setUserListeners(nextIds.filter(id => (
-        this.props.uniqueUserIds && !this.props.uniqueUserIds.includes(id)
-      )));
+      this.setUserListeners(
+        nextIds.filter(
+          id =>
+            this.props.uniqueUserIds && !this.props.uniqueUserIds.includes(id)
+        )
+      );
     }
   }
 
@@ -57,45 +60,53 @@ class Chat extends Component<Props, State> {
     }
   }
 
-  setUserListeners = (ids) => {
-    this.props.firestore.setListeners(ids.map(id => ({
-      collection: 'users', doc: id,
-    })));
+  setUserListeners = ids => {
+    this.props.firestore.setListeners(
+      ids.map(id => ({
+        collection: "users",
+        doc: id
+      }))
+    );
   };
 
-  timelineEl: ?HTMLElement = null
+  timelineEl: ?HTMLElement = null;
 
   scrollToLatest = () => {
     if (this.timelineEl) {
       this.timelineEl.scrollTop =
         this.timelineEl.scrollHeight - this.timelineEl.offsetHeight;
     }
-  }
+  };
 
   sendMessage = () => {
     const {
       form: { getFieldsValue, setFieldsValue },
       firebase,
       firestore,
-      user,
+      user
     } = this.props;
     const { message } = getFieldsValue();
 
     this.setState({ sendingMessage: true });
-    setFieldsValue({ message: '' });
-    firestore.set({
-      collection: 'leagues',
-      doc: 'first',
-      subcollections: [{ collection: 'messages', doc: uuid() }],
-    }, {
-      message,
-      userRef: firebase.firestore().doc(`users/${user.uid}`),
-      userId: user.uid,
-      timestamp: firebaseDep.firestore.FieldValue.serverTimestamp(),
-    }).then(() => {
-      this.setState({ sendingMessage: false });
-    });
-  }
+    setFieldsValue({ message: "" });
+    firestore
+      .set(
+        {
+          collection: "leagues",
+          doc: "first",
+          subcollections: [{ collection: "messages", doc: uuid() }]
+        },
+        {
+          message,
+          userRef: firebase.firestore().doc(`users/${user.uid}`),
+          userId: user.uid,
+          timestamp: firebaseDep.firestore.FieldValue.serverTimestamp()
+        }
+      )
+      .then(() => {
+        this.setState({ sendingMessage: false });
+      });
+  };
 
   render() {
     const { sendingMessage } = this.state;
@@ -103,14 +114,14 @@ class Chat extends Component<Props, State> {
       messages,
       form: { getFieldDecorator },
       leagueName,
-      user: { displayName },
+      user: { displayName }
     } = this.props;
 
-    const chat = (
-      getFieldDecorator('message')(<Input
+    const chat = getFieldDecorator("message")(
+      <Input
         addonBefore="Draft Chat"
         onPressEnter={sendingMessage ? () => {} : this.sendMessage}
-      />)
+      />
     );
 
     return (
@@ -118,73 +129,75 @@ class Chat extends Component<Props, State> {
         <Timeline>
           <div
             className="timeline"
-            ref={(el) => { this.timelineEl = el; }}
+            ref={el => {
+              this.timelineEl = el;
+            }}
           >
-            {
-              isLoaded(messages) &&
+            {isLoaded(messages) &&
               messages &&
               Object.keys(messages).map(key => (
                 <Timeline.Item key={key}>
                   {`${messages[key].userName} - ${messages[key].message}`}
                 </Timeline.Item>
-              ))
-            }
+              ))}
           </div>
         </Timeline>
-        <Form>
-          {displayName && chat}
-        </Form>
+        <Form>{displayName && chat}</Form>
         <style jsx>{`
           .timeline {
             height: 300px;
             overflow-y: scroll;
           }
-        `}
-        </style>
+        `}</style>
       </Card>
     );
   }
 }
 
 const mapMessagesToUsers = (users: Object, messages: Object) =>
+  messages &&
   // eslint-disable-next-line no-unused-vars
-  messages && Object.entries(messages).map(([key, values]) => ({
+  Object.entries(messages).map(([key, values]) => ({
     ...values,
     // $FlowFixMe
-    userName: get(users, `${values.userId}.displayName`),
+    userName: get(users, `${values.userId}.displayName`)
   }));
 
 const filterUniqueUserIds = (messages: Object) =>
-  messages &&
-  [
-    ...new Set(Object.values(messages)
-      // $FlowFixMe
-      .map(({ userId }) => userId)),
+  messages && [
+    ...new Set(
+      Object.values(messages)
+        // $FlowFixMe
+        .map(({ userId }) => userId)
+    )
   ];
 
 const mapStateToProps = ({ firestore, user: { uid } }) => {
-  const rawMessages = get(firestore.data, 'leagues.first.messages');
+  const rawMessages = get(firestore.data, "leagues.first.messages");
 
   return {
-    leagueName: get(firestore.data, 'leagues.first.name'),
+    leagueName: get(firestore.data, "leagues.first.name"),
     messages: mapMessagesToUsers(firestore.data.users, rawMessages),
     uniqueUserIds: filterUniqueUserIds(rawMessages),
     user: {
       ...get(firestore.data, `users.${uid}`),
-      uid,
-    },
+      uid
+    }
   };
 };
 
 export default compose(
   connect(mapStateToProps, () => ({})),
-  withFirestore(({ user: { uid } }) => [{
-    collection: 'leagues',
-    doc: 'first',
-    subcollections: [{ collection: 'messages', orderBy: ['timestamp'] }],
-  }, {
-    collection: 'users',
-    doc: uid,
-  }]),
-  Form.create(),
+  withFirestore(({ user: { uid } }) => [
+    {
+      collection: "leagues",
+      doc: "first",
+      subcollections: [{ collection: "messages", orderBy: ["timestamp"] }]
+    },
+    {
+      collection: "users",
+      doc: uid
+    }
+  ]),
+  Form.create()
 )(Chat);
