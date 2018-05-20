@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { Input, Timeline, Card, Form } from "antd";
 import uuid from "uuid/v4";
 import get from "lodash/get";
-import firebaseDep from "firebase";
+import { firestore as firestoreDep } from "firebase";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { isLoaded } from "react-redux-firebase";
@@ -100,7 +100,7 @@ class Chat extends Component<Props, State> {
           message,
           userRef: firebase.firestore().doc(`users/${user.uid}`),
           userId: user.uid,
-          timestamp: firebaseDep.firestore.FieldValue.serverTimestamp()
+          timestamp: firestoreDep.FieldValue.serverTimestamp()
         }
       )
       .then(() => {
