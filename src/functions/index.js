@@ -1,9 +1,9 @@
 import { initializeApp } from "firebase-admin";
-import { https, config } from "firebase-functions";
+import { https } from "firebase-functions";
 import next from "next";
 
 const dev = process.env.NODE_ENV !== "production";
-initializeApp(config().firebase);
+initializeApp();
 const app = next({ dev, conf: { distDir: "next" } });
 const handle = app.getRequestHandler();
 
