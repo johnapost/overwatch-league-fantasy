@@ -1,21 +1,34 @@
 // @flow
 
-import React from 'react';
+import React from "react";
+
+export type AbbreviatedNames =
+  | "BOS"
+  | "DAL"
+  | "FLA"
+  | "GLA"
+  | "HOU"
+  | "LDN"
+  | "NYE"
+  | "PHI"
+  | "SEO"
+  | "SFS"
+  | "SHD"
+  | "VAL";
 
 type Props = {
-  team: 'BOS' | 'DAL' | 'FLA' | 'GLA' | 'HOU' | 'LDN' | 'NYE' | 'PHI' | 'SEO' |
-    'SFS' | 'SHD' | 'VAL'
-}
+  height?: string,
+  team: AbbreviatedNames,
+  width?: string
+};
 
-export default ({ team }: Props) => (
-  <div>
-    <img src={`static/${team}.svg`} alt={team} />
-    <style jsx>{`
-      img {
-        height: 32px;
-        width: 32px;
-      }
-    `}
-    </style>
-  </div>
+const TeamLogo = ({ team, height, width }: Props) => (
+  <img src={`static/${team}.svg`} alt={team} height={height} width={width} />
 );
+
+TeamLogo.defaultProps = {
+  height: "32",
+  width: "32"
+};
+
+export default TeamLogo;

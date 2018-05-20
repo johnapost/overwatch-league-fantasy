@@ -11,7 +11,9 @@ export default () => (
         (accum, { competitor: { players } }) => [...accum, ...players],
         []
       )
-      .map(({ player, team }) => <Player {...player} team={team.id} />)}
+      .map(({ player, team }) => (
+        <Player {...player} teamId={team.id} key={player.id} />
+      ))}
     <style jsx>{`
       .wrapper {
         display: flex;

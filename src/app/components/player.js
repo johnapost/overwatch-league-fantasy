@@ -1,27 +1,72 @@
 // @flow
 
 import React from "react";
+import TeamLogo from "./teamLogo";
+import fromTeam from "../shared/getTeam";
 
 type Props = {
-  givenName: string,
-  familyName: string,
+  // givenName: string,
+  // familyName: string,
   headshot: string,
   name: string,
-  nationality: string,
-  id: string,
-  team: string
+  // nationality: string,
+  // id: string,
+  teamId: string
 };
 
-export default ({ headshot, name }: Props) => (
-  <div className="container">
-    <img src={headshot} alt={name} title={name} />
-    <style jsx>{`
-      .container {
-        background: url("/static/player-bg.jpg");
-        border: solid 4px #dddde3;
-        margin: 10px;
-        max-width: 300px;
-      }
-    `}</style>
-  </div>
-);
+export default ({ headshot, name, teamId }: Props) => {
+  const { abbreviatedName, primaryColor } = fromTeam(teamId);
+  return (
+    <div className="container">
+      <div className="background" />
+      <div className="headshot">
+        <img src={headshot} alt={name} title={name} />
+      </div>
+      <div className="profile">
+        <TeamLogo team={abbreviatedName} width="24" /> {name}
+      </div>
+      <style jsx>{`
+        .container {
+          border: solid 5px #dddde3;
+          height: 200px;
+          margin: 5px;
+          overflow: hidden;
+          position: relative;
+          transform: skew(-15deg);
+          transition: border, transform 0.15s ease-out;
+          width: 150px;
+        }
+        .container:hover {
+          border: solid 5px #ffffff;
+          transform: scale(1.3) skew(-15deg);
+          z-index: 1;
+        }
+        .background {
+          background-color: #${primaryColor};
+          height: 200px;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 150px;
+        }
+        .headshot {
+          transform: scale(1.5) skew(15deg) translate(-2px, 9px);
+        }
+        img {
+          display: block;
+          height: 150px;
+        }
+        .profile {
+          background: #e8e8eb;
+          color: #28354f;
+          font-family: "BigNoodleToo";
+          font-size: 1.5rem;
+          text-align: center;
+          text-transform: uppercase;
+          transform: skew(15deg) translate(-14px, 7px);
+          width: 160px;
+        }
+      `}</style>
+    </div>
+  );
+};
