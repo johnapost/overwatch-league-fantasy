@@ -25,7 +25,8 @@ if (typeof window !== "undefined") {
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
   }
-  firebase.firestore();
+  const firestore = firebase.firestore();
+  firestore.settings({ timestampsInSnapshots: true });
 
   const composeFn =
     // eslint-disable-next-line no-underscore-dangle

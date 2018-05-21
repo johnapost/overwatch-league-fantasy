@@ -3,15 +3,14 @@
 
 import React, { Component } from "react";
 import { compose } from "redux";
-import { isLoaded } from "react-redux-firebase";
+import { isLoaded, withFirebase } from "react-redux-firebase";
 import { Form, Button, Input, message } from "antd";
 import { withRouter } from "next/router";
-import withFirestore from "../shared/withFirestore";
 import hasErrors from "../shared/hasErrors";
 
 type Props = {
   disabled: boolean,
-  firestore: Object,
+  firebase: Object,
   form: Object,
   router: Object,
   setDisabled: (bool: boolean) => void,
@@ -30,12 +29,12 @@ class LoginForm extends Component<Props> {
   handleSubmit = e => {
     e.preventDefault();
     const {
-      firestore,
+      firebase,
       form: { validateFields },
       setDisabled
     } = this.props;
 
-    if (!isLoaded(firestore)) {
+    if (!isLoaded(firebase)) {
       return;
     }
 
@@ -53,7 +52,7 @@ class LoginForm extends Component<Props> {
         return;
       }
 
-      firestore
+      firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .catch(({ code, message: errorMessage }) => {
@@ -118,4 +117,4 @@ class LoginForm extends Component<Props> {
   }
 }
 
-export default compose(withRouter, withFirestore(), Form.create())(LoginForm);
+export default compose(withRouter, withFirebase, Form.create())(LoginForm);
