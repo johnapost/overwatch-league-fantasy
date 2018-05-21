@@ -3,13 +3,14 @@
 import React, { Component } from "react";
 import { Form, Input, Button, message } from "antd";
 import { compose } from "redux";
-import { isLoaded } from "react-redux-firebase";
+import { isLoaded, withFirebase } from "react-redux-firebase";
 import { withRouter } from "next/router";
 import withFirestore from "../shared/withFirestore";
 import hasErrors from "../shared/hasErrors";
 
 type Props = {
   disabled: boolean,
+  firebase: Object,
   firestore: Object,
   form: Object,
   hideSignUpModal: Function,
@@ -20,13 +21,14 @@ class SignUpForm extends Component<Props> {
   handleSubmit = e => {
     e.preventDefault();
     const {
+      firebase,
       firestore,
       form: { validateFields },
       hideSignUpModal,
       setDisabled
     } = this.props;
 
-    if (!isLoaded(firestore)) {
+    if (!isLoaded(firebase) || !isLoaded(firestore)) {
       return;
     }
 
@@ -39,16 +41,28 @@ class SignUpForm extends Component<Props> {
       hideSignUpModal();
     };
 
-    validateFields((err, { email, password }) => {
+    validateFields(async (err, { displayName, email, password }) => {
       if (err) {
         finishSubmitting();
         return;
       }
 
-      firestore
-        .auth()
+      const auth = await firebase.auth();
+
+      auth
         .createUserWithEmailAndPassword(email, password)
-        .then(user => user.sendEmailVerification())
+        .then(async ({ user }) => {
+          user.sendEmailVerification();
+          firestore.set(
+            {
+              collection: "users",
+              doc: user.uid
+            },
+            {
+              displayName
+            }
+          );
+        })
         .then(() => {
           finishSubmitting();
           message.success("Successfully signed up!");
@@ -70,6 +84,7 @@ class SignUpForm extends Component<Props> {
     } = this.props;
     const emailValidations = [{ required: true }, { type: "email" }];
     const passwordValidations = [{ required: true }, { min: 6 }];
+    const displayNameValidations = [{ required: true }, { min: 3 }];
 
     return (
       <Form onSubmit={this.handleSubmit}>
@@ -81,6 +96,11 @@ class SignUpForm extends Component<Props> {
         <Form.Item>
           {getFieldDecorator("password", { rules: passwordValidations })(
             <Input placeholder="Password" type="password" />
+          )}
+        </Form.Item>
+        <Form.Item>
+          {getFieldDecorator("displayName", { rules: displayNameValidations })(
+            <Input placeholder="Display name" />
           )}
         </Form.Item>
         <div style={{ marginTop: "10px" }}>
@@ -97,4 +117,9 @@ class SignUpForm extends Component<Props> {
   }
 }
 
-export default compose(withRouter, withFirestore(), Form.create())(SignUpForm);
+export default compose(
+  withRouter,
+  withFirebase,
+  withFirestore(),
+  Form.create()
+)(SignUpForm);

@@ -4,12 +4,11 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { Button, Dropdown, Menu, Modal } from "antd";
-import { isLoaded } from "react-redux-firebase";
-import withFirestore from "../shared/withFirestore";
+import { isLoaded, withFirebase } from "react-redux-firebase";
 import ProfileForm from "./profileForm";
 
 type Props = {
-  firestore: Object,
+  firebase: Object,
   user: {
     uid: string,
     displayName: string | null
@@ -39,13 +38,13 @@ class ProfileMenu extends Component<Props, State> {
   hideProfileModal = () => this.setState({ showProfileModal: false });
 
   signOut = () => {
-    const { firestore } = this.props;
+    const { firebase } = this.props;
 
-    if (!isLoaded(firestore)) {
+    if (!isLoaded(firebase)) {
       return;
     }
 
-    firestore.auth().signOut();
+    firebase.auth().signOut();
   };
 
   render() {
@@ -71,7 +70,11 @@ class ProfileMenu extends Component<Props, State> {
           title="Update Profile"
           visible={this.state.showProfileModal}
         >
-          <ProfileForm hideProfileModal={this.hideProfileModal} uid={uid} />
+          <ProfileForm
+            hideProfileModal={this.hideProfileModal}
+            uid={uid}
+            displayName={displayName}
+          />
         </Modal>
       </div>
     );
@@ -80,6 +83,6 @@ class ProfileMenu extends Component<Props, State> {
 
 const mapStateToProps = ({ user }) => ({ user });
 
-export default compose(connect(mapStateToProps, () => ({})), withFirestore())(
+export default compose(connect(mapStateToProps, () => ({})), withFirebase)(
   ProfileMenu
 );

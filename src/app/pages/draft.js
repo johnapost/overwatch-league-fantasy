@@ -2,14 +2,12 @@
 
 import React from "react";
 import { Row, Col, Form } from "antd";
-import withRedux from "next-redux-wrapper";
 import { compose } from "redux";
-import store from "../shared/makeStore";
 import withFirestore from "../shared/withFirestore";
 import Layout from "../components/layout";
 import Chat from "../components/chat";
 
-const Index = () => (
+const Draft = () => (
   <Layout>
     <Row>
       <Col sm={6} md={4} />
@@ -28,7 +26,6 @@ const Index = () => (
 );
 
 export default compose(
-  withRedux(store),
   withFirestore(() => [
     {
       collection: "leagues",
@@ -36,4 +33,4 @@ export default compose(
     }
   ]),
   Form.create()
-)(Index);
+)(Draft);

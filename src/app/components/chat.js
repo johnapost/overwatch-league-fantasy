@@ -126,13 +126,13 @@ class Chat extends Component<Props, State> {
 
     return (
       <Card title={leagueName}>
-        <Timeline>
-          <div
-            className="timeline"
-            ref={el => {
-              this.timelineEl = el;
-            }}
-          >
+        <div
+          className="timeline"
+          ref={el => {
+            this.timelineEl = el;
+          }}
+        >
+          <Timeline>
             {isLoaded(messages) &&
               messages &&
               Object.keys(messages).map(key => (
@@ -140,8 +140,8 @@ class Chat extends Component<Props, State> {
                   {`${messages[key].userName} - ${messages[key].message}`}
                 </Timeline.Item>
               ))}
-          </div>
-        </Timeline>
+          </Timeline>
+        </div>
         <Form>{displayName && chat}</Form>
         <style jsx>{`
           .timeline {
