@@ -12,6 +12,7 @@
     "prettier/flowtype",
     "prettier/react"
   ],
+  "parser": "babel-eslint",
   "plugins": [
     "flowtype",
     "react",

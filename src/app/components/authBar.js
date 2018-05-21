@@ -4,18 +4,18 @@ import React, { Component } from "react";
 import { Form, Modal, message } from "antd";
 import { compose } from "redux";
 import { connect } from "react-redux";
+import { withFirebase } from "react-redux-firebase";
 import { withRouter } from "next/router";
 import { userLogin, userLogout } from "../redux/user";
 import LoginForm from "./loginForm";
 import SignUpForm from "./signUpForm";
 import ProfileMenu from "./profileMenu";
-import withFirestore from "../shared/withFirestore";
 
 type Props = {
-  firestore: Object,
-  router: Object,
+  firebase: Object,
   login: (user: Object) => void,
-  logout: Function
+  logout: Function,
+  router: Object
 };
 
 type State = {
@@ -33,7 +33,7 @@ class AuthBar extends Component<Props, State> {
 
   async componentDidMount() {
     const {
-      firestore,
+      firebase,
       router: {
         query: { mode, oobCode },
         push
@@ -43,7 +43,7 @@ class AuthBar extends Component<Props, State> {
     } = this.props;
 
     // Add auth change listener
-    const auth = await firestore.auth();
+    const auth = await firebase.auth();
     this.authObserver = auth.onAuthStateChanged(user => {
       // TODO: Create a user resource if it does not exist
       // TODO: Handle logged in and not verified
@@ -74,21 +74,10 @@ class AuthBar extends Component<Props, State> {
   authObserver = null;
 
   verifyEmail = async (oobCode: string, closeMessage: Function) => {
-    const { firestore } = this.props;
-    const auth = await firestore.auth();
+    const { firebase } = this.props;
+    const auth = await firebase.auth();
     auth
       .applyActionCode(oobCode)
-      .then(() =>
-        firestore.set(
-          {
-            collection: "users",
-            doc: auth.currentUser.uid
-          },
-          {
-            displayName: null
-          }
-        )
-      )
       .then(() => {
         // Issues with nextjs reload, force a reload with this instead
         window.location = window.location.pathname;
@@ -156,6 +145,6 @@ const mapDispatchToProps = { login: userLogin, logout: userLogout };
 export default compose(
   connect(() => ({}), mapDispatchToProps),
   withRouter,
-  withFirestore(),
+  withFirebase,
   Form.create()
 )(AuthBar);

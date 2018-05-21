@@ -2,12 +2,10 @@
 
 import React from "react";
 import { Row, Col, Card } from "antd";
-import withRedux from "next-redux-wrapper";
-import store from "../shared/makeStore";
 import Layout from "../components/layout";
 import Roster from "../components/roster";
 
-const Index = () => (
+export default () => (
   <Layout>
     <Row>
       <Col sm={6} md={4} />
@@ -31,5 +29,3 @@ const Index = () => (
     `}</style>
   </Layout>
 );
-
-export default withRedux(store)(Index);
