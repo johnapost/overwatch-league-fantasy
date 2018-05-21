@@ -1,25 +1,8 @@
 {
   "plugins": [
-    [
-      "lodash",
-      {
-        "id": [
-          "lodash"
-        ]
-      }
-    ],
-    "transform-class-properties",
-    "transform-runtime"
+    "transform-flow-strip-types"
   ],
   "presets": [
-    "next/babel",
-    [
-      "env", {
-        "targets": {
-          "browsers": ["last 2 versions"],
-          "node": "6.14.0"
-        }
-      }
-    ]
+    "next/babel"
   ]
 }

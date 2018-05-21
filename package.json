@@ -16,32 +16,48 @@
     "type-check": "flow",
     "type-install": "flow-typed install"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    },
+    "notify": true
+  },
   "dependencies": {
-    "antd": "^3.2.0",
+    "antd": "^3.5.3",
     "babel-runtime": "^6.26.0",
     "firebase": "^5.0.3",
     "firebase-admin": "^5.12.1",
     "firebase-functions": "^1.0.2",
-    "lodash": "^4.17.4",
-    "next": "^4.2.3",
-    "next-redux-wrapper": "^1.3.5",
+    "lodash": "^4.17.10",
+    "next": "^6.0.3",
+    "next-redux-wrapper": "^2.0.0-beta.6",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-redux": "^5.0.7",
     "react-redux-firebase": "^2.1.1",
     "redux": "^4.0.0",
-    "redux-firestore": "^0.2.8",
+    "redux-firestore": "^0.5.4",
     "styled-jsx": "^2.2.6",
     "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.47",
-    "@babel/core": "^7.0.0-beta.47",
-    "@babel/preset-env": "^7.0.0-beta.47",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
     "babel-plugin-inline-react-svg": "^0.5.2",
     "babel-plugin-lodash": "^3.3.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
     "cpx": "^1.5.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
@@ -58,19 +74,5 @@
     "prettier": "^1.12.1",
     "rimraf": "^2.6.2",
     "sort-package-json": "^1.15.0"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.js"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": 80
-      }
-    },
-    "notify": true
   }
 }
