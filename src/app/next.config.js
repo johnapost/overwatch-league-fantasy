@@ -1,5 +1,5 @@
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || "development";
 
 module.exports = {
-  distDir: env === 'production' ? '../../dist/functions/next' : '.next',
+  distDir: env === "production" ? "../../dist/functions/next" : ".next"
 };

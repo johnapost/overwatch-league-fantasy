@@ -8,6 +8,7 @@ import withFirestore from "../shared/withFirestore";
 import hasErrors from "../shared/hasErrors";
 
 type Props = {
+  displayName: string,
   firestore: Object,
   form: Object,
   hideProfileModal: Function,
@@ -60,6 +61,7 @@ class ProfileForm extends Component<Props> {
 
   render() {
     const {
+      displayName,
       form: { getFieldDecorator, getFieldsError }
     } = this.props;
     const displayNameValidations = [{ required: true }, { min: 3 }];
@@ -67,9 +69,10 @@ class ProfileForm extends Component<Props> {
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Item>
-          {getFieldDecorator("displayName", { rules: displayNameValidations })(
-            <Input placeholder="Display name" />
-          )}
+          {getFieldDecorator("displayName", {
+            rules: displayNameValidations,
+            initialValue: displayName
+          })(<Input placeholder="Display name" />)}
         </Form.Item>
         <div style={{ marginTop: "10px" }}>
           <Button
