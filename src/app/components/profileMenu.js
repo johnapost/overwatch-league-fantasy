@@ -70,7 +70,11 @@ class ProfileMenu extends Component<Props, State> {
           title="Update Profile"
           visible={this.state.showProfileModal}
         >
-          <ProfileForm hideProfileModal={this.hideProfileModal} uid={uid} />
+          <ProfileForm
+            hideProfileModal={this.hideProfileModal}
+            uid={uid}
+            displayName={displayName}
+          />
         </Modal>
       </div>
     );
