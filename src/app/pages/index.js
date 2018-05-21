@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react';
-import { Row, Col, Card } from 'antd';
-import withRedux from 'next-redux-wrapper';
-import store from '../shared/makeStore';
-import Layout from '../components/layout';
-import Roster from '../components/roster';
+import React from "react";
+import { Row, Col, Card } from "antd";
+import withRedux from "next-redux-wrapper";
+import store from "../shared/makeStore";
+import Layout from "../components/layout";
+import Roster from "../components/roster";
 
 const Index = () => (
   <Layout>
@@ -28,8 +28,7 @@ const Index = () => (
       .wrapper {
         margin: 50px 0;
       }
-    `}
-    </style>
+    `}</style>
   </Layout>
 );
 

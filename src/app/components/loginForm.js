@@ -1,13 +1,13 @@
 // @flow
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
-import React, { Component } from 'react';
-import { compose } from 'redux';
-import { isLoaded } from 'react-redux-firebase';
-import { Form, Button, Input, message } from 'antd';
-import { withRouter } from 'next/router';
-import withFirestore from '../shared/withFirestore';
-import hasErrors from '../shared/hasErrors';
+import React, { Component } from "react";
+import { compose } from "redux";
+import { isLoaded } from "react-redux-firebase";
+import { Form, Button, Input, message } from "antd";
+import { withRouter } from "next/router";
+import withFirestore from "../shared/withFirestore";
+import hasErrors from "../shared/hasErrors";
 
 type Props = {
   disabled: boolean,
@@ -15,8 +15,8 @@ type Props = {
   form: Object,
   router: Object,
   setDisabled: (bool: boolean) => void,
-  showSignUpModal: Function,
-}
+  showSignUpModal: Function
+};
 
 class LoginForm extends Component<Props> {
   componentDidMount() {
@@ -25,14 +25,14 @@ class LoginForm extends Component<Props> {
     }
   }
 
-  emailEl: ?HTMLElement = null
+  emailEl: ?HTMLElement = null;
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
     const {
       firestore,
       form: { validateFields },
-      setDisabled,
+      setDisabled
     } = this.props;
 
     if (!isLoaded(firestore)) {
@@ -40,7 +40,7 @@ class LoginForm extends Component<Props> {
     }
 
     setDisabled(true);
-    const closeMessage = message.loading('Logging in..', 0);
+    const closeMessage = message.loading("Logging in..", 0);
 
     const finishSubmitting = () => {
       setDisabled(false);
@@ -65,38 +65,39 @@ class LoginForm extends Component<Props> {
           finishSubmitting();
         });
     });
-  }
+  };
 
   render() {
     const {
       disabled,
       form: { getFieldDecorator, getFieldsError },
-      router: { query: { email } },
-      showSignUpModal,
+      router: {
+        query: { email }
+      },
+      showSignUpModal
     } = this.props;
-    const emailValidations = [{ required: true }, { type: 'email' }];
+    const emailValidations = [{ required: true }, { type: "email" }];
     const passwordValidations = [{ required: true }];
 
     return (
       <Form layout="inline" onSubmit={this.handleSubmit}>
         <Form.Item help={false}>
-          {
-            getFieldDecorator(
-              'email',
-              { rules: emailValidations, initialValue: email },
-            )(<Input
+          {getFieldDecorator("email", {
+            rules: emailValidations,
+            initialValue: email
+          })(
+            <Input
               placeholder="Email"
-              ref={(el) => { this.emailEl = el; }}
-            />)
-          }
+              ref={el => {
+                this.emailEl = el;
+              }}
+            />
+          )}
         </Form.Item>
         <Form.Item help={false}>
-          {
-            getFieldDecorator(
-              'password',
-              { rules: passwordValidations },
-            )(<Input placeholder="Password" type="password" />)
-          }
+          {getFieldDecorator("password", { rules: passwordValidations })(
+            <Input placeholder="Password" type="password" />
+          )}
         </Form.Item>
         <Form.Item help={false}>
           <Button
@@ -108,10 +109,7 @@ class LoginForm extends Component<Props> {
           </Button>
         </Form.Item>
         <Form.Item help={false}>
-          <Button
-            type="secondary"
-            onClick={showSignUpModal}
-          >
+          <Button type="secondary" onClick={showSignUpModal}>
             Sign up
           </Button>
         </Form.Item>
@@ -120,8 +118,4 @@ class LoginForm extends Component<Props> {
   }
 }
 
-export default compose(
-  withRouter,
-  withFirestore(),
-  Form.create(),
-)(LoginForm);
+export default compose(withRouter, withFirestore(), Form.create())(LoginForm);

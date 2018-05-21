@@ -1,7 +1,7 @@
 // @flow
 
-import React from 'react';
-import { Row, Col } from 'antd';
+import React from "react";
+import { Row, Col } from "antd";
 
 export default () => (
   <footer>
@@ -11,19 +11,16 @@ export default () => (
         <p>
           Special thanks to Overwatch and the Overwatch League for existing.
         </p>
-        <p>
-          All trademarks belong to their owners.
-        </p>
+        <p>All trademarks belong to their owners.</p>
       </Col>
     </Row>
     <style jsx>{`
       footer {
         background: #212121;
-        color: #FFFFFF;
+        color: #ffffff;
         height: 300px;
         padding: 50px;
       }
-    `}
-    </style>
+    `}</style>
   </footer>
 );
