@@ -1,29 +1,29 @@
 // @flow
 
-import React, { Component } from 'react';
-import { Form, Input, Button, message } from 'antd';
-import { compose } from 'redux';
-import { isLoaded } from 'react-redux-firebase';
-import { withRouter } from 'next/router';
-import withFirestore from '../shared/withFirestore';
-import hasErrors from '../shared/hasErrors';
+import React, { Component } from "react";
+import { Form, Input, Button, message } from "antd";
+import { compose } from "redux";
+import { isLoaded } from "react-redux-firebase";
+import { withRouter } from "next/router";
+import withFirestore from "../shared/withFirestore";
+import hasErrors from "../shared/hasErrors";
 
 type Props = {
   disabled: boolean,
   firestore: Object,
   form: Object,
   hideSignUpModal: Function,
-  setDisabled: (bool: boolean) => void,
-}
+  setDisabled: (bool: boolean) => void
+};
 
 class SignUpForm extends Component<Props> {
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
     const {
       firestore,
       form: { validateFields },
       hideSignUpModal,
-      setDisabled,
+      setDisabled
     } = this.props;
 
     if (!isLoaded(firestore)) {
@@ -31,7 +31,7 @@ class SignUpForm extends Component<Props> {
     }
 
     setDisabled(true);
-    const closeMessage = message.loading('Signing up..', 0);
+    const closeMessage = message.loading("Signing up..", 0);
 
     const finishSubmitting = () => {
       setDisabled(false);
@@ -45,11 +45,13 @@ class SignUpForm extends Component<Props> {
         return;
       }
 
-      firestore.auth().createUserWithEmailAndPassword(email, password)
+      firestore
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
         .then(user => user.sendEmailVerification())
         .then(() => {
           finishSubmitting();
-          message.success('Successfully signed up!');
+          message.success("Successfully signed up!");
         })
         .catch(({ code, message: errorMessage }) => {
           finishSubmitting();
@@ -59,35 +61,29 @@ class SignUpForm extends Component<Props> {
           console.error(code, message);
         });
     });
-  }
+  };
 
   render() {
     const {
       disabled,
-      form: { getFieldDecorator, getFieldsError },
+      form: { getFieldDecorator, getFieldsError }
     } = this.props;
-    const emailValidations = [{ required: true }, { type: 'email' }];
+    const emailValidations = [{ required: true }, { type: "email" }];
     const passwordValidations = [{ required: true }, { min: 6 }];
 
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Item>
-          {
-            getFieldDecorator(
-              'email',
-              { rules: emailValidations },
-            )(<Input placeholder="Email" />)
-          }
+          {getFieldDecorator("email", { rules: emailValidations })(
+            <Input placeholder="Email" />
+          )}
         </Form.Item>
         <Form.Item>
-          {
-            getFieldDecorator(
-              'password',
-              { rules: passwordValidations },
-            )(<Input placeholder="Password" type="password" />)
-          }
+          {getFieldDecorator("password", { rules: passwordValidations })(
+            <Input placeholder="Password" type="password" />
+          )}
         </Form.Item>
-        <div style={{ marginTop: '10px' }}>
+        <div style={{ marginTop: "10px" }}>
           <Button
             type="primary"
             htmlType="submit"
@@ -101,8 +97,4 @@ class SignUpForm extends Component<Props> {
   }
 }
 
-export default compose(
-  withRouter,
-  withFirestore(),
-  Form.create(),
-)(SignUpForm);
+export default compose(withRouter, withFirestore(), Form.create())(SignUpForm);

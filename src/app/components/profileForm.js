@@ -1,34 +1,34 @@
 // @flow
 
-import React, { Component } from 'react';
-import { Form, Input, Button, message } from 'antd';
-import { compose } from 'redux';
-import { isLoaded } from 'react-redux-firebase';
-import withFirestore from '../shared/withFirestore';
-import hasErrors from '../shared/hasErrors';
+import React, { Component } from "react";
+import { Form, Input, Button, message } from "antd";
+import { compose } from "redux";
+import { isLoaded } from "react-redux-firebase";
+import withFirestore from "../shared/withFirestore";
+import hasErrors from "../shared/hasErrors";
 
 type Props = {
   firestore: Object,
   form: Object,
   hideProfileModal: Function,
-  uid: string,
-}
+  uid: string
+};
 
 class ProfileForm extends Component<Props> {
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
     const {
       firestore,
       form: { validateFields },
       hideProfileModal,
-      uid,
+      uid
     } = this.props;
 
     if (!isLoaded(firestore)) {
       return;
     }
 
-    const closeMessage = message.loading('Updating display name..', 0);
+    const closeMessage = message.loading("Updating display name..", 0);
 
     const finishSubmitting = () => {
       closeMessage();
@@ -41,33 +41,37 @@ class ProfileForm extends Component<Props> {
         return;
       }
 
-      firestore.update({
-        collection: 'users',
-        doc: uid,
-      }, {
-        displayName,
-      }).then(() => {
-        finishSubmitting();
-        message.success('Successfully updated display name!');
-      });
+      firestore
+        .update(
+          {
+            collection: "users",
+            doc: uid
+          },
+          {
+            displayName
+          }
+        )
+        .then(() => {
+          finishSubmitting();
+          message.success("Successfully updated display name!");
+        });
     });
-  }
+  };
 
   render() {
-    const { form: { getFieldDecorator, getFieldsError } } = this.props;
+    const {
+      form: { getFieldDecorator, getFieldsError }
+    } = this.props;
     const displayNameValidations = [{ required: true }, { min: 3 }];
 
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Item>
-          {
-            getFieldDecorator(
-              'displayName',
-              { rules: displayNameValidations },
-            )(<Input placeholder="Display name" />)
-          }
+          {getFieldDecorator("displayName", { rules: displayNameValidations })(
+            <Input placeholder="Display name" />
+          )}
         </Form.Item>
-        <div style={{ marginTop: '10px' }}>
+        <div style={{ marginTop: "10px" }}>
           <Button
             type="primary"
             htmlType="submit"
@@ -81,8 +85,4 @@ class ProfileForm extends Component<Props> {
   }
 }
 
-
-export default compose(
-  withFirestore(),
-  Form.create(),
-)(ProfileForm);
+export default compose(withFirestore(), Form.create())(ProfileForm);
