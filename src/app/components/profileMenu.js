@@ -1,12 +1,12 @@
 // @flow
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { Button, Dropdown, Menu, Modal } from 'antd';
-import { isLoaded } from 'react-redux-firebase';
-import withFirestore from '../shared/withFirestore';
-import ProfileForm from './profileForm';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { compose } from "redux";
+import { Button, Dropdown, Menu, Modal } from "antd";
+import { isLoaded } from "react-redux-firebase";
+import withFirestore from "../shared/withFirestore";
+import ProfileForm from "./profileForm";
 
 type Props = {
   firestore: Object,
@@ -14,26 +14,29 @@ type Props = {
     uid: string,
     displayName: string | null
   }
-}
+};
 
 type State = {
-  showProfileModal: boolean,
-}
+  showProfileModal: boolean
+};
 
 class ProfileMenu extends Component<Props, State> {
   state = {
-    showProfileModal: false,
-  }
+    showProfileModal: false
+  };
 
   menuActions = ({ key }: Object) => {
     switch (key) {
-      case 'setDisplayName': return this.setState({ showProfileModal: true });
-      case 'signOut': return this.signOut();
-      default: return null;
+      case "setDisplayName":
+        return this.setState({ showProfileModal: true });
+      case "signOut":
+        return this.signOut();
+      default:
+        return null;
     }
-  }
+  };
 
-  hideProfileModal = () => this.setState({ showProfileModal: false })
+  hideProfileModal = () => this.setState({ showProfileModal: false });
 
   signOut = () => {
     const { firestore } = this.props;
@@ -43,28 +46,24 @@ class ProfileMenu extends Component<Props, State> {
     }
 
     firestore.auth().signOut();
-  }
+  };
 
   render() {
-    const { user: { displayName, uid } } = this.props;
+    const {
+      user: { displayName, uid }
+    } = this.props;
 
     const menu = (
       <Menu onClick={this.menuActions}>
-        <Menu.Item key="setDisplayName">
-          Edit profile
-        </Menu.Item>
-        <Menu.Item key="signOut">
-          Sign out
-        </Menu.Item>
+        <Menu.Item key="setDisplayName">Edit profile</Menu.Item>
+        <Menu.Item key="signOut">Sign out</Menu.Item>
       </Menu>
     );
 
     return (
       <div>
         <Dropdown overlay={menu} placement="bottomRight">
-          <Button>
-            {displayName || 'No display name'}
-          </Button>
+          <Button>{displayName || "No display name"}</Button>
         </Dropdown>
         <Modal
           footer={null}
@@ -81,7 +80,6 @@ class ProfileMenu extends Component<Props, State> {
 
 const mapStateToProps = ({ user }) => ({ user });
 
-export default compose(
-  connect(mapStateToProps, () => ({})),
-  withFirestore(),
-)(ProfileMenu);
+export default compose(connect(mapStateToProps, () => ({})), withFirestore())(
+  ProfileMenu
+);
