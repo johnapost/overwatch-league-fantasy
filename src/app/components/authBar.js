@@ -1,61 +1,64 @@
 // @flow
 
-import React, { Component } from 'react';
-import { Form, Modal, message } from 'antd';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { withRouter } from 'next/router';
-import { userLogin, userLogout } from '../redux/user';
-import LoginForm from './loginForm';
-import SignUpForm from './signUpForm';
-import ProfileMenu from './profileMenu';
-import withFirestore from '../shared/withFirestore';
+import React, { Component } from "react";
+import { Form, Modal, message } from "antd";
+import { compose } from "redux";
+import { connect } from "react-redux";
+import { withRouter } from "next/router";
+import { userLogin, userLogout } from "../redux/user";
+import LoginForm from "./loginForm";
+import SignUpForm from "./signUpForm";
+import ProfileMenu from "./profileMenu";
+import withFirestore from "../shared/withFirestore";
 
 type Props = {
   firestore: Object,
   router: Object,
   login: (user: Object) => void,
   logout: Function
-}
+};
 
 type State = {
   disabled: boolean,
   loggedIn: boolean,
-  showSignUpModal: boolean,
-}
+  showSignUpModal: boolean
+};
 
 class AuthBar extends Component<Props, State> {
   state = {
     disabled: false,
     loggedIn: false,
-    showSignUpModal: false,
-  }
+    showSignUpModal: false
+  };
 
   async componentDidMount() {
     const {
       firestore,
-      router: { query: { mode, oobCode }, push },
+      router: {
+        query: { mode, oobCode },
+        push
+      },
       login,
-      logout,
+      logout
     } = this.props;
 
     // Add auth change listener
     const auth = await firestore.auth();
-    this.authObserver = auth.onAuthStateChanged((user) => {
+    this.authObserver = auth.onAuthStateChanged(user => {
       // TODO: Create a user resource if it does not exist
       // TODO: Handle logged in and not verified
       if (user && user.emailVerified && user.uid) {
         this.setState({ loggedIn: true });
         login(user.uid);
-        return push('/draft');
+        return push("/draft");
       }
       this.setState({ loggedIn: false });
       logout();
-      return push('/');
+      return push("/");
     });
 
-    if (mode === 'verifyEmail' && oobCode) {
-      const closeMessage = message.loading('Verifying email..', 0);
+    if (mode === "verifyEmail" && oobCode) {
+      const closeMessage = message.loading("Verifying email..", 0);
       this.verifyEmail(oobCode, closeMessage);
     }
   }
@@ -66,22 +69,26 @@ class AuthBar extends Component<Props, State> {
     }
   }
 
-  setDisabled = bool => this.setState({ disabled: bool })
+  setDisabled = bool => this.setState({ disabled: bool });
 
-  authObserver = null
+  authObserver = null;
 
   verifyEmail = async (oobCode: string, closeMessage: Function) => {
     const { firestore } = this.props;
     const auth = await firestore.auth();
-    auth.applyActionCode(oobCode)
-      .then(() => (
-        firestore.set({
-          collection: 'users',
-          doc: auth.currentUser.uid,
-        }, {
-          displayName: null,
-        })
-      ))
+    auth
+      .applyActionCode(oobCode)
+      .then(() =>
+        firestore.set(
+          {
+            collection: "users",
+            doc: auth.currentUser.uid
+          },
+          {
+            displayName: null
+          }
+        )
+      )
       .then(() => {
         // Issues with nextjs reload, force a reload with this instead
         window.location = window.location.pathname;
@@ -94,9 +101,9 @@ class AuthBar extends Component<Props, State> {
       .then(() => {
         closeMessage();
       });
-  }
+  };
 
-  hideSignUpModal = () => this.setState({ showSignUpModal: false })
+  hideSignUpModal = () => this.setState({ showSignUpModal: false });
 
   render() {
     const renderLoggedOut = (
@@ -128,7 +135,7 @@ class AuthBar extends Component<Props, State> {
         {this.state.loggedIn ? <ProfileMenu /> : renderLoggedOut}
         <style jsx>{`
           .container {
-            background: ${this.state.loggedIn ? 'transparent' : '#FFFFFF'};
+            background: ${this.state.loggedIn ? "transparent" : "#FFFFFF"};
             display: flex;
             height: 59px;
             justify-content: flex-end;
@@ -138,8 +145,7 @@ class AuthBar extends Component<Props, State> {
             width: 100vw;
             z-index: 100;
           }
-        `}
-        </style>
+        `}</style>
       </div>
     );
   }
@@ -151,5 +157,5 @@ export default compose(
   connect(() => ({}), mapDispatchToProps),
   withRouter,
   withFirestore(),
-  Form.create(),
+  Form.create()
 )(AuthBar);

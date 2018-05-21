@@ -1,32 +1,30 @@
-import { initializeApp, firestore } from 'firebase-admin';
-import { https, config } from 'firebase-functions';
-import next from 'next';
+import admin from "firebase-admin";
+import { https } from "firebase-functions";
+import next from "next";
 
-const dev = process.env.NODE_ENV !== 'production';
-initializeApp(config().firebase);
-const app = next({ dev, conf: { distDir: 'next' } });
+const dev = process.env.NODE_ENV !== "production";
+admin.initializeApp();
+const app = next({ dev, conf: { distDir: "next" } });
 const handle = app.getRequestHandler();
 
 const nextApp = https.onRequest((req, res) => {
   // eslint-disable-next-line no-console
   console.log(`File: ${req.originalUrl}`);
-  const url = req.originalUrl.split('?').shift();
+  const url = req.originalUrl.split("?").shift();
   switch (url) {
     // Handle auth email actions
-    case '/auth': {
-      const { query: { mode, oobCode } } = req;
-      return app.prepare().then(() =>
-        res.redirect(`/?mode=${mode}&oobCode=${oobCode}`));
+    case "/auth": {
+      const {
+        query: { mode, oobCode }
+      } = req;
+      return app
+        .prepare()
+        .then(() => res.redirect(`/?mode=${mode}&oobCode=${oobCode}`));
     }
     default:
       return app.prepare().then(() => handle(req, res));
   }
 });
 
-const updateRoster = https.onRequest((req, res) => {
-  console.log('updating roster');
-  console.log(firestore().collection('leagues'));
-});
-
 // eslint-disable-next-line import/prefer-default-export
-export { nextApp, updateRoster };
+export { nextApp };

@@ -4,47 +4,49 @@
 type UserState = {
   uid: string | null,
   displayName: string | null
-}
+};
 
 type UserLogin = {
-  type: 'LOGIN',
+  type: "LOGIN",
   uid: string
-}
+};
 
 type UserLogout = {
-  type: 'LOGOUT',
-}
+  type: "LOGOUT"
+};
 
 type UserSetName = {
-  type: '@@reactReduxFirebase/SET_PROFILE',
+  type: "@@reactReduxFirebase/SET_PROFILE",
   profile: {
     displayName: string
   }
-}
+};
 
-type UserAction = UserLogin | UserLogout | UserSetName
+type UserAction = UserLogin | UserLogout | UserSetName;
 
 // Action Creators
 
 export const userLogin = (uid: string): UserLogin => ({
-  type: 'LOGIN', uid,
+  type: "LOGIN",
+  uid
 });
 
 export const userLogout = (): UserLogout => ({
-  type: 'LOGOUT',
+  type: "LOGOUT"
 });
 
 // Reducer
 const defaultState = { uid: null, displayName: null };
 
-export default (
-  state: UserState = defaultState,
-  action: UserAction,
-) => {
+export default (state: UserState = defaultState, action: UserAction) => {
   switch (action.type) {
-    case 'LOGIN': return { ...state, uid: action.uid };
-    case 'LOGOUT': return defaultState;
-    case '@@reactReduxFirebase/SET_PROFILE': return { ...state, displayName: action.profile.displayName };
-    default: return state;
+    case "LOGIN":
+      return { ...state, uid: action.uid };
+    case "LOGOUT":
+      return defaultState;
+    case "@@reactReduxFirebase/SET_PROFILE":
+      return { ...state, displayName: action.profile.displayName };
+    default:
+      return state;
   }
 };
