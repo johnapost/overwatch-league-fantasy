@@ -3,7 +3,7 @@
 import React from "react";
 import { Row, Col, Card } from "antd";
 import Layout from "../components/layout";
-import Roster from "../components/roster";
+import FilterableRoster from "../components/filterableRoster";
 
 export default () => (
   <Layout>
@@ -19,7 +19,7 @@ export default () => (
     </Row>
     <Row>
       <Col>
-        <Roster />
+        <FilterableRoster />
       </Col>
     </Row>
     <style jsx>{`

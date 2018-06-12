@@ -4,13 +4,20 @@ import React from "react";
 import api from "../shared/api.json";
 import Player from "./player";
 
-export default () => (
+type Props = {
+  withTeamId?: number | null
+};
+
+const allPlayers = (): Object[] =>
+  api.competitors.reduce(
+    (accum, { competitor: { players } }) => [...accum, ...players],
+    []
+  );
+
+const Roster = ({ withTeamId }: Props) => (
   <div className="wrapper">
-    {api.competitors
-      .reduce(
-        (accum, { competitor: { players } }) => [...accum, ...players],
-        []
-      )
+    {allPlayers()
+      .filter(({ team }) => (withTeamId ? withTeamId === team.id : true))
       .map(({ player, team }) => (
         <Player {...player} teamId={team.id} key={player.id} />
       ))}
@@ -24,3 +31,9 @@ export default () => (
     `}</style>
   </div>
 );
+
+Roster.defaultProps = {
+  withTeamId: null
+};
+
+export default Roster;
