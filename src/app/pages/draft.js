@@ -6,6 +6,7 @@ import { compose } from "redux";
 import withFirestore from "../shared/withFirestore";
 import Layout from "../components/layout";
 import Chat from "../components/chat";
+import FilterableRoster from "../components/filterableRoster";
 
 const Draft = () => (
   <Layout>
@@ -15,6 +16,11 @@ const Draft = () => (
         <div className="wrapper">
           <Chat />
         </div>
+      </Col>
+    </Row>
+    <Row>
+      <Col>
+        <FilterableRoster />
       </Col>
     </Row>
     <style jsx>{`

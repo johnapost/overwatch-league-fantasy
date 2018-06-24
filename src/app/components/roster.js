@@ -5,9 +5,9 @@ import api from "../shared/api.json";
 import Player from "./player";
 
 type Props = {
-  playerName: string,
+  playerName?: string,
   teamId?: number | null,
-  role: string | null
+  role?: string | null
 };
 
 const allPlayers = (): Object[] =>
@@ -46,7 +46,9 @@ const Roster = ({ teamId, role, playerName }: Props) => (
 );
 
 Roster.defaultProps = {
-  teamId: null
+  playerName: "",
+  teamId: null,
+  role: null
 };
 
 export default Roster;

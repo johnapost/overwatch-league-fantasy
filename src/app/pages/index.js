@@ -3,7 +3,7 @@
 import React from "react";
 import { Row, Col, Card } from "antd";
 import Layout from "../components/layout";
-import FilterableRoster from "../components/filterableRoster";
+import Roster from "../components/roster";
 
 export default () => (
   <Layout>
@@ -17,7 +17,7 @@ export default () => (
         </div>
       </Col>
     </Row>
-    <FilterableRoster />
+    <Roster />
     <style jsx>{`
       .wrapper {
         margin: 50px 0;
