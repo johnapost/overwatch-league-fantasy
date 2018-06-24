@@ -5,8 +5,9 @@ import api from "../shared/api.json";
 import Player from "./player";
 
 type Props = {
-  withTeamId?: number | null,
-  withRole: string | null
+  playerName: string,
+  teamId?: number | null,
+  role: string | null
 };
 
 const allPlayers = (): Object[] =>
@@ -15,16 +16,20 @@ const allPlayers = (): Object[] =>
     []
   );
 
-const Roster = ({ withTeamId, withRole }: Props) => (
+const Roster = ({ teamId, role, playerName }: Props) => (
   <div className="wrapper">
     {allPlayers()
-      .filter(({ team }) => (withTeamId ? withTeamId === team.id : true))
+      .filter(({ team }) => (teamId ? teamId === team.id : true))
       .filter(
         ({
           player: {
-            attributes: { role }
+            attributes: { role: _role }
           }
-        }) => (withRole ? withRole.toLowerCase() === role : true)
+        }) => (role ? role.toLowerCase() === _role : true)
+      )
+      .filter(
+        ({ player: { name } }) =>
+          playerName ? name.indexOf(playerName) > -1 : true
       )
       .map(({ player, team }) => (
         <Player {...player} teamId={team.id} key={player.id} />
@@ -41,7 +46,7 @@ const Roster = ({ withTeamId, withRole }: Props) => (
 );
 
 Roster.defaultProps = {
-  withTeamId: null
+  teamId: null
 };
 
 export default Roster;

@@ -8,6 +8,7 @@ import getTeam from "../shared/getTeam";
 import teams from "../shared/teams.json";
 
 type State = {
+  playerName: string,
   playerNames: string[],
   role: string | null,
   teamId: number | null
@@ -21,9 +22,14 @@ const allPlayerNames = api.competitors
 
 class FilterableRoster extends Component<*, State> {
   state = {
+    playerName: "",
     playerNames: allPlayerNames,
     role: null,
     teamId: null
+  };
+
+  setPlayerName = (playerName: string) => {
+    this.setState({ playerName });
   };
 
   filterPlayerNames = (inputValue: string, option: Object) =>
@@ -83,16 +89,19 @@ class FilterableRoster extends Component<*, State> {
               </Button>
             </Dropdown>
             <AutoComplete
+              allowClear
               dataSource={this.state.playerNames}
-              placeholder="Player Name"
               filterOption={this.filterPlayerNames}
+              onChange={this.setPlayerName}
+              placeholder="Player Name"
               size="large"
             />
           </div>
         </Input.Group>
         <Roster
-          withTeamId={this.state.teamId}
-          withRole={this.state.role}
+          playerName={this.state.playerName}
+          role={this.state.role}
+          teamId={this.state.teamId}
           key="1"
         />
         <style jsx>{`
