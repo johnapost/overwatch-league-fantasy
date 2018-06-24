@@ -29,7 +29,9 @@ const Roster = ({ teamId, role, playerName }: Props) => (
       )
       .filter(
         ({ player: { name } }) =>
-          playerName ? name.indexOf(playerName) > -1 : true
+          playerName
+            ? name.toLowerCase().indexOf(playerName.toLocaleLowerCase()) > -1
+            : true
       )
       .map(({ player, team }) => (
         <Player {...player} teamId={team.id} key={player.id} />
@@ -40,6 +42,7 @@ const Roster = ({ teamId, role, playerName }: Props) => (
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
+        margin: 25px;
       }
     `}</style>
   </div>

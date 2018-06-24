@@ -14,7 +14,7 @@ type State = {
   teamId: number | null
 };
 
-const roles = ["Offense", "Tank", "Support", "Flex"];
+const ROLES = ["Offense", "Tank", "Support", "Flex"];
 
 const allPlayerNames = api.competitors
   .reduce((accum, { competitor: { players } }) => [...accum, ...players], [])
@@ -29,7 +29,12 @@ class FilterableRoster extends Component<*, State> {
   };
 
   setPlayerName = (playerName: string) => {
-    this.setState({ playerName });
+    this.setState({
+      playerName
+    });
+
+    if (allPlayerNames.find(_playerName => playerName === _playerName))
+      this.setState({ role: null, teamId: null });
   };
 
   filterPlayerNames = (inputValue: string, option: Object) =>
@@ -52,9 +57,9 @@ class FilterableRoster extends Component<*, State> {
   renderPositionMenu = () => (
     <Menu>
       <Menu.Item onClick={() => this.setState({ role: null })}>
-        All Positions
+        All Roles
       </Menu.Item>
-      {roles.map(role => (
+      {ROLES.map(role => (
         <Menu.Item key={role} onClick={() => this.setState({ role })}>
           {role}
         </Menu.Item>
@@ -66,7 +71,7 @@ class FilterableRoster extends Component<*, State> {
     return (
       <div>
         <Input.Group>
-          <div className="wrapper">
+          <div className="filters">
             <Dropdown
               overlay={this.renderTeamMenu()}
               placement="bottomLeft"
@@ -85,7 +90,7 @@ class FilterableRoster extends Component<*, State> {
               trigger={["click"]}
             >
               <Button size="large">
-                {this.state.role ? this.state.role : "All Positions"}
+                {this.state.role ? this.state.role : "All Roles"}
               </Button>
             </Dropdown>
             <AutoComplete
@@ -98,16 +103,22 @@ class FilterableRoster extends Component<*, State> {
             />
           </div>
         </Input.Group>
-        <Roster
-          playerName={this.state.playerName}
-          role={this.state.role}
-          teamId={this.state.teamId}
-          key="1"
-        />
+        <div className="roster">
+          <Roster
+            playerName={this.state.playerName}
+            role={this.state.role}
+            teamId={this.state.teamId}
+            key="1"
+          />
+        </div>
         <style jsx>{`
-          .wrapper {
+          .filters {
             display: flex;
             justify-content: center;
+          }
+          .roster {
+            max-height: calc(100vh - 138px);
+            overflow-y: scroll;
           }
         `}</style>
       </div>

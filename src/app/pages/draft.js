@@ -6,26 +6,30 @@ import { compose } from "redux";
 import withFirestore from "../shared/withFirestore";
 import Layout from "../components/layout";
 import Chat from "../components/chat";
+import Team from "../components/team";
 import FilterableRoster from "../components/filterableRoster";
 
 const Draft = () => (
   <Layout>
-    <Row>
-      <Col sm={6} md={4} />
-      <Col sm={12} md={16}>
+    <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+      <Col md={2} />
+      <Col md={9}>
+        <div className="wrapper">
+          <FilterableRoster />
+        </div>
+      </Col>
+      <Col md={9}>
         <div className="wrapper">
           <Chat />
         </div>
-      </Col>
-    </Row>
-    <Row>
-      <Col>
-        <FilterableRoster />
+        <div className="wrapper">
+          <Team />
+        </div>
       </Col>
     </Row>
     <style jsx>{`
       .wrapper {
-        margin: 50px 0;
+        margin: 25px 0;
       }
     `}</style>
   </Layout>
