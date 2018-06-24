@@ -4,7 +4,7 @@
     "rules": "firestore.rules"
   },
   "functions": {
-    "predeploy": "yarn build-fns && yarn build-app && yarn copy-deps && yarn install-deps",
+    "predeploy": "yarn build-fns && yarn build-app && yarn copy-deps",
     "source": "dist/functions"
   },
   "hosting": {

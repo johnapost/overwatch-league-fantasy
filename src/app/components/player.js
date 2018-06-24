@@ -2,7 +2,7 @@
 
 import React from "react";
 import TeamLogo from "./teamLogo";
-import fromTeam from "../shared/getTeam";
+import getTeam from "../shared/getTeam";
 
 type Props = {
   // givenName: string,
@@ -11,11 +11,11 @@ type Props = {
   name: string,
   // nationality: string,
   // id: string,
-  teamId: string
+  teamId: number
 };
 
 export default ({ headshot, name, teamId }: Props) => {
-  const { abbreviatedName, primaryColor } = fromTeam(teamId);
+  const { abbreviatedName, primaryColor } = getTeam(teamId);
   return (
     <div className="container">
       <div className="background" />

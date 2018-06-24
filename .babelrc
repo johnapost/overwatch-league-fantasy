@@ -1,8 +1,16 @@
 {
   "plugins": [
-    "transform-flow-strip-types"
+    "@babel/plugin-transform-flow-strip-types"
   ],
   "presets": [
-    "next/babel"
+    [
+      "next/babel",
+      {
+        "targets": {
+          "browsers": ["last 2 versions"],
+          "node": "6.11.5"
+        }
+      }
+    ]
   ]
 }
