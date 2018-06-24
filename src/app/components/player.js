@@ -3,16 +3,9 @@
 import React from "react";
 import TeamLogo from "./teamLogo";
 import getTeam from "../shared/getTeam";
+import type { Player } from "../shared/player";
 
-type Props = {
-  // givenName: string,
-  // familyName: string,
-  headshot: string,
-  name: string,
-  // nationality: string,
-  // id: string,
-  teamId: number
-};
+type Props = Player;
 
 export default ({ headshot, name, teamId }: Props) => {
   const { abbreviatedName, primaryColor } = getTeam(teamId);

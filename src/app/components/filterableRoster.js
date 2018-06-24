@@ -6,6 +6,7 @@ import Roster from "./roster";
 import api from "../shared/api.json";
 import getTeam from "../shared/getTeam";
 import teams from "../shared/teams.json";
+import roles from "../shared/roles";
 
 type State = {
   playerName: string,
@@ -13,8 +14,6 @@ type State = {
   role: string | null,
   teamId: number | null
 };
-
-const ROLES = ["Offense", "Tank", "Support", "Flex"];
 
 const allPlayerNames = api.competitors
   .reduce((accum, { competitor: { players } }) => [...accum, ...players], [])
@@ -59,7 +58,7 @@ class FilterableRoster extends Component<*, State> {
       <Menu.Item onClick={() => this.setState({ role: null })}>
         All Roles
       </Menu.Item>
-      {ROLES.map(role => (
+      {roles.map(role => (
         <Menu.Item key={role} onClick={() => this.setState({ role })}>
           {role}
         </Menu.Item>
