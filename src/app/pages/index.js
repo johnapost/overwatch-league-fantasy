@@ -17,11 +17,7 @@ export default () => (
         </div>
       </Col>
     </Row>
-    <Row>
-      <Col>
-        <FilterableRoster />
-      </Col>
-    </Row>
+    <FilterableRoster />
     <style jsx>{`
       .wrapper {
         margin: 50px 0;

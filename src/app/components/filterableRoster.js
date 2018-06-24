@@ -1,47 +1,108 @@
 // @flow
 
-import { Menu, Dropdown, Button } from "antd";
-
 import React, { Component } from "react";
+import { Menu, Dropdown, Button, Input, AutoComplete } from "antd";
 import Roster from "./roster";
+import api from "../shared/api.json";
 import getTeam from "../shared/getTeam";
 import teams from "../shared/teams.json";
 
 type State = {
+  playerNames: string[],
+  role: string | null,
   teamId: number | null
 };
 
+const roles = ["Offense", "Tank", "Support", "Flex"];
+
+const allPlayerNames = api.competitors
+  .reduce((accum, { competitor: { players } }) => [...accum, ...players], [])
+  .map(({ player: { name } }) => name);
+
 class FilterableRoster extends Component<*, State> {
   state = {
+    playerNames: allPlayerNames,
+    role: null,
     teamId: null
   };
 
-  render() {
-    const menu = (
-      <Menu>
-        <Menu.Item>
-          <a onClick={() => this.setState({ teamId: null })} role="button">
-            All Teams
-          </a>
-        </Menu.Item>
-        {teams.map(({ id, name }) => (
-          <Menu.Item key={id}>
-            <a onClick={() => this.setState({ teamId: id })} role="button">
-              {name}
-            </a>
-          </Menu.Item>
-        ))}
-      </Menu>
-    );
+  filterPlayerNames = (inputValue: string, option: Object) =>
+    option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !==
+    -1;
 
-    return [
-      <Dropdown overlay={menu} placement="topLeft" trigger={["click"]} key="0">
-        <Button>
-          {this.state.teamId ? getTeam(this.state.teamId).name : "All Teams"}
-        </Button>
-      </Dropdown>,
-      <Roster withTeamId={this.state.teamId} key="1" />
-    ];
+  renderTeamMenu = () => (
+    <Menu>
+      <Menu.Item onClick={() => this.setState({ teamId: null })}>
+        All Teams
+      </Menu.Item>
+      {teams.map(({ id, name }) => (
+        <Menu.Item key={id} onClick={() => this.setState({ teamId: id })}>
+          {name}
+        </Menu.Item>
+      ))}
+    </Menu>
+  );
+
+  renderPositionMenu = () => (
+    <Menu>
+      <Menu.Item onClick={() => this.setState({ role: null })}>
+        All Positions
+      </Menu.Item>
+      {roles.map(role => (
+        <Menu.Item key={role} onClick={() => this.setState({ role })}>
+          {role}
+        </Menu.Item>
+      ))}
+    </Menu>
+  );
+
+  render() {
+    return (
+      <div>
+        <Input.Group>
+          <div className="wrapper">
+            <Dropdown
+              overlay={this.renderTeamMenu()}
+              placement="bottomLeft"
+              trigger={["click"]}
+              key="0"
+            >
+              <Button size="large">
+                {this.state.teamId
+                  ? getTeam(this.state.teamId).name
+                  : "All Teams"}
+              </Button>
+            </Dropdown>
+            <Dropdown
+              overlay={this.renderPositionMenu()}
+              placement="bottomLeft"
+              trigger={["click"]}
+            >
+              <Button size="large">
+                {this.state.role ? this.state.role : "All Positions"}
+              </Button>
+            </Dropdown>
+            <AutoComplete
+              dataSource={this.state.playerNames}
+              placeholder="Player Name"
+              filterOption={this.filterPlayerNames}
+              size="large"
+            />
+          </div>
+        </Input.Group>
+        <Roster
+          withTeamId={this.state.teamId}
+          withRole={this.state.role}
+          key="1"
+        />
+        <style jsx>{`
+          .wrapper {
+            display: flex;
+            justify-content: center;
+          }
+        `}</style>
+      </div>
+    );
   }
 }
 

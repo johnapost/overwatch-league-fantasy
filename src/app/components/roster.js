@@ -5,7 +5,8 @@ import api from "../shared/api.json";
 import Player from "./player";
 
 type Props = {
-  withTeamId?: number | null
+  withTeamId?: number | null,
+  withRole: string | null
 };
 
 const allPlayers = (): Object[] =>
@@ -14,10 +15,17 @@ const allPlayers = (): Object[] =>
     []
   );
 
-const Roster = ({ withTeamId }: Props) => (
+const Roster = ({ withTeamId, withRole }: Props) => (
   <div className="wrapper">
     {allPlayers()
       .filter(({ team }) => (withTeamId ? withTeamId === team.id : true))
+      .filter(
+        ({
+          player: {
+            attributes: { role }
+          }
+        }) => (withRole ? withRole.toLowerCase() === role : true)
+      )
       .map(({ player, team }) => (
         <Player {...player} teamId={team.id} key={player.id} />
       ))}
