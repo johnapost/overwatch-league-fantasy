@@ -5,6 +5,7 @@ import type { Player } from "../shared/player";
 
 // Types
 type TeamState = {
+  selectedPlayer: Player | null,
   slots: [Player, Roles][]
 };
 
@@ -13,20 +14,32 @@ type TeamSetSlots = {
   slots: string[]
 };
 
-type TeamDraft = {
-  type: "DRAFT",
-  player: Player,
+type TeamDraftSelect = {
+  type: "DRAFT_SELECT",
+  player: Player
+};
+
+type TeamDraftPlace = {
+  type: "DRAFT_PLACE",
   toIndex: number
 };
 
-type TeamMove = {
-  type: "MOVE",
-  fromIndex: number,
-  player: Player,
+type TeamMoveSelect = {
+  type: "MOVE_SELECT",
+  fromIndex: number
+};
+
+type TeamMovePlace = {
+  type: "MOVE_PLACE",
   toIndex: number
 };
 
-type TeamAction = TeamSetSlots | TeamDraft | TeamMove;
+type TeamAction =
+  | TeamSetSlots
+  | TeamDraftSelect
+  | TeamDraftPlace
+  | TeamMoveSelect
+  | TeamMovePlace;
 
 // Action Creators
 export const teamSetSlots = (slots: string[]): TeamSetSlots => ({
@@ -34,25 +47,28 @@ export const teamSetSlots = (slots: string[]): TeamSetSlots => ({
   slots
 });
 
-export const teamDraft = (player: Player, toIndex: number): TeamDraft => ({
-  type: "DRAFT",
-  player,
+export const teamDraftSelect = (player: Player): TeamDraftSelect => ({
+  type: "DRAFT_SELECT",
+  player
+});
+
+export const teamDraftPlace = (toIndex: number): TeamDraftPlace => ({
+  type: "DRAFT_PLACE",
   toIndex
 });
 
-export const teamMove = (
-  player: Player,
-  fromIndex: number,
-  toIndex: number
-): TeamDraft => ({
-  type: "DRAFT",
-  fromIndex,
-  player,
+export const teamMoveSelect = (fromIndex: number): TeamMoveSelect => ({
+  type: "MOVE_SELECT",
+  fromIndex
+});
+
+export const teamMovePlace = (toIndex: number): TeamMovePlace => ({
+  type: "MOVE_PLACE",
   toIndex
 });
 
 // Reducer
-const defaultState: TeamState = { slots: [] };
+const defaultState: TeamState = { selectedPlayer: null, slots: [] };
 
 export default (state: TeamState = defaultState, action: TeamAction) => {
   switch (action.type) {
