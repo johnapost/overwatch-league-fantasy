@@ -12,6 +12,7 @@
     "dev": "next src/app",
     "firebase-login": "firebase login",
     "sort": "sort-package-json",
+    "test": "jest",
     "type-check": "flow",
     "type-install": "flow-typed install"
   },

@@ -1,12 +1,12 @@
 // @flow
 
-import type { Roles } from "../shared/roles";
+import type { Role } from "../shared/roles";
 import type { Player } from "../shared/player";
 
 // Types
 type TeamState = {
   selectedPlayer: Player | null,
-  slots: [Player, Roles][]
+  slots: [Player | null, Role][]
 };
 
 type TeamSetSlots = {
@@ -68,7 +68,7 @@ export const teamMovePlace = (toIndex: number): TeamMovePlace => ({
 });
 
 // Reducer
-const defaultState: TeamState = { selectedPlayer: null, slots: [] };
+export const defaultState: TeamState = { selectedPlayer: null, slots: [] };
 
 export default (state: TeamState = defaultState, action: TeamAction) => {
   switch (action.type) {
