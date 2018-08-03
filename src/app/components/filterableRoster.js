@@ -8,6 +8,10 @@ import getTeam from "../shared/getTeam";
 import teams from "../shared/teams.json";
 import roles from "../shared/roles";
 
+type Props = {
+  drafting?: boolean
+};
+
 type State = {
   playerName: string,
   playerNames: string[],
@@ -19,7 +23,7 @@ const allPlayerNames = api.competitors
   .reduce((accum, { competitor: { players } }) => [...accum, ...players], [])
   .map(({ player: { name } }) => name);
 
-class FilterableRoster extends Component<*, State> {
+class FilterableRoster extends Component<Props, State> {
   state = {
     playerName: "",
     playerNames: allPlayerNames,
@@ -104,6 +108,7 @@ class FilterableRoster extends Component<*, State> {
         </Input.Group>
         <div className="roster">
           <Roster
+            drafting={this.props.drafting}
             playerName={this.state.playerName}
             role={this.state.role}
             teamId={this.state.teamId}
@@ -124,5 +129,9 @@ class FilterableRoster extends Component<*, State> {
     );
   }
 }
+
+FilterableRoster.defaultProps = {
+  drafting: false
+};
 
 export default FilterableRoster;
