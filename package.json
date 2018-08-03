@@ -28,7 +28,10 @@
         "statements": 80
       }
     },
-    "notify": true
+    "notify": true,
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    }
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.47",
@@ -50,10 +53,13 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.47",
-    "@babel/core": "^7.0.0-beta.47",
+    "@babel/core": "^7.0.0-beta.55",
     "@babel/plugin-transform-flow-strip-types": "^7.0.0-beta.47",
+    "@babel/plugin-transform-modules-commonjs": "^7.0.0-beta.55",
     "@babel/preset-env": "^7.0.0-beta.47",
+    "babel-core": "^7.0.0-0",
     "babel-eslint": "^8.2.3",
+    "babel-jest": "^23.4.2",
     "cpx": "^1.5.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",

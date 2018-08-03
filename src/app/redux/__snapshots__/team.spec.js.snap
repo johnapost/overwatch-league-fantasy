@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`team action creators teamDraftPlace should return action 1`] = `
+Object {
+  "toIndex": 0,
+  "type": "DRAFT_PLACE",
+}
+`;
+
+exports[`team action creators teamDraftSelect should return action 1`] = `
+Object {
+  "player": Object {
+    "familyName": "Williams",
+    "givenName": "Nina",
+    "headshot": "https://url.url/nina-williams.jpg",
+    "id": "1234",
+    "name": "OWLName",
+    "nationality": "FI",
+    "teamId": 4523,
+  },
+  "type": "DRAFT_SELECT",
+}
+`;
+
+exports[`team action creators teamMovePlace should return action 1`] = `
+Object {
+  "toIndex": 1,
+  "type": "MOVE_PLACE",
+}
+`;
+
+exports[`team action creators teamMoveSelect should return action 1`] = `
+Object {
+  "fromIndex": 0,
+  "type": "MOVE_SELECT",
+}
+`;
+
+exports[`team action creators teamSetSlots should return action 1`] = `
+Object {
+  "slots": Array [
+    "Offense",
+    "Offense",
+    "Tank",
+    "Tank",
+    "Support",
+    "Support",
+    "Flex",
+    "Flex",
+  ],
+  "type": "SET_SLOTS",
+}
+`;
+
+exports[`team reducer should return default state 1`] = `
+Object {
+  "selectedPlayer": null,
+  "slots": Array [],
+}
+`;
+
+exports[`team reducer should update state when drafting players 1`] = `
+Object {
+  "selectedPlayer": null,
+  "slots": Array [],
+}
+`;
+
+exports[`team reducer should update state when drafting players 2`] = `
+Object {
+  "selectedPlayer": null,
+  "slots": Array [],
+}
+`;
+
+exports[`team reducer should update state when drafting players 3`] = `
+Object {
+  "selectedPlayer": null,
+  "slots": Array [],
+}
+`;
