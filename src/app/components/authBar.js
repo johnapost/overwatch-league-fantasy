@@ -31,6 +31,8 @@ class AuthBar extends Component<Props, State> {
     showSignUpModal: false
   };
 
+  authObserver = null;
+
   async componentDidMount() {
     const {
       firebase,
@@ -70,8 +72,6 @@ class AuthBar extends Component<Props, State> {
   }
 
   setDisabled = bool => this.setState({ disabled: bool });
-
-  authObserver = null;
 
   verifyEmail = async (oobCode: string, closeMessage: Function) => {
     const { firebase } = this.props;
@@ -143,7 +143,10 @@ class AuthBar extends Component<Props, State> {
 const mapDispatchToProps = { login: userLogin, logout: userLogout };
 
 export default compose(
-  connect(() => ({}), mapDispatchToProps),
+  connect(
+    null,
+    mapDispatchToProps
+  ),
   withRouter,
   withFirebase,
   Form.create()

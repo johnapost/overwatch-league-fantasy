@@ -196,7 +196,7 @@ const mapStateToProps = ({ firestore, user: { uid } }) => {
 };
 
 export default compose(
-  connect(mapStateToProps, () => ({})),
+  connect(mapStateToProps),
   withFirestore(({ user: { uid } }) => [
     {
       collection: "leagues",

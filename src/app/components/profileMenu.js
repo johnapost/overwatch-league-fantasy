@@ -83,6 +83,7 @@ class ProfileMenu extends Component<Props, State> {
 
 const mapStateToProps = ({ user }) => ({ user });
 
-export default compose(connect(mapStateToProps, () => ({})), withFirebase)(
-  ProfileMenu
-);
+export default compose(
+  connect(mapStateToProps),
+  withFirebase
+)(ProfileMenu);

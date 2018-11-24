@@ -24,6 +24,10 @@ const allPlayerNames = api.competitors
   .map(({ player: { name } }) => name);
 
 class FilterableRoster extends Component<Props, State> {
+  static defaultProps = {
+    drafting: false
+  };
+
   state = {
     playerName: "",
     playerNames: allPlayerNames,
@@ -129,9 +133,5 @@ class FilterableRoster extends Component<Props, State> {
     );
   }
 }
-
-FilterableRoster.defaultProps = {
-  drafting: false
-};
 
 export default FilterableRoster;

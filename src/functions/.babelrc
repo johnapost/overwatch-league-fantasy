@@ -1,10 +1,10 @@
 {
   "presets": [
     [
-      "@babel/preset-env",
+      "next/babel",
       {
         "targets": {
-          "node": "6.11.5"
+          "node": "8.13.0"
         }
       }
     ]

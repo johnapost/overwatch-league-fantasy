@@ -1,6 +1,6 @@
 // @flow
 
-import React from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { teamSetSlots } from "../redux/team";
 import api from "../shared/api.json";
@@ -9,12 +9,10 @@ import Player from "./player";
 type Props = {
   drafting?: boolean,
   playerName?: string,
-  setSlots: teamSetSlots,
+  setSlots: typeof teamSetSlots,
   teamId?: number | null,
   role?: string | null
 };
-
-type State = {};
 
 const allPlayers = (): Object[] =>
   api.competitors.reduce(
@@ -23,6 +21,13 @@ const allPlayers = (): Object[] =>
   );
 
 class Roster extends Component<Props> {
+  static defaultProps = {
+    drafting: false,
+    playerName: "",
+    teamId: null,
+    role: null
+  };
+
   render() {
     const { drafting, teamId, role, playerName } = this.props;
 
@@ -30,19 +35,13 @@ class Roster extends Component<Props> {
       <div className="wrapper">
         {allPlayers()
           .filter(({ team }) => (teamId ? teamId === team.id : true))
-          .filter(
-            ({
-              player: {
-                attributes: { role: _role }
-              }
-            }) => (role ? role.toLowerCase() === _role : true)
+          .filter(({ player: { attributes: { role: _role } } }) =>
+            role ? role.toLowerCase() === _role : true
           )
-          .filter(
-            ({ player: { name } }) =>
-              playerName
-                ? name.toLowerCase().indexOf(playerName.toLocaleLowerCase()) >
-                  -1
-                : true
+          .filter(({ player: { name } }) =>
+            playerName
+              ? name.toLowerCase().indexOf(playerName.toLocaleLowerCase()) > -1
+              : true
           )
           .map(({ player, team }) => (
             <Player {...player} teamId={team.id} key={player.id} />
@@ -61,13 +60,9 @@ class Roster extends Component<Props> {
   }
 }
 
-Roster.defaultProps = {
-  drafting: false,
-  playerName: "",
-  teamId: null,
-  role: null
-};
-
 const mapDispatchToProps = { setSlots: teamSetSlots };
 
-export default connect(() => ({}), mapDispatchToProps)(Roster);
+export default connect(
+  null,
+  mapDispatchToProps
+)(Roster);
