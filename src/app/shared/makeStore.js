@@ -3,14 +3,13 @@
 import { combineReducers, compose, createStore } from "redux";
 import { reactReduxFirebase } from "react-redux-firebase";
 import { reduxFirestore, firestoreReducer } from "redux-firestore";
+import { config } from "firebase-functions";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 import user from "../redux/user";
-import { apiKey, authDomain, projectId } from "../secrets";
 
 // Firebase setup
-const firebaseConfig = { apiKey, authDomain, projectId };
 const rrfConfig = { userProfile: "users", useFirestoreForProfile: true };
 
 // Redux setup
@@ -24,7 +23,7 @@ let enhancers;
 // Client Only
 if (typeof window !== "undefined") {
   if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(config().firebase);
   }
   const firestore = firebase.firestore();
   firestore.settings({ timestampsInSnapshots: true });
