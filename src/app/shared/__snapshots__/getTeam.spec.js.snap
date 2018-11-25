@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getTeam should get a team 1`] = `
+Object {
+  "abbreviatedName": "DAL",
+  "addressCountry": "US",
+  "homeLocation": "Dallas, TX",
+  "id": 4523,
+  "name": "Dallas Fuel",
+  "owl_division": 80,
+  "primaryColor": "0c2340",
+  "secondaryColor": "0072ce",
+}
+`;

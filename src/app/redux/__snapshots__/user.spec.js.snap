@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`user action creators userLogin should return action 1`] = `
+Object {
+  "type": "LOGIN",
+  "uid": "123",
+}
+`;
+
+exports[`user action creators userLogout should return action 1`] = `
+Object {
+  "type": "LOGOUT",
+}
+`;
+
+exports[`user reducer should return default state 1`] = `
+Object {
+  "displayName": null,
+  "uid": null,
+}
+`;
+
+exports[`user reducer should update user when logging in 1`] = `
+Object {
+  "displayName": null,
+  "uid": "123",
+}
+`;
+
+exports[`user reducer should update user when logging in 2`] = `
+Object {
+  "displayName": "testUser",
+  "uid": "123",
+}
+`;
+
+exports[`user reducer should update user when logging in and out 1`] = `
+Object {
+  "displayName": null,
+  "uid": "123",
+}
+`;
+
+exports[`user reducer should update user when logging in and out 2`] = `
+Object {
+  "displayName": "testUser",
+  "uid": "123",
+}
+`;
+
+exports[`user reducer should update user when logging in and out 3`] = `
+Object {
+  "displayName": null,
+  "uid": null,
+}
+`;
