@@ -62,7 +62,7 @@ describe("team", () => {
       const draftSelect = reducer(setSlots, teamDraftSelect(player));
       expect(draftSelect).toMatchSnapshot();
 
-      const draftPlace = reducer(draftSelect, teamDraftPlace(0));
+      const draftPlace = reducer(draftSelect, teamDraftPlace(1));
       expect(draftPlace).toMatchSnapshot();
     });
 

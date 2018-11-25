@@ -4,9 +4,11 @@ import type { Role } from "../shared/roles";
 import type { Player } from "../shared/player";
 
 // Types
-type TeamState = {
+export type TeamState = {
   selectedPlayer: Player | null,
-  slots: [Player | null, Role][]
+  slots: {
+    [index: string]: Player | Role
+  }
 };
 
 type TeamSetSlots = {
@@ -68,10 +70,29 @@ export const teamMovePlace = (toIndex: number): TeamMovePlace => ({
 });
 
 // Reducer
-export const defaultState: TeamState = { selectedPlayer: null, slots: [] };
+export const defaultState: TeamState = { selectedPlayer: null, slots: {} };
 
 export default (state: TeamState = defaultState, action: TeamAction) => {
   switch (action.type) {
+    case "SET_SLOTS":
+      return {
+        ...state,
+        slots: action.slots.reduce(
+          (accum, curr, index) => ({ ...accum, [index]: curr }),
+          {}
+        )
+      };
+    case "DRAFT_SELECT":
+      return { ...state, selectedPlayer: action.player };
+    case "DRAFT_PLACE":
+      return {
+        ...state,
+        selectedPlayer: null,
+        slots: {
+          ...state.slots,
+          [action.toIndex]: state.selectedPlayer
+        }
+      };
     default:
       return state;
   }

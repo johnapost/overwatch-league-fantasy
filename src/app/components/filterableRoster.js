@@ -75,6 +75,9 @@ class FilterableRoster extends Component<Props, State> {
   );
 
   render() {
+    const { drafting } = this.props;
+    const { teamId, role, playerName, playerNames } = this.state;
+
     return (
       <div>
         <Input.Group>
@@ -86,9 +89,7 @@ class FilterableRoster extends Component<Props, State> {
               key="0"
             >
               <Button size="large">
-                {this.state.teamId
-                  ? getTeam(this.state.teamId).name
-                  : "All Teams"}
+                {teamId ? getTeam(teamId).name : "All Teams"}
               </Button>
             </Dropdown>
             <Dropdown
@@ -96,13 +97,11 @@ class FilterableRoster extends Component<Props, State> {
               placement="bottomLeft"
               trigger={["click"]}
             >
-              <Button size="large">
-                {this.state.role ? this.state.role : "All Roles"}
-              </Button>
+              <Button size="large">{role || "All Roles"}</Button>
             </Dropdown>
             <AutoComplete
               allowClear
-              dataSource={this.state.playerNames}
+              dataSource={playerNames}
               filterOption={this.filterPlayerNames}
               onChange={this.setPlayerName}
               placeholder="Player Name"
@@ -112,10 +111,10 @@ class FilterableRoster extends Component<Props, State> {
         </Input.Group>
         <div className="roster">
           <Roster
-            drafting={this.props.drafting}
-            playerName={this.state.playerName}
-            role={this.state.role}
-            teamId={this.state.teamId}
+            drafting={drafting}
+            playerName={playerName}
+            role={role}
+            teamId={teamId}
             key="1"
           />
         </div>

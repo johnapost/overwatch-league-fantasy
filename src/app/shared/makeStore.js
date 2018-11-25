@@ -7,6 +7,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 import user from "../redux/user";
+import team from "../redux/team";
 import { apiKey, authDomain, projectId } from "../secrets.json";
 
 // Firebase setup
@@ -16,6 +17,7 @@ const rrfConfig = { userProfile: "users", useFirestoreForProfile: true };
 // Redux setup
 const reducers = combineReducers({
   firestore: firestoreReducer,
+  team,
   user
 });
 

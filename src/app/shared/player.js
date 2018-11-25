@@ -1,11 +1,11 @@
 // @flow
 
 export type Player = {
-  givenName: string,
   familyName: string,
+  givenName: string,
   headshot: string,
+  id: string,
   name: string,
   nationality: string,
-  id: string,
   teamId: number
 };

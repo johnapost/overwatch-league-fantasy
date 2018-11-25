@@ -20,20 +20,6 @@ Object {
 }
 `;
 
-exports[`user reducer should update user when logging in 1`] = `
-Object {
-  "displayName": null,
-  "uid": "123",
-}
-`;
-
-exports[`user reducer should update user when logging in 2`] = `
-Object {
-  "displayName": "testUser",
-  "uid": "123",
-}
-`;
-
 exports[`user reducer should update user when logging in and out 1`] = `
 Object {
   "displayName": null,
