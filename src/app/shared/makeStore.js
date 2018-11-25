@@ -7,7 +7,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 import user from "../redux/user";
-import { apiKey, authDomain, projectId } from "../secrets";
+import { apiKey, authDomain, projectId } from "../secrets.json";
 
 // Firebase setup
 const firebaseConfig = { apiKey, authDomain, projectId };

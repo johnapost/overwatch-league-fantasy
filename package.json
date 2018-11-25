@@ -18,7 +18,8 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.js"
+      "src/**/*.js",
+      "!src/app/next.config.js"
     ],
     "coverageThreshold": {
       "global": {
