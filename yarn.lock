@@ -2003,6 +2003,7 @@ babel-helpers@^6.24.1:
 babel-jest@^23.6.0:
   version "23.6.0"
   resolved "https://thezebra.jfrog.io/thezebra/api/npm/npm/babel-jest/-/babel-jest-23.6.0.tgz#a644232366557a2240a0c083da6b25786185a2f1"
+  integrity sha1-pkQjI2ZVeiJAoMCD2msleGGFovE=
   dependencies:
     babel-plugin-istanbul "^4.1.6"
     babel-preset-jest "^23.2.0"

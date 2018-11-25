@@ -12,7 +12,8 @@ export default () => (
       <Col sm={12} md={16}>
         <div className="wrapper">
           <Card>
-            Create or join leagues to compete with your own Overwatch team!
+            This site is a work in progress and is not ready for usage at all!
+            Any data is subject to deletion while work continues.
           </Card>
         </div>
       </Col>

@@ -95,12 +95,14 @@ class AuthBar extends Component<Props, State> {
   hideSignUpModal = () => this.setState({ showSignUpModal: false });
 
   render() {
+    const { disabled, showSignUpModal, loggedIn } = this.state;
+
     const renderLoggedOut = (
       <div>
         {/* TODO: Handle resending verification email */}
         {/* TODO: Handle resetting password */}
         <LoginForm
-          disabled={this.state.disabled || this.state.showSignUpModal}
+          disabled={disabled || showSignUpModal}
           showSignUpModal={() => this.setState({ showSignUpModal: true })}
           setDisabled={this.setDisabled}
         />
@@ -108,10 +110,10 @@ class AuthBar extends Component<Props, State> {
           footer={null}
           onCancel={this.hideSignUpModal}
           title="Create an account"
-          visible={this.state.showSignUpModal}
+          visible={showSignUpModal}
         >
           <SignUpForm
-            disabled={this.state.disabled}
+            disabled={disabled}
             hideSignUpModal={this.hideSignUpModal}
             setDisabled={this.setDisabled}
           />
@@ -121,10 +123,10 @@ class AuthBar extends Component<Props, State> {
 
     return (
       <div className="container">
-        {this.state.loggedIn ? <ProfileMenu /> : renderLoggedOut}
+        {loggedIn ? <ProfileMenu /> : renderLoggedOut}
         <style jsx>{`
           .container {
-            background: ${this.state.loggedIn ? "transparent" : "#FFFFFF"};
+            background: ${loggedIn ? "transparent" : "#FFFFFF"};
             display: flex;
             height: 59px;
             justify-content: flex-end;

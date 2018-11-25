@@ -8,7 +8,7 @@
       {
         "targets": {
           "browsers": ["last 2 versions"],
-          "node": "8.13.0"
+          "node": "6.11.5"
         }
       }
     ]
