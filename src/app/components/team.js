@@ -5,27 +5,54 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import get from "lodash/get";
 import withFirestore from "../shared/withFirestore";
-import { teamSetDrafter } from "../redux/team";
+import { teamDraftPlace } from "../redux/team";
 import Header from "./header";
+import Player from "./player";
 import DraftSlot from "./draftSlot";
 
 import type { TeamState } from "../redux/team";
+import type { Player as PlayerType } from "../shared/player";
 import type { Role } from "../shared/roles";
 
-type Props = TeamState & {
-  rosterSlots: {
-    [index: string]: Role
-  },
-  setDrafter: typeof teamSetDrafter
+type Roster = {
+  [index: string]: PlayerType | null
 };
 
-const Team = ({ rosterSlots }: Props) => (
+type RosterSlots = {
+  [index: string]: Role
+};
+
+type Props = TeamState & {
+  drafting: boolean,
+  roster: Roster,
+  rosterSlots: RosterSlots,
+  draftPlace: typeof teamDraftPlace
+};
+
+const mergeDrafted = (roster: Roster, rosterSlots: RosterSlots) =>
+  Object.entries(rosterSlots).reduce(
+    (accum, [key, value]) => [...accum, roster[key] ? roster[key] : value],
+    []
+  );
+
+const Team = ({ drafting, draftPlace, roster, rosterSlots }: Props) => (
   <div>
     <Header title="My Team" />
     <div className="slots-wrapper">
-      {(Object.entries(rosterSlots): any).map(([key, value]) => (
-        <DraftSlot key={key} role={value} />
-      ))}
+      {mergeDrafted(roster, rosterSlots).map((value, index) =>
+        value === "Offense" ||
+        value === "Tank" ||
+        value === "Support" ||
+        value === "Flex" ? (
+          <DraftSlot
+            key={`${index + 1}`}
+            role={value}
+            onClick={drafting ? () => draftPlace(index) : () => {}}
+          />
+        ) : (
+          <Player key={value.id} {...value} />
+        )
+      )}
     </div>
     <style jsx>{`
       .slots-wrapper {
@@ -39,17 +66,19 @@ const Team = ({ rosterSlots }: Props) => (
   </div>
 );
 
-const mapStateToProps = ({ firestore, team }) => {
+const mapStateToProps = ({ firestore, team, user: { uid } }) => {
   const rosterSlots = get(firestore.data, "leagues.first.rosterSlots", {});
+  const drafter = get(firestore.data, "leagues.first.drafter", "");
 
   return {
     ...team,
+    drafting: drafter === uid,
     rosterSlots
   };
 };
 
 const mapDispatchProps = {
-  setDrafter: teamSetDrafter
+  draftPlace: teamDraftPlace
 };
 
 export default compose(

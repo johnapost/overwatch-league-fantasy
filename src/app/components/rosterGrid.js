@@ -10,7 +10,7 @@ import { teamDraftSelect } from "../redux/team";
 
 type Props = {
   drafting: boolean,
-  draftSelect: Function,
+  draftSelect: typeof teamDraftSelect,
   playerName?: string,
   teamId?: number | null,
   role?: string | null
@@ -22,7 +22,13 @@ const allPlayers = (): Object[] =>
     []
   );
 
-const Roster = ({ drafting, teamId, role, playerName, draftSelect }: Props) => (
+const RosterGrid = ({
+  drafting,
+  teamId,
+  role,
+  playerName,
+  draftSelect
+}: Props) => (
   <div className="wrapper">
     {allPlayers()
       .filter(({ team }) => (teamId ? teamId === team.id : true))
@@ -40,7 +46,9 @@ const Roster = ({ drafting, teamId, role, playerName, draftSelect }: Props) => (
           teamId={team.id}
           key={player.id}
           onClick={
-            drafting && draftSelect ? () => draftSelect(player) : () => {}
+            drafting
+              ? () => draftSelect({ ...player, teamId: team.id })
+              : () => {}
           }
         />
       ))}
@@ -56,7 +64,7 @@ const Roster = ({ drafting, teamId, role, playerName, draftSelect }: Props) => (
   </div>
 );
 
-Roster.defaultProps = {
+RosterGrid.defaultProps = {
   playerName: "",
   teamId: null,
   role: null
@@ -79,4 +87,4 @@ export default compose(
     mapStateToProps,
     mapDispatchProps
   )
-)(Roster);
+)(RosterGrid);

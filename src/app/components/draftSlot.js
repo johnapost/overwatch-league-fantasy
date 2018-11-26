@@ -4,11 +4,12 @@ import React from "react";
 import type { Role } from "../shared/roles";
 
 type Props = {
+  onClick: Function,
   role: Role
 };
 
-export default ({ role }: Props) => (
-  <div className="container">
+export default ({ onClick, role }: Props) => (
+  <div className="container" onClick={onClick}>
     <div className="background" />
     <div className="headshot">
       {/* <img src={headshot} alt={name} title={name} /> */}

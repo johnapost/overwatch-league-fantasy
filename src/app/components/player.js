@@ -6,7 +6,7 @@ import getTeam from "../shared/getTeam";
 import type { Player } from "../shared/player";
 
 type Props = Player & {
-  onClick: Function
+  onClick?: Function
 };
 
 export default ({ headshot, name, teamId, onClick }: Props) => {

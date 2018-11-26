@@ -2,7 +2,7 @@
 
 import React, { Component } from "react";
 import { Menu, Dropdown, Button, Input, AutoComplete } from "antd";
-import Roster from "./roster";
+import RosterGrid from "./rosterGrid";
 import api from "../shared/api.json";
 import getTeam from "../shared/getTeam";
 import teams from "../shared/teams.json";
@@ -19,7 +19,7 @@ const allPlayerNames = api.competitors
   .reduce((accum, { competitor: { players } }) => [...accum, ...players], [])
   .map(({ player: { name } }) => name);
 
-class FilterableRoster extends Component<*, State> {
+class FilterableRosterGrid extends Component<*, State> {
   state = {
     playerName: "",
     playerNames: allPlayerNames,
@@ -101,7 +101,7 @@ class FilterableRoster extends Component<*, State> {
           </div>
         </Input.Group>
         <div className="roster">
-          <Roster playerName={playerName} role={role} teamId={teamId} />
+          <RosterGrid playerName={playerName} role={role} teamId={teamId} />
         </div>
         <style jsx>{`
           .filters {
@@ -118,4 +118,4 @@ class FilterableRoster extends Component<*, State> {
   }
 }
 
-export default FilterableRoster;
+export default FilterableRosterGrid;

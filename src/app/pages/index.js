@@ -3,7 +3,7 @@
 import React from "react";
 import { Row, Col, Card } from "antd";
 import Layout from "../components/layout";
-import Roster from "../components/roster";
+import RosterGrid from "../components/rosterGrid";
 
 export default () => (
   <Layout>
@@ -18,7 +18,7 @@ export default () => (
         </div>
       </Col>
     </Row>
-    <Roster />
+    <RosterGrid />
     <style jsx>{`
       .wrapper {
         margin: 50px 0;
