@@ -11,12 +11,13 @@ type Props = {
 export default ({ onClick, role }: Props) => (
   <div className="container" onClick={onClick}>
     <div className="background" />
-    <div className="headshot">
-      {/* <img src={headshot} alt={name} title={name} /> */}
+    <div className="image-container">
+      <img src={`static/${role}.svg`} alt={role} title={role} />
     </div>
     <div className="profile">{role}</div>
     <style jsx>{`
       .container {
+        background: #ffffff;
         border: solid 5px #dddde3;
         height: 200px;
         margin: 5px;
@@ -37,9 +38,6 @@ export default ({ onClick, role }: Props) => (
         position: absolute;
         top: 0;
         width: 150px;
-      }
-      .headshot {
-        transform: scale(1.5) skew(15deg) translate(-2px, 9px);
       }
       img {
         display: block;

@@ -32,7 +32,10 @@ type Props = TeamState & {
 // Merge roster with rosterSlots to mix displays for draft
 const mergeDrafted = (roster: Roster, rosterSlots: RosterSlots): any =>
   Object.entries(rosterSlots).reduce(
-    (accum, [key, value]) => [...accum, roster[key] ? roster[key] : value],
+    (accum, [key, value]) => [
+      ...accum,
+      roster[key] ? { ...roster[key], role: value } : value
+    ],
     []
   );
 
