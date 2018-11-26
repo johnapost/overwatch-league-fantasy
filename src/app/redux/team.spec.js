@@ -49,7 +49,7 @@ describe("team", () => {
       const draftSelect = reducer(
         {
           ...defaultState,
-          slots: {
+          roster: {
             0: null,
             1: null
           }
@@ -74,7 +74,7 @@ describe("team", () => {
       const moveSelect = reducer(
         {
           ...defaultState,
-          slots: {
+          roster: {
             0: player,
             1: null
           }

@@ -6,7 +6,7 @@ import type { Player } from "../shared/player";
 export type TeamState = {
   drafter: string | null,
   selectedPlayer: Player | null,
-  slots: {
+  roster: {
     [index: string]: Player | null
   }
 };
@@ -73,7 +73,7 @@ export const teamSetDrafter = (uid: number | null): TeamSetDrafter => ({
 export const defaultState: TeamState = {
   drafter: null,
   selectedPlayer: null,
-  slots: {}
+  roster: {}
 };
 
 export default (state: TeamState = defaultState, action: TeamAction) => {
@@ -84,24 +84,24 @@ export default (state: TeamState = defaultState, action: TeamAction) => {
       return {
         ...state,
         selectedPlayer: null,
-        slots: {
-          ...state.slots,
+        roster: {
+          ...state.roster,
           [action.toIndex]: state.selectedPlayer
         }
       };
     case "MOVE_SELECT":
       return {
         ...state,
-        selectedPlayer: state.slots[`${action.fromIndex}`]
+        selectedPlayer: state.roster[`${action.fromIndex}`]
       };
     case "MOVE_PLACE":
       return {
         ...state,
         selectedPlayer: null,
-        slots: {
-          ...state.slots,
-          [Object.keys(state.slots).find(
-            key => state.slots[key] === state.selectedPlayer
+        roster: {
+          ...state.roster,
+          [Object.keys(state.roster).find(
+            key => state.roster[key] === state.selectedPlayer
           )]: null,
           [action.toIndex]: state.selectedPlayer
         }

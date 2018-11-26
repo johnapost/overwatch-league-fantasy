@@ -5,12 +5,14 @@ import TeamLogo from "./teamLogo";
 import getTeam from "../shared/getTeam";
 import type { Player } from "../shared/player";
 
-type Props = Player;
+type Props = Player & {
+  onClick: Function
+};
 
-export default ({ headshot, name, teamId }: Props) => {
+export default ({ headshot, name, teamId, onClick }: Props) => {
   const { abbreviatedName, primaryColor } = getTeam(teamId);
   return (
-    <div className="container">
+    <div className="container" onClick={onClick}>
       <div className="background" />
       <div className="headshot">
         <img src={headshot} alt={name} title={name} />

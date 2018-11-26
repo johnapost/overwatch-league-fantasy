@@ -4579,6 +4579,7 @@ flat-cache@^1.2.1:
 flow-bin@0.86.0:
   version "0.86.0"
   resolved "https://thezebra.jfrog.io/thezebra/api/npm/npm/flow-bin/-/flow-bin-0.86.0.tgz#153a28722b4dc13b7200c74b644dd4d9f4969a11"
+  integrity sha1-FToocitNwTtyAMdLZE3U2fSWmhE=
 
 flow-typed@^2.5.1:
   version "2.5.1"

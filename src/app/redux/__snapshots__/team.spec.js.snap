@@ -46,30 +46,34 @@ Object {
 exports[`team reducer should return default state 1`] = `
 Object {
   "drafter": null,
+  "roster": Object {},
   "selectedPlayer": null,
-  "slots": Object {},
 }
 `;
 
 exports[`team reducer should update state when assigning drafters 1`] = `
 Object {
   "drafter": 12345,
+  "roster": Object {},
   "selectedPlayer": null,
-  "slots": Object {},
 }
 `;
 
 exports[`team reducer should update state when assigning drafters 2`] = `
 Object {
   "drafter": 54321,
+  "roster": Object {},
   "selectedPlayer": null,
-  "slots": Object {},
 }
 `;
 
 exports[`team reducer should update state when drafting players 1`] = `
 Object {
   "drafter": null,
+  "roster": Object {
+    "0": null,
+    "1": null,
+  },
   "selectedPlayer": Object {
     "familyName": "Williams",
     "givenName": "Nina",
@@ -79,18 +83,13 @@ Object {
     "nationality": "FI",
     "teamId": 4523,
   },
-  "slots": Object {
-    "0": null,
-    "1": null,
-  },
 }
 `;
 
 exports[`team reducer should update state when drafting players 2`] = `
 Object {
   "drafter": null,
-  "selectedPlayer": null,
-  "slots": Object {
+  "roster": Object {
     "0": null,
     "1": Object {
       "familyName": "Williams",
@@ -102,22 +101,14 @@ Object {
       "teamId": 4523,
     },
   },
+  "selectedPlayer": null,
 }
 `;
 
 exports[`team reducer should update state when moving players 1`] = `
 Object {
   "drafter": null,
-  "selectedPlayer": Object {
-    "familyName": "Williams",
-    "givenName": "Nina",
-    "headshot": "https://url.url/nina-williams.jpg",
-    "id": "1234",
-    "name": "OWLName",
-    "nationality": "FI",
-    "teamId": 4523,
-  },
-  "slots": Object {
+  "roster": Object {
     "0": Object {
       "familyName": "Williams",
       "givenName": "Nina",
@@ -129,14 +120,22 @@ Object {
     },
     "1": null,
   },
+  "selectedPlayer": Object {
+    "familyName": "Williams",
+    "givenName": "Nina",
+    "headshot": "https://url.url/nina-williams.jpg",
+    "id": "1234",
+    "name": "OWLName",
+    "nationality": "FI",
+    "teamId": 4523,
+  },
 }
 `;
 
 exports[`team reducer should update state when moving players 2`] = `
 Object {
   "drafter": null,
-  "selectedPlayer": null,
-  "slots": Object {
+  "roster": Object {
     "0": null,
     "1": Object {
       "familyName": "Williams",
@@ -148,5 +147,6 @@ Object {
       "teamId": 4523,
     },
   },
+  "selectedPlayer": null,
 }
 `;
