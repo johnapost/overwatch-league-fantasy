@@ -36,24 +36,32 @@ Object {
 }
 `;
 
-exports[`team action creators teamSetSlots should return action 1`] = `
+exports[`team action creators teamSetDrafter should return action 1`] = `
 Object {
-  "slots": Array [
-    "Offense",
-    "Offense",
-    "Tank",
-    "Tank",
-    "Support",
-    "Support",
-    "Flex",
-    "Flex",
-  ],
-  "type": "SET_SLOTS",
+  "type": "SET_DRAFTER",
+  "uid": 12345,
 }
 `;
 
 exports[`team reducer should return default state 1`] = `
 Object {
+  "drafter": null,
+  "selectedPlayer": null,
+  "slots": Object {},
+}
+`;
+
+exports[`team reducer should update state when assigning drafters 1`] = `
+Object {
+  "drafter": 12345,
+  "selectedPlayer": null,
+  "slots": Object {},
+}
+`;
+
+exports[`team reducer should update state when assigning drafters 2`] = `
+Object {
+  "drafter": 54321,
   "selectedPlayer": null,
   "slots": Object {},
 }
@@ -61,22 +69,7 @@ Object {
 
 exports[`team reducer should update state when drafting players 1`] = `
 Object {
-  "selectedPlayer": null,
-  "slots": Array [
-    "Offense",
-    "Offense",
-    "Tank",
-    "Tank",
-    "Support",
-    "Support",
-    "Flex",
-    "Flex",
-  ],
-}
-`;
-
-exports[`team reducer should update state when drafting players 2`] = `
-Object {
+  "drafter": null,
   "selectedPlayer": Object {
     "familyName": "Williams",
     "givenName": "Nina",
@@ -86,24 +79,19 @@ Object {
     "nationality": "FI",
     "teamId": 4523,
   },
-  "slots": Array [
-    "Offense",
-    "Offense",
-    "Tank",
-    "Tank",
-    "Support",
-    "Support",
-    "Flex",
-    "Flex",
-  ],
+  "slots": Object {
+    "0": null,
+    "1": null,
+  },
 }
 `;
 
-exports[`team reducer should update state when drafting players 3`] = `
+exports[`team reducer should update state when drafting players 2`] = `
 Object {
+  "drafter": null,
   "selectedPlayer": null,
   "slots": Object {
-    "0": "Offense",
+    "0": null,
     "1": Object {
       "familyName": "Williams",
       "givenName": "Nina",
@@ -113,12 +101,52 @@ Object {
       "nationality": "FI",
       "teamId": 4523,
     },
-    "2": "Tank",
-    "3": "Tank",
-    "4": "Support",
-    "5": "Support",
-    "6": "Flex",
-    "7": "Flex",
+  },
+}
+`;
+
+exports[`team reducer should update state when moving players 1`] = `
+Object {
+  "drafter": null,
+  "selectedPlayer": Object {
+    "familyName": "Williams",
+    "givenName": "Nina",
+    "headshot": "https://url.url/nina-williams.jpg",
+    "id": "1234",
+    "name": "OWLName",
+    "nationality": "FI",
+    "teamId": 4523,
+  },
+  "slots": Object {
+    "0": Object {
+      "familyName": "Williams",
+      "givenName": "Nina",
+      "headshot": "https://url.url/nina-williams.jpg",
+      "id": "1234",
+      "name": "OWLName",
+      "nationality": "FI",
+      "teamId": 4523,
+    },
+    "1": null,
+  },
+}
+`;
+
+exports[`team reducer should update state when moving players 2`] = `
+Object {
+  "drafter": null,
+  "selectedPlayer": null,
+  "slots": Object {
+    "0": null,
+    "1": Object {
+      "familyName": "Williams",
+      "givenName": "Nina",
+      "headshot": "https://url.url/nina-williams.jpg",
+      "id": "1234",
+      "name": "OWLName",
+      "nationality": "FI",
+      "teamId": 4523,
+    },
   },
 }
 `;

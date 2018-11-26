@@ -8,7 +8,6 @@ import { firestore as firestoreDep } from "firebase";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { isLoaded } from "react-redux-firebase";
-import Header from "./header";
 import withFirestore from "../shared/withFirestore";
 
 type Props = {
@@ -124,7 +123,6 @@ class Chat extends Component<Props, State> {
 
     return (
       <div>
-        <Header title="Draft Chat" />
         <Card title={leagueName}>
           <div
             className="timeline"

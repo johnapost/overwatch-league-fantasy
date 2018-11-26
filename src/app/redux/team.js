@@ -1,19 +1,14 @@
 // @flow
 
-import type { Role } from "../shared/roles";
 import type { Player } from "../shared/player";
 
 // Types
 export type TeamState = {
+  drafter: string | null,
   selectedPlayer: Player | null,
   slots: {
-    [index: string]: Player | Role
+    [index: string]: Player | null
   }
-};
-
-type TeamSetSlots = {
-  type: "SET_SLOTS",
-  slots: string[]
 };
 
 type TeamDraftSelect = {
@@ -36,19 +31,19 @@ type TeamMovePlace = {
   toIndex: number
 };
 
+type TeamSetDrafter = {
+  type: "SET_DRAFTER",
+  uid: number | null
+};
+
 type TeamAction =
-  | TeamSetSlots
   | TeamDraftSelect
   | TeamDraftPlace
   | TeamMoveSelect
-  | TeamMovePlace;
+  | TeamMovePlace
+  | TeamSetDrafter;
 
 // Action Creators
-export const teamSetSlots = (slots: string[]): TeamSetSlots => ({
-  type: "SET_SLOTS",
-  slots
-});
-
 export const teamDraftSelect = (player: Player): TeamDraftSelect => ({
   type: "DRAFT_SELECT",
   player
@@ -69,19 +64,20 @@ export const teamMovePlace = (toIndex: number): TeamMovePlace => ({
   toIndex
 });
 
+export const teamSetDrafter = (uid: number | null): TeamSetDrafter => ({
+  type: "SET_DRAFTER",
+  uid
+});
+
 // Reducer
-export const defaultState: TeamState = { selectedPlayer: null, slots: {} };
+export const defaultState: TeamState = {
+  drafter: null,
+  selectedPlayer: null,
+  slots: {}
+};
 
 export default (state: TeamState = defaultState, action: TeamAction) => {
   switch (action.type) {
-    case "SET_SLOTS":
-      return {
-        ...state,
-        slots: action.slots.reduce(
-          (accum, curr, index) => ({ ...accum, [index]: curr }),
-          {}
-        )
-      };
     case "DRAFT_SELECT":
       return { ...state, selectedPlayer: action.player };
     case "DRAFT_PLACE":
@@ -92,6 +88,28 @@ export default (state: TeamState = defaultState, action: TeamAction) => {
           ...state.slots,
           [action.toIndex]: state.selectedPlayer
         }
+      };
+    case "MOVE_SELECT":
+      return {
+        ...state,
+        selectedPlayer: state.slots[`${action.fromIndex}`]
+      };
+    case "MOVE_PLACE":
+      return {
+        ...state,
+        selectedPlayer: null,
+        slots: {
+          ...state.slots,
+          [Object.keys(state.slots).find(
+            key => state.slots[key] === state.selectedPlayer
+          )]: null,
+          [action.toIndex]: state.selectedPlayer
+        }
+      };
+    case "SET_DRAFTER":
+      return {
+        ...state,
+        drafter: action.uid
       };
     default:
       return state;

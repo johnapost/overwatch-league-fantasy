@@ -1,15 +1,12 @@
 // @flow
 
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { teamSetSlots } from "../redux/team";
 import api from "../shared/api.json";
 import Player from "./player";
 
 type Props = {
   drafting?: boolean,
   playerName?: string,
-  setSlots: typeof teamSetSlots,
   teamId?: number | null,
   role?: string | null
 };
@@ -60,9 +57,4 @@ class Roster extends Component<Props> {
   }
 }
 
-const mapDispatchToProps = { setSlots: teamSetSlots };
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(Roster);
+export default Roster;
