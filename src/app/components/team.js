@@ -29,42 +29,69 @@ type Props = TeamState & {
   draftPlace: typeof teamDraftPlace
 };
 
-const mergeDrafted = (roster: Roster, rosterSlots: RosterSlots) =>
+// Merge roster with rosterSlots to mix displays for draft
+const mergeDrafted = (roster: Roster, rosterSlots: RosterSlots): any =>
   Object.entries(rosterSlots).reduce(
     (accum, [key, value]) => [...accum, roster[key] ? roster[key] : value],
     []
   );
 
-const Team = ({ drafting, draftPlace, roster, rosterSlots }: Props) => (
-  <div>
-    <Header title="My Team" />
-    <div className="slots-wrapper">
-      {mergeDrafted(roster, rosterSlots).map((value, index) =>
-        value === "Offense" ||
-        value === "Tank" ||
-        value === "Support" ||
-        value === "Flex" ? (
-          <DraftSlot
-            key={`${index + 1}`}
-            role={value}
-            onClick={drafting ? () => draftPlace(index) : () => {}}
-          />
-        ) : (
-          <Player key={value.id} {...value} />
-        )
-      )}
+const Team = ({
+  drafting,
+  draftPlace,
+  roster,
+  rosterSlots,
+  selectedPlayer
+}: Props) => {
+  // Creates click handler for each component
+  const createOnClick = (index: number) => (e: Event) => {
+    e.preventDefault();
+    if (!drafting) return;
+    // Guard against duplicates
+    if (
+      Object.values(roster).some(
+        player =>
+          player &&
+          player.id &&
+          selectedPlayer &&
+          player.id === selectedPlayer.id
+      )
+    )
+      return;
+    draftPlace(index);
+  };
+
+  return (
+    <div>
+      <Header title="My Team" />
+      <div className="slots-wrapper">
+        {mergeDrafted(roster, rosterSlots).map((value, index) =>
+          value === "Offense" ||
+          value === "Tank" ||
+          value === "Support" ||
+          value === "Flex" ? (
+            <DraftSlot
+              key={`${index + 1}`}
+              role={value}
+              onClick={createOnClick(index)}
+            />
+          ) : (
+            <Player key={value.id} onClick={createOnClick(index)} {...value} />
+          )
+        )}
+      </div>
+      <style jsx>{`
+        .slots-wrapper {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+          margin: 25px;
+        }
+      `}</style>
     </div>
-    <style jsx>{`
-      .slots-wrapper {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin: 25px;
-      }
-    `}</style>
-  </div>
-);
+  );
+};
 
 const mapStateToProps = ({ firestore, team, user: { uid } }) => {
   const rosterSlots = get(firestore.data, "leagues.first.rosterSlots", {});
