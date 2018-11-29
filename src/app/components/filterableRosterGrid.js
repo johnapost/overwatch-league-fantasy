@@ -11,7 +11,7 @@ import roles from "../shared/roles";
 type State = {
   playerName: string,
   playerNames: string[],
-  role: string | null,
+  filteredRole: string | null,
   teamId: number | null
 };
 
@@ -23,7 +23,7 @@ class FilterableRosterGrid extends Component<*, State> {
   state = {
     playerName: "",
     playerNames: allPlayerNames,
-    role: null,
+    filteredRole: null,
     teamId: null
   };
 
@@ -33,7 +33,7 @@ class FilterableRosterGrid extends Component<*, State> {
     });
 
     if (allPlayerNames.find(_playerName => playerName === _playerName))
-      this.setState({ role: null, teamId: null });
+      this.setState({ filteredRole: null, teamId: null });
   };
 
   filterPlayerNames = (inputValue: string, option: Object) =>
@@ -55,19 +55,22 @@ class FilterableRosterGrid extends Component<*, State> {
 
   renderPositionMenu = () => (
     <Menu>
-      <Menu.Item onClick={() => this.setState({ role: null })}>
+      <Menu.Item onClick={() => this.setState({ filteredRole: null })}>
         All Roles
       </Menu.Item>
-      {roles.map(role => (
-        <Menu.Item key={role} onClick={() => this.setState({ role })}>
-          {role}
+      {roles.map(filteredRole => (
+        <Menu.Item
+          key={filteredRole}
+          onClick={() => this.setState({ filteredRole })}
+        >
+          {filteredRole}
         </Menu.Item>
       ))}
     </Menu>
   );
 
   render() {
-    const { teamId, role, playerName, playerNames } = this.state;
+    const { teamId, filteredRole, playerName, playerNames } = this.state;
 
     return (
       <div>
@@ -88,7 +91,7 @@ class FilterableRosterGrid extends Component<*, State> {
               placement="bottomLeft"
               trigger={["click"]}
             >
-              <Button size="large">{role || "All Roles"}</Button>
+              <Button size="large">{filteredRole || "All Roles"}</Button>
             </Dropdown>
             <AutoComplete
               allowClear
@@ -101,7 +104,11 @@ class FilterableRosterGrid extends Component<*, State> {
           </div>
         </Input.Group>
         <div className="roster">
-          <RosterGrid playerName={playerName} role={role} teamId={teamId} />
+          <RosterGrid
+            playerName={playerName}
+            role={filteredRole}
+            teamId={teamId}
+          />
         </div>
         <style jsx>{`
           .filters {

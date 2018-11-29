@@ -1,4 +1,4 @@
 // @flow
 
-export type Role = "Offense" | "Tank" | "Support" | "Flex";
-export default ["Offense", "Tank", "Support", "Flex"];
+export type Role = "offense" | "tank" | "support" | "flex";
+export default ["offense", "tank", "support", "flex"];

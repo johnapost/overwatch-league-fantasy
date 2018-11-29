@@ -13,7 +13,7 @@ type Props = {
   draftSelect: typeof teamDraftSelect,
   playerName?: string,
   teamId?: number | null,
-  role?: string | null
+  filteredRole?: string | null
 };
 
 const allPlayers = (): Object[] =>
@@ -25,15 +25,15 @@ const allPlayers = (): Object[] =>
 const RosterGrid = ({
   drafting,
   teamId,
-  role,
+  filteredRole,
   playerName,
   draftSelect
 }: Props) => (
   <div className="wrapper">
     {allPlayers()
       .filter(({ team }) => (teamId ? teamId === team.id : true))
-      .filter(({ player: { attributes: { role: _role } } }) =>
-        role ? role.toLowerCase() === _role : true
+      .filter(({ player: { attributes: { role } } }) =>
+        filteredRole ? filteredRole.toLowerCase() === role : true
       )
       .filter(({ player: { name } }) =>
         playerName
@@ -43,6 +43,7 @@ const RosterGrid = ({
       .map(({ player, team }) => (
         <Player
           {...player}
+          role={player.attributes.role}
           teamId={team.id}
           key={player.id}
           onClick={

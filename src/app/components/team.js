@@ -34,7 +34,8 @@ const mergeDrafted = (roster: Roster, rosterSlots: RosterSlots): any =>
   Object.entries(rosterSlots).reduce(
     (accum, [key, value]) => [
       ...accum,
-      roster[key] ? { ...roster[key], role: value } : value
+      // Null roster values are
+      roster[key] ? { ...roster[key] } : value
     ],
     []
   );
@@ -47,7 +48,7 @@ const Team = ({
   selectedPlayer
 }: Props) => {
   // Creates click handler for each component
-  const createOnClick = (index: number) => (e: Event) => {
+  const createOnClick = (index: number) => (role: Role) => (e: Event) => {
     e.preventDefault();
     if (!drafting) return;
     // Guard against duplicates
@@ -61,6 +62,15 @@ const Team = ({
       )
     )
       return;
+    if (
+      // Otherwise, guard against off-role picks
+      selectedPlayer &&
+      selectedPlayer.attributes.role !== role &&
+      // Flex roles can go wherever they want
+      role !== "flex" &&
+      selectedPlayer.attributes.role !== "flex"
+    )
+      return;
     draftPlace(index);
   };
 
@@ -69,14 +79,11 @@ const Team = ({
       <Header title="My Team" />
       <div className="slots-wrapper">
         {mergeDrafted(roster, rosterSlots).map((value, index) =>
-          value === "Offense" ||
-          value === "Tank" ||
-          value === "Support" ||
-          value === "Flex" ? (
+          typeof value === "string" ? (
             <DraftSlot
               key={`${index + 1}`}
               role={value}
-              onClick={createOnClick(index)}
+              onClick={createOnClick(index)(value)}
             />
           ) : (
             <Player key={value.id} onClick={createOnClick(index)} {...value} />

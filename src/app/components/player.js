@@ -12,7 +12,13 @@ type Props = Player & {
   role?: Role
 };
 
-export default ({ headshot, name, teamId, onClick, role }: Props) => {
+export default ({
+  headshot,
+  name,
+  teamId,
+  onClick,
+  attributes: { role }
+}: Props) => {
   const { abbreviatedName, primaryColor } = getTeam(teamId);
   return (
     <div className="container" onClick={onClick}>
