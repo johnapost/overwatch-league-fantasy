@@ -13,10 +13,7 @@ import DraftSlot from "./draftSlot";
 import type { TeamState } from "../redux/team";
 import type { Player as PlayerType } from "../shared/player";
 import type { Role } from "../shared/roles";
-
-type Roster = {
-  [index: string]: PlayerType | null
-};
+import type { Roster } from "../shared/roster";
 
 type RosterSlots = {
   [index: string]: Role
@@ -30,12 +27,15 @@ type Props = TeamState & {
 };
 
 // Merge roster with rosterSlots to mix displays for draft
-const mergeDrafted = (roster: Roster, rosterSlots: RosterSlots): any =>
+const mergeDrafted = (
+  roster: Roster,
+  rosterSlots: RosterSlots
+): (Role | PlayerType)[] =>
   Object.entries(rosterSlots).reduce(
     (accum, [key, value]) => [
       ...accum,
-      // Null roster values are
-      roster[key] ? { ...roster[key] } : value
+      // Null roster values are replaced with DraftSlot component
+      roster[key] ? { ...roster[key] } : ((value: any): PlayerType)
     ],
     []
   );
@@ -86,7 +86,11 @@ const Team = ({
               onClick={createOnClick(index)(value)}
             />
           ) : (
-            <Player key={value.id} onClick={createOnClick(index)} {...value} />
+            <Player
+              key={value.id}
+              onClick={createOnClick(index)(value.attributes.role)}
+              {...value}
+            />
           )
         )}
       </div>

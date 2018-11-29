@@ -9,31 +9,34 @@ import teams from "../shared/teams.json";
 import roles from "../shared/roles";
 
 type State = {
-  playerName: string,
+  filteredPlayerName: string,
   playerNames: string[],
   filteredRole: string | null,
-  teamId: number | null
+  filteredTeamId: number | null
 };
 
 const allPlayerNames = api.competitors
   .reduce((accum, { competitor: { players } }) => [...accum, ...players], [])
   .map(({ player: { name } }) => name);
 
+const capitalizeFirstChar = (word: string): string =>
+  word.charAt(0).toUpperCase() + word.slice(1);
+
 class FilterableRosterGrid extends Component<*, State> {
   state = {
-    playerName: "",
+    filteredPlayerName: "",
     playerNames: allPlayerNames,
     filteredRole: null,
-    teamId: null
+    filteredTeamId: null
   };
 
-  setPlayerName = (playerName: string) => {
+  setPlayerName = (filteredPlayerName: string) => {
     this.setState({
-      playerName
+      filteredPlayerName
     });
 
-    if (allPlayerNames.find(_playerName => playerName === _playerName))
-      this.setState({ filteredRole: null, teamId: null });
+    if (allPlayerNames.find(_playerName => filteredPlayerName === _playerName))
+      this.setState({ filteredRole: null, filteredTeamId: null });
   };
 
   filterPlayerNames = (inputValue: string, option: Object) =>
@@ -42,11 +45,14 @@ class FilterableRosterGrid extends Component<*, State> {
 
   renderTeamMenu = () => (
     <Menu>
-      <Menu.Item onClick={() => this.setState({ teamId: null })}>
+      <Menu.Item onClick={() => this.setState({ filteredTeamId: null })}>
         All Teams
       </Menu.Item>
       {teams.map(({ id, name }) => (
-        <Menu.Item key={id} onClick={() => this.setState({ teamId: id })}>
+        <Menu.Item
+          key={id}
+          onClick={() => this.setState({ filteredTeamId: id })}
+        >
           {name}
         </Menu.Item>
       ))}
@@ -63,14 +69,19 @@ class FilterableRosterGrid extends Component<*, State> {
           key={filteredRole}
           onClick={() => this.setState({ filteredRole })}
         >
-          {filteredRole}
+          {capitalizeFirstChar(filteredRole)}
         </Menu.Item>
       ))}
     </Menu>
   );
 
   render() {
-    const { teamId, filteredRole, playerName, playerNames } = this.state;
+    const {
+      filteredTeamId,
+      filteredRole,
+      filteredPlayerName,
+      playerNames
+    } = this.state;
 
     return (
       <div>
@@ -83,7 +94,7 @@ class FilterableRosterGrid extends Component<*, State> {
               key="0"
             >
               <Button size="large">
-                {teamId ? getTeam(teamId).name : "All Teams"}
+                {filteredTeamId ? getTeam(filteredTeamId).name : "All Teams"}
               </Button>
             </Dropdown>
             <Dropdown
@@ -91,7 +102,10 @@ class FilterableRosterGrid extends Component<*, State> {
               placement="bottomLeft"
               trigger={["click"]}
             >
-              <Button size="large">{filteredRole || "All Roles"}</Button>
+              <Button size="large">
+                {(filteredRole && capitalizeFirstChar(filteredRole)) ||
+                  "All Roles"}
+              </Button>
             </Dropdown>
             <AutoComplete
               allowClear
@@ -105,9 +119,9 @@ class FilterableRosterGrid extends Component<*, State> {
         </Input.Group>
         <div className="roster">
           <RosterGrid
-            playerName={playerName}
-            role={filteredRole}
-            teamId={teamId}
+            filteredPlayerName={filteredPlayerName}
+            filteredRole={filteredRole}
+            filteredTeamId={filteredTeamId}
           />
         </div>
         <style jsx>{`

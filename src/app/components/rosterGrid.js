@@ -8,12 +8,15 @@ import api from "../shared/api.json";
 import Player from "./player";
 import { teamDraftSelect } from "../redux/team";
 
+import type { Roster } from "../shared/roster";
+
 type Props = {
   drafting: boolean,
   draftSelect: typeof teamDraftSelect,
-  playerName?: string,
-  teamId?: number | null,
-  filteredRole?: string | null
+  filteredPlayerName?: string,
+  filteredTeamId?: number | null,
+  filteredRole?: string | null,
+  roster: Roster
 };
 
 const allPlayers = (): Object[] =>
@@ -24,21 +27,30 @@ const allPlayers = (): Object[] =>
 
 const RosterGrid = ({
   drafting,
-  teamId,
+  draftSelect,
+  filteredPlayerName,
   filteredRole,
-  playerName,
-  draftSelect
+  filteredTeamId,
+  roster
 }: Props) => (
   <div className="wrapper">
     {allPlayers()
-      .filter(({ team }) => (teamId ? teamId === team.id : true))
+      .filter(({ team }) =>
+        filteredTeamId ? filteredTeamId === team.id : true
+      )
       .filter(({ player: { attributes: { role } } }) =>
         filteredRole ? filteredRole.toLowerCase() === role : true
       )
       .filter(({ player: { name } }) =>
-        playerName
-          ? name.toLowerCase().indexOf(playerName.toLocaleLowerCase()) > -1
+        filteredPlayerName
+          ? name.toLowerCase().indexOf(filteredPlayerName.toLocaleLowerCase()) >
+            -1
           : true
+      )
+      .filter(
+        ({ player: { id } }) =>
+          roster &&
+          !Object.values(roster).some(player => player && player.id === id)
       )
       .map(({ player, team }) => (
         <Player
@@ -66,16 +78,17 @@ const RosterGrid = ({
 );
 
 RosterGrid.defaultProps = {
-  playerName: "",
-  teamId: null,
-  role: null
+  filteredPlayerName: "",
+  filteredTeamId: null,
+  filteredRole: null
 };
 
-const mapStateToProps = ({ firestore, user: { uid } }) => {
+const mapStateToProps = ({ firestore, user: { uid }, team: { roster } }) => {
   const drafter = get(firestore.data, "leagues.first.drafter", "");
 
   return {
-    drafting: drafter === uid
+    drafting: drafter === uid,
+    roster
   };
 };
 
