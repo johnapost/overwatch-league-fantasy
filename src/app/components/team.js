@@ -50,7 +50,10 @@ const Team = ({
   // Creates click handler for each component
   const createOnClick = (index: number) => (role: Role) => (e: Event) => {
     e.preventDefault();
+    // Guard against out-of-order drafting
     if (!drafting) return;
+    // Guard against empty placements
+    if (!selectedPlayer) return;
     // Guard against duplicates
     if (
       Object.values(roster).some(
@@ -63,10 +66,10 @@ const Team = ({
     )
       return;
     if (
-      // Otherwise, guard against off-role picks
+      // Guard against off-role picks
       selectedPlayer &&
       selectedPlayer.attributes.role !== role &&
-      // Flex roles can go wherever they want
+      // But, flex roles can go wherever they want
       role !== "flex" &&
       selectedPlayer.attributes.role !== "flex"
     )
