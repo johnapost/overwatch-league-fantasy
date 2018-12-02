@@ -2,9 +2,6 @@
   "name": "overwatch-league-fantasy",
   "version": "1.0.0",
   "license": "MIT",
-  "engines": {
-    "node": "8"
-  },
   "scripts": {
     "build-app": "NODE_ENV=production next build src/app",
     "build-fns": "babel \"src/functions\" --out-dir \"dist/functions\"",
@@ -83,5 +80,8 @@
     "prettier": "^1.15.2",
     "rimraf": "^2.6.2",
     "sort-package-json": "^1.16.0"
+  },
+  "engines": {
+    "node": "8"
   }
 }
