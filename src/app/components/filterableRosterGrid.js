@@ -2,34 +2,41 @@
 
 import React, { Component } from "react";
 import { Menu, Dropdown, Button, Input, AutoComplete } from "antd";
-import Roster from "./roster";
+import RosterGrid from "./rosterGrid";
 import api from "../shared/api.json";
 import getTeam from "../shared/getTeam";
 import teams from "../shared/teams.json";
+import roles from "../shared/roles";
 
 type State = {
-  playerName: string,
+  filteredPlayerName: string,
   playerNames: string[],
-  role: string | null,
-  teamId: number | null
+  filteredRole: string | null,
+  filteredTeamId: number | null
 };
-
-const roles = ["Offense", "Tank", "Support", "Flex"];
 
 const allPlayerNames = api.competitors
   .reduce((accum, { competitor: { players } }) => [...accum, ...players], [])
   .map(({ player: { name } }) => name);
 
-class FilterableRoster extends Component<*, State> {
+const capitalizeFirstChar = (word: string): string =>
+  word.charAt(0).toUpperCase() + word.slice(1);
+
+class FilterableRosterGrid extends Component<*, State> {
   state = {
-    playerName: "",
+    filteredPlayerName: "",
     playerNames: allPlayerNames,
-    role: null,
-    teamId: null
+    filteredRole: null,
+    filteredTeamId: null
   };
 
-  setPlayerName = (playerName: string) => {
-    this.setState({ playerName });
+  setPlayerName = (filteredPlayerName: string) => {
+    this.setState({
+      filteredPlayerName
+    });
+
+    if (allPlayerNames.find(_playerName => filteredPlayerName === _playerName))
+      this.setState({ filteredRole: null, filteredTeamId: null });
   };
 
   filterPlayerNames = (inputValue: string, option: Object) =>
@@ -38,11 +45,14 @@ class FilterableRoster extends Component<*, State> {
 
   renderTeamMenu = () => (
     <Menu>
-      <Menu.Item onClick={() => this.setState({ teamId: null })}>
+      <Menu.Item onClick={() => this.setState({ filteredTeamId: null })}>
         All Teams
       </Menu.Item>
       {teams.map(({ id, name }) => (
-        <Menu.Item key={id} onClick={() => this.setState({ teamId: id })}>
+        <Menu.Item
+          key={id}
+          onClick={() => this.setState({ filteredTeamId: id })}
+        >
           {name}
         </Menu.Item>
       ))}
@@ -51,22 +61,32 @@ class FilterableRoster extends Component<*, State> {
 
   renderPositionMenu = () => (
     <Menu>
-      <Menu.Item onClick={() => this.setState({ role: null })}>
-        All Positions
+      <Menu.Item onClick={() => this.setState({ filteredRole: null })}>
+        All Roles
       </Menu.Item>
-      {roles.map(role => (
-        <Menu.Item key={role} onClick={() => this.setState({ role })}>
-          {role}
+      {roles.map(filteredRole => (
+        <Menu.Item
+          key={filteredRole}
+          onClick={() => this.setState({ filteredRole })}
+        >
+          {capitalizeFirstChar(filteredRole)}
         </Menu.Item>
       ))}
     </Menu>
   );
 
   render() {
+    const {
+      filteredTeamId,
+      filteredRole,
+      filteredPlayerName,
+      playerNames
+    } = this.state;
+
     return (
       <div>
         <Input.Group>
-          <div className="wrapper">
+          <div className="filters">
             <Dropdown
               overlay={this.renderTeamMenu()}
               placement="bottomLeft"
@@ -74,9 +94,7 @@ class FilterableRoster extends Component<*, State> {
               key="0"
             >
               <Button size="large">
-                {this.state.teamId
-                  ? getTeam(this.state.teamId).name
-                  : "All Teams"}
+                {filteredTeamId ? getTeam(filteredTeamId).name : "All Teams"}
               </Button>
             </Dropdown>
             <Dropdown
@@ -85,12 +103,13 @@ class FilterableRoster extends Component<*, State> {
               trigger={["click"]}
             >
               <Button size="large">
-                {this.state.role ? this.state.role : "All Positions"}
+                {(filteredRole && capitalizeFirstChar(filteredRole)) ||
+                  "All Roles"}
               </Button>
             </Dropdown>
             <AutoComplete
               allowClear
-              dataSource={this.state.playerNames}
+              dataSource={playerNames}
               filterOption={this.filterPlayerNames}
               onChange={this.setPlayerName}
               placeholder="Player Name"
@@ -98,16 +117,21 @@ class FilterableRoster extends Component<*, State> {
             />
           </div>
         </Input.Group>
-        <Roster
-          playerName={this.state.playerName}
-          role={this.state.role}
-          teamId={this.state.teamId}
-          key="1"
-        />
+        <div className="roster">
+          <RosterGrid
+            filteredPlayerName={filteredPlayerName}
+            filteredRole={filteredRole}
+            filteredTeamId={filteredTeamId}
+          />
+        </div>
         <style jsx>{`
-          .wrapper {
+          .filters {
             display: flex;
             justify-content: center;
+          }
+          .roster {
+            max-height: calc(100vh - 138px);
+            overflow-y: scroll;
           }
         `}</style>
       </div>
@@ -115,4 +139,4 @@ class FilterableRoster extends Component<*, State> {
   }
 }
 
-export default FilterableRoster;
+export default FilterableRosterGrid;

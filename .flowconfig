@@ -3,6 +3,7 @@ flow-typed
 flow-overrides
 
 [options]
+sharedmemory.hash_table_pow=21
 module.file_ext=.js
 module.file_ext=.json
 
@@ -12,3 +13,6 @@ module.file_ext=.json
 .*/node_modules/npmconf
 .*/node_modules/protobufjs
 dist/**/*
+
+[version]
+0.86.0

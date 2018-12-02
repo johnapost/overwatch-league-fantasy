@@ -1,36 +1,40 @@
 // @flow
 
 import React from "react";
-import { Row, Col, Form } from "antd";
-import { compose } from "redux";
-import withFirestore from "../shared/withFirestore";
+import { Row, Col } from "antd";
+import Header from "../components/header";
 import Layout from "../components/layout";
 import Chat from "../components/chat";
+import Team from "../components/team";
+import FilterableRosterGrid from "../components/filterableRosterGrid";
 
-const Draft = () => (
+export default () => (
   <Layout>
     <Row>
-      <Col sm={6} md={4} />
-      <Col sm={12} md={16}>
+      <Col xs={1} />
+      <Col>
+        <Header title="Now Drafting" />
+      </Col>
+    </Row>
+    <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+      <Col md={11}>
+        <div className="wrapper">
+          <FilterableRosterGrid />
+        </div>
+      </Col>
+      <Col md={13}>
         <div className="wrapper">
           <Chat />
+        </div>
+        <div className="wrapper">
+          <Team />
         </div>
       </Col>
     </Row>
     <style jsx>{`
       .wrapper {
-        margin: 50px 0;
+        margin: 25px 0;
       }
     `}</style>
   </Layout>
 );
-
-export default compose(
-  withFirestore(() => [
-    {
-      collection: "leagues",
-      doc: "first"
-    }
-  ]),
-  Form.create()
-)(Draft);

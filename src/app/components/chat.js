@@ -118,38 +118,45 @@ class Chat extends Component<Props, State> {
     } = this.props;
 
     const chat = getFieldDecorator("message")(
-      <Input
-        addonBefore="Draft Chat"
-        onPressEnter={sendingMessage ? () => {} : this.sendMessage}
-      />
+      <Input onPressEnter={sendingMessage ? () => {} : this.sendMessage} />
     );
 
     return (
-      <Card title={leagueName}>
-        <div
-          className="timeline"
-          ref={el => {
-            this.timelineEl = el;
-          }}
-        >
-          <Timeline>
-            {isLoaded(messages) &&
-              messages &&
-              Object.keys(messages).map(key => (
-                <Timeline.Item key={key}>
-                  {`${messages[key].userName} - ${messages[key].message}`}
-                </Timeline.Item>
-              ))}
-          </Timeline>
-        </div>
-        <Form>{displayName && chat}</Form>
+      <div>
+        <Card title={leagueName}>
+          <div
+            className="timeline"
+            ref={el => {
+              this.timelineEl = el;
+            }}
+          >
+            <Timeline>
+              {isLoaded(messages) &&
+                messages &&
+                Object.keys(messages).map(key => (
+                  <Timeline.Item key={key}>
+                    {`${messages[key].userName} - ${messages[key].message}`}
+                  </Timeline.Item>
+                ))}
+            </Timeline>
+          </div>
+          <Form>{displayName && chat}</Form>
+        </Card>
         <style jsx>{`
+          .header {
+            font-family: "Big";
+          }
           .timeline {
-            height: 300px;
+            height: 200px;
             overflow-y: scroll;
           }
         `}</style>
-      </Card>
+        <style>{`
+          .ant-timeline-item-last .ant-timeline-item-content {
+            min-height: initial;
+          };
+        `}</style>
+      </div>
     );
   }
 }
@@ -187,7 +194,7 @@ const mapStateToProps = ({ firestore, user: { uid } }) => {
 };
 
 export default compose(
-  connect(mapStateToProps, () => ({})),
+  connect(mapStateToProps),
   withFirestore(({ user: { uid } }) => [
     {
       collection: "leagues",

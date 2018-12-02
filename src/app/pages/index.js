@@ -3,7 +3,7 @@
 import React from "react";
 import { Row, Col, Card } from "antd";
 import Layout from "../components/layout";
-import FilterableRoster from "../components/filterableRoster";
+import RosterGrid from "../components/rosterGrid";
 
 export default () => (
   <Layout>
@@ -12,12 +12,13 @@ export default () => (
       <Col sm={12} md={16}>
         <div className="wrapper">
           <Card>
-            Create or join leagues to compete with your own Overwatch team!
+            This site is a work in progress and is not ready for usage at all!
+            Any data is subject to deletion while work continues.
           </Card>
         </div>
       </Col>
     </Row>
-    <FilterableRoster />
+    <RosterGrid />
     <style jsx>{`
       .wrapper {
         margin: 50px 0;

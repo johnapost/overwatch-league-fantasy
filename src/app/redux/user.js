@@ -25,7 +25,6 @@ type UserSetName = {
 type UserAction = UserLogin | UserLogout | UserSetName;
 
 // Action Creators
-
 export const userLogin = (uid: string): UserLogin => ({
   type: "LOGIN",
   uid
@@ -36,7 +35,7 @@ export const userLogout = (): UserLogout => ({
 });
 
 // Reducer
-const defaultState = { uid: null, displayName: null };
+export const defaultState: UserState = { uid: null, displayName: null };
 
 export default (state: UserState = defaultState, action: UserAction) => {
   switch (action.type) {

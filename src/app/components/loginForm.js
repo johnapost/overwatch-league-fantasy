@@ -18,13 +18,13 @@ type Props = {
 };
 
 class LoginForm extends Component<Props> {
+  emailEl: ?HTMLElement = null;
+
   componentDidMount() {
     if (this.emailEl) {
       this.emailEl.focus();
     }
   }
-
-  emailEl: ?HTMLElement = null;
 
   handleSubmit = e => {
     e.preventDefault();
@@ -117,4 +117,8 @@ class LoginForm extends Component<Props> {
   }
 }
 
-export default compose(withRouter, withFirebase, Form.create())(LoginForm);
+export default compose(
+  withRouter,
+  withFirebase,
+  Form.create()
+)(LoginForm);

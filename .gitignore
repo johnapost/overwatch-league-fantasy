@@ -4,4 +4,5 @@
 *.log
 dist
 node_modules
-secrets.js
+secrets.json
+coverage

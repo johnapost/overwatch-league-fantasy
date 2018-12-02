@@ -1,0 +1,152 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`team action creators teamDraftPlace should return action 1`] = `
+Object {
+  "toIndex": 0,
+  "type": "DRAFT_PLACE",
+}
+`;
+
+exports[`team action creators teamDraftSelect should return action 1`] = `
+Object {
+  "player": Object {
+    "familyName": "Williams",
+    "givenName": "Nina",
+    "headshot": "https://url.url/nina-williams.jpg",
+    "id": "1234",
+    "name": "OWLName",
+    "nationality": "FI",
+    "teamId": 4523,
+  },
+  "type": "DRAFT_SELECT",
+}
+`;
+
+exports[`team action creators teamMovePlace should return action 1`] = `
+Object {
+  "toIndex": 1,
+  "type": "MOVE_PLACE",
+}
+`;
+
+exports[`team action creators teamMoveSelect should return action 1`] = `
+Object {
+  "fromIndex": 0,
+  "type": "MOVE_SELECT",
+}
+`;
+
+exports[`team action creators teamSetDrafter should return action 1`] = `
+Object {
+  "type": "SET_DRAFTER",
+  "uid": 12345,
+}
+`;
+
+exports[`team reducer should return default state 1`] = `
+Object {
+  "drafter": null,
+  "roster": Object {},
+  "selectedPlayer": null,
+}
+`;
+
+exports[`team reducer should update state when assigning drafters 1`] = `
+Object {
+  "drafter": 12345,
+  "roster": Object {},
+  "selectedPlayer": null,
+}
+`;
+
+exports[`team reducer should update state when assigning drafters 2`] = `
+Object {
+  "drafter": 54321,
+  "roster": Object {},
+  "selectedPlayer": null,
+}
+`;
+
+exports[`team reducer should update state when drafting players 1`] = `
+Object {
+  "drafter": null,
+  "roster": Object {
+    "0": null,
+    "1": null,
+  },
+  "selectedPlayer": Object {
+    "familyName": "Williams",
+    "givenName": "Nina",
+    "headshot": "https://url.url/nina-williams.jpg",
+    "id": "1234",
+    "name": "OWLName",
+    "nationality": "FI",
+    "teamId": 4523,
+  },
+}
+`;
+
+exports[`team reducer should update state when drafting players 2`] = `
+Object {
+  "drafter": null,
+  "roster": Object {
+    "0": null,
+    "1": Object {
+      "familyName": "Williams",
+      "givenName": "Nina",
+      "headshot": "https://url.url/nina-williams.jpg",
+      "id": "1234",
+      "name": "OWLName",
+      "nationality": "FI",
+      "teamId": 4523,
+    },
+  },
+  "selectedPlayer": null,
+}
+`;
+
+exports[`team reducer should update state when moving players 1`] = `
+Object {
+  "drafter": null,
+  "roster": Object {
+    "0": Object {
+      "familyName": "Williams",
+      "givenName": "Nina",
+      "headshot": "https://url.url/nina-williams.jpg",
+      "id": "1234",
+      "name": "OWLName",
+      "nationality": "FI",
+      "teamId": 4523,
+    },
+    "1": null,
+  },
+  "selectedPlayer": Object {
+    "familyName": "Williams",
+    "givenName": "Nina",
+    "headshot": "https://url.url/nina-williams.jpg",
+    "id": "1234",
+    "name": "OWLName",
+    "nationality": "FI",
+    "teamId": 4523,
+  },
+}
+`;
+
+exports[`team reducer should update state when moving players 2`] = `
+Object {
+  "drafter": null,
+  "roster": Object {
+    "0": null,
+    "1": Object {
+      "familyName": "Williams",
+      "givenName": "Nina",
+      "headshot": "https://url.url/nina-williams.jpg",
+      "id": "1234",
+      "name": "OWLName",
+      "nationality": "FI",
+      "teamId": 4523,
+    },
+  },
+  "selectedPlayer": null,
+}
+`;
