@@ -2,6 +2,9 @@
   "name": "overwatch-league-fantasy",
   "version": "1.0.0",
   "license": "MIT",
+  "engines": {
+    "node": "8"
+  },
   "scripts": {
     "build-app": "NODE_ENV=production next build src/app",
     "build-fns": "babel \"src/functions\" --out-dir \"dist/functions\"",
