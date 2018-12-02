@@ -49,7 +49,6 @@ const RosterGrid = ({
       )
       .filter(
         ({ player: { id } }) =>
-          roster &&
           !Object.values(roster).some(player => player && player.id === id)
       )
       .map(({ player, team }) => (

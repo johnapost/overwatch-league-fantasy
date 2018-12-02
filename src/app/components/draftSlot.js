@@ -14,7 +14,7 @@ export default ({ onClick, role }: Props) => (
     <div className="image-container">
       <img src={`static/${role}.svg`} alt={role} title={role} />
     </div>
-    <div className="profile">{role}</div>
+    <div className="role">{role}</div>
     <style jsx>{`
       .container {
         background: #ffffff;
@@ -43,7 +43,7 @@ export default ({ onClick, role }: Props) => (
         display: block;
         height: 150px;
       }
-      .profile {
+      .role {
         background: #e8e8eb;
         color: #28354f;
         font-family: "BigNoodleToo";
