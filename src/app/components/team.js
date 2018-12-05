@@ -40,7 +40,7 @@ const mergeDrafted = (
     []
   );
 
-const Team = ({
+export const Team = ({
   drafting,
   draftPlace,
   roster,
@@ -110,7 +110,7 @@ const Team = ({
   );
 };
 
-const mapStateToProps = ({ firestore, team, user: { uid } }) => {
+export const mapStateToProps = ({ firestore, team, user: { uid } }) => {
   const rosterSlots = get(firestore.data, "leagues.first.rosterSlots", {});
   const drafter = get(firestore.data, "leagues.first.drafter", "");
 
