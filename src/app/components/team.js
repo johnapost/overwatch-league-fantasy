@@ -10,6 +10,7 @@ import Header from "./header";
 import Player from "./player";
 import DraftSlot from "./draftSlot";
 
+import type { StoreState } from "../shared/makeStore";
 import type { TeamState } from "../redux/team";
 import type { Player as PlayerType } from "../shared/player";
 import type { Role } from "../shared/roles";
@@ -110,7 +111,11 @@ export const Team = ({
   );
 };
 
-export const mapStateToProps = ({ firestore, team, user: { uid } }) => {
+export const mapStateToProps = ({
+  firestore,
+  team,
+  user: { uid }
+}: StoreState) => {
   const rosterSlots = get(firestore.data, "leagues.first.rosterSlots", {});
   const drafter = get(firestore.data, "leagues.first.drafter", "");
 

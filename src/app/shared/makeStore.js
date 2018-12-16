@@ -10,6 +10,15 @@ import user from "../redux/user";
 import team from "../redux/team";
 import { apiKey, authDomain, projectId } from "../secrets.json";
 
+import type { TeamState } from "../redux/team";
+import type { UserState } from "../redux/user";
+
+export type StoreState = {
+  firestore: Object,
+  team: TeamState,
+  user: UserState
+};
+
 // Firebase setup
 const firebaseConfig = { apiKey, authDomain, projectId };
 const rrfConfig = { userProfile: "users", useFirestoreForProfile: true };

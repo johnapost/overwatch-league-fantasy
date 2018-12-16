@@ -8,6 +8,7 @@ import api from "../shared/api.json";
 import Player from "./player";
 import { teamDraftSelect } from "../redux/team";
 
+import type { Player as PlayerType } from "../shared/player";
 import type { Roster } from "../shared/roster";
 
 type Props = {
@@ -49,7 +50,9 @@ const RosterGrid = ({
       )
       .filter(
         ({ player: { id } }) =>
-          !Object.values(roster).some(player => player && player.id === id)
+          !Object.values(roster).some(
+            player => player && ((player: any): PlayerType).id === id
+          )
       )
       .map(({ player, team }) => (
         <Player
