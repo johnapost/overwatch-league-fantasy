@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Team mapStateToProps should assign rosterSlots 1`] = `
+Object {
+  "drafter": null,
+  "drafting": true,
+  "roster": Object {},
+  "rosterSlots": Object {},
+  "selectedPlayer": null,
+}
+`;
+
+exports[`Team mapStateToProps should check if currently drafting 1`] = `
+Object {
+  "drafter": null,
+  "drafting": true,
+  "roster": Object {},
+  "rosterSlots": Object {},
+  "selectedPlayer": null,
+}
+`;

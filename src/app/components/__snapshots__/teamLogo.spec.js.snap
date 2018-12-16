@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TeamLogo should render img tag with default props 1`] = `"<img src=\\"static/BOS.svg\\" alt=\\"BOS\\" height=\\"32\\" width=\\"32\\"/>"`;
+
+exports[`TeamLogo should render img tag with passed props 1`] = `"<img src=\\"static/BOS.svg\\" alt=\\"BOS\\" height=\\"16\\" width=\\"16\\"/>"`;

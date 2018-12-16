@@ -16,7 +16,7 @@ type Props = {
   filteredPlayerName?: string,
   filteredTeamId?: number | null,
   filteredRole?: string | null,
-  roster: Roster
+  roster?: Roster
 };
 
 const allPlayers = (): Object[] =>
@@ -79,7 +79,8 @@ const RosterGrid = ({
 RosterGrid.defaultProps = {
   filteredPlayerName: "",
   filteredTeamId: null,
-  filteredRole: null
+  filteredRole: null,
+  roster: {}
 };
 
 const mapStateToProps = ({ firestore, user: { uid }, team: { roster } }) => {

@@ -1,0 +1,12 @@
+codecov:
+  branch: develop
+  notify:
+    require_ci_to_pass: yes
+
+coverage:
+  status:
+    project: yes
+    patch: yes
+
+comment:
+  layout: "header, diff"
