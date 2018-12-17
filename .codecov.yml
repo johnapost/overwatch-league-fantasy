@@ -6,7 +6,6 @@ codecov:
 coverage:
   status:
     project: yes
-    patch: yes
 
 comment:
   layout: "header, diff"

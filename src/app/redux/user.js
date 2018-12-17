@@ -1,7 +1,7 @@
 // @flow
 
 // Types
-type UserState = {
+export type UserState = {
   uid: string | null,
   displayName: string | null
 };

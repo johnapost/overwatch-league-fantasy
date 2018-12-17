@@ -3,18 +3,26 @@
 import React from "react";
 
 export type AbbreviatedNames =
+  | "ATL"
   | "BOS"
+  | "CDH"
   | "DAL"
   | "FLA"
   | "GLA"
+  | "GZC"
   | "HOU"
+  | "HZS"
   | "LDN"
   | "NYE"
+  | "PAR"
   | "PHI"
   | "SEO"
   | "SFS"
   | "SHD"
-  | "VAL";
+  | "TOR"
+  | "VAL"
+  | "VAN"
+  | "WAS";
 
 type Props = {
   height?: string,

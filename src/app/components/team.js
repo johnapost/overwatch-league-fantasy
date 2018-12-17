@@ -10,6 +10,7 @@ import Header from "./header";
 import Player from "./player";
 import DraftSlot from "./draftSlot";
 
+import type { StoreState } from "../shared/makeStore";
 import type { TeamState } from "../redux/team";
 import type { Player as PlayerType } from "../shared/player";
 import type { Role } from "../shared/roles";
@@ -40,7 +41,7 @@ const mergeDrafted = (
     []
   );
 
-export const Team = ({
+export const TeamComponent = ({
   drafting,
   draftPlace,
   roster,
@@ -90,9 +91,9 @@ export const Team = ({
             />
           ) : (
             <Player
+              {...value}
               key={value.id}
               onClick={createOnClick(index)(value.attributes.role)}
-              {...value}
             />
           )
         )}
@@ -110,7 +111,11 @@ export const Team = ({
   );
 };
 
-export const mapStateToProps = ({ firestore, team, user: { uid } }) => {
+export const mapStateToProps = ({
+  firestore,
+  team,
+  user: { uid }
+}: StoreState) => {
   const rosterSlots = get(firestore.data, "leagues.first.rosterSlots", {});
   const drafter = get(firestore.data, "leagues.first.drafter", "");
 
@@ -136,4 +141,4 @@ export default compose(
       doc: "first"
     }
   ])
-)(Team);
+)(TeamComponent);

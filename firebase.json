@@ -12,6 +12,10 @@
     "public": "dist/public",
     "rewrites": [
       {
+        "source": "sync/teams",
+        "function": "syncTeams"
+      },
+      {
         "source": "**/**",
         "function": "nextApp"
       }

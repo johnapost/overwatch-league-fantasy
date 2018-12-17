@@ -4,11 +4,13 @@ import React from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import get from "lodash/get";
-import api from "../shared/api.json";
+import withFirestore from "../shared/withFirestore";
 import Player from "./player";
 import { teamDraftSelect } from "../redux/team";
 
+import type { Player as PlayerType } from "../shared/player";
 import type { Roster } from "../shared/roster";
+import type { Team } from "../shared/team";
 
 type Props = {
   drafting: boolean,
@@ -16,54 +18,61 @@ type Props = {
   filteredPlayerName?: string,
   filteredTeamId?: number | null,
   filteredRole?: string | null,
-  roster?: Roster
+  players: {
+    [key: number]: PlayerType
+  },
+  roster?: Roster,
+  teams: {
+    [key: number]: Team
+  }
 };
 
-const allPlayers = (): Object[] =>
-  api.competitors.reduce(
-    (accum, { competitor: { players } }) => [...accum, ...players],
-    []
-  );
-
 const RosterGrid = ({
+  players,
   drafting,
   draftSelect,
   filteredPlayerName,
   filteredRole,
   filteredTeamId,
-  roster
+  roster,
+  teams
 }: Props) => (
   <div className="wrapper">
-    {allPlayers()
-      .filter(({ team }) =>
-        filteredTeamId ? filteredTeamId === team.id : true
+    {((Object.values(players): any): PlayerType[])
+      .filter(({ teamId }) =>
+        filteredTeamId ? filteredTeamId === teamId : true
       )
-      .filter(({ player: { attributes: { role } } }) =>
+      .filter(({ attributes: { role } }) =>
         filteredRole ? filteredRole.toLowerCase() === role : true
       )
-      .filter(({ player: { name } }) =>
+      .filter(({ name }) =>
         filteredPlayerName
           ? name.toLowerCase().indexOf(filteredPlayerName.toLocaleLowerCase()) >
             -1
           : true
       )
       .filter(
-        ({ player: { id } }) =>
-          !Object.values(roster).some(player => player && player.id === id)
+        ({ id }) =>
+          !Object.values(roster).some(
+            player => player && ((player: any): PlayerType).id === id
+          )
       )
-      .map(({ player, team }) => (
-        <Player
-          {...player}
-          role={player.attributes.role}
-          teamId={team.id}
-          key={player.id}
-          onClick={
-            drafting
-              ? () => draftSelect({ ...player, teamId: team.id })
-              : () => {}
-          }
-        />
-      ))}
+      .map(player => {
+        const teamAttributes = teams[player.teamId];
+        return (
+          <Player
+            {...player}
+            role={player.attributes.role}
+            team={teamAttributes}
+            key={player.id}
+            onClick={
+              drafting
+                ? () => draftSelect({ ...player, team: teamAttributes })
+                : () => {}
+            }
+          />
+        );
+      })}
     <style jsx>{`
       .wrapper {
         display: flex;
@@ -85,10 +94,14 @@ RosterGrid.defaultProps = {
 
 const mapStateToProps = ({ firestore, user: { uid }, team: { roster } }) => {
   const drafter = get(firestore.data, "leagues.first.drafter", "");
+  const teams = get(firestore.data, "teams", {});
+  const players = get(firestore.data, "players", {});
 
   return {
     drafting: drafter === uid,
-    roster
+    players,
+    roster,
+    teams
   };
 };
 
@@ -100,5 +113,13 @@ export default compose(
   connect(
     mapStateToProps,
     mapDispatchProps
-  )
+  ),
+  withFirestore(() => [
+    {
+      collection: "teams"
+    },
+    {
+      collection: "players"
+    }
+  ])
 )(RosterGrid);
