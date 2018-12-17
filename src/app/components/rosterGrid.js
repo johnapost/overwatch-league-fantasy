@@ -4,12 +4,14 @@ import React from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import get from "lodash/get";
+import withFirestore from "../shared/withFirestore";
 import api from "../shared/api.json";
 import Player from "./player";
 import { teamDraftSelect } from "../redux/team";
 
 import type { Player as PlayerType } from "../shared/player";
 import type { Roster } from "../shared/roster";
+import type { Team } from "../shared/team";
 
 type Props = {
   drafting: boolean,
@@ -17,7 +19,10 @@ type Props = {
   filteredPlayerName?: string,
   filteredTeamId?: number | null,
   filteredRole?: string | null,
-  roster?: Roster
+  roster?: Roster,
+  teams: {
+    [key: number]: Team
+  }
 };
 
 const allPlayers = (): Object[] =>
@@ -32,7 +37,8 @@ const RosterGrid = ({
   filteredPlayerName,
   filteredRole,
   filteredTeamId,
-  roster
+  roster,
+  teams
 }: Props) => (
   <div className="wrapper">
     {allPlayers()
@@ -54,19 +60,22 @@ const RosterGrid = ({
             player => player && ((player: any): PlayerType).id === id
           )
       )
-      .map(({ player, team }) => (
-        <Player
-          {...player}
-          role={player.attributes.role}
-          teamId={team.id}
-          key={player.id}
-          onClick={
-            drafting
-              ? () => draftSelect({ ...player, teamId: team.id })
-              : () => {}
-          }
-        />
-      ))}
+      .map(({ player, team }) => {
+        const teamAttributes = teams[team.id];
+        return (
+          <Player
+            {...player}
+            role={player.attributes.role}
+            team={teamAttributes}
+            key={player.id}
+            onClick={
+              drafting
+                ? () => draftSelect({ ...player, team: teamAttributes })
+                : () => {}
+            }
+          />
+        );
+      })}
     <style jsx>{`
       .wrapper {
         display: flex;
@@ -88,10 +97,12 @@ RosterGrid.defaultProps = {
 
 const mapStateToProps = ({ firestore, user: { uid }, team: { roster } }) => {
   const drafter = get(firestore.data, "leagues.first.drafter", "");
+  const teams = get(firestore.data, "teams", []);
 
   return {
     drafting: drafter === uid,
-    roster
+    roster,
+    teams
   };
 };
 
@@ -103,5 +114,10 @@ export default compose(
   connect(
     mapStateToProps,
     mapDispatchProps
-  )
+  ),
+  withFirestore(() => [
+    {
+      collection: "teams"
+    }
+  ])
 )(RosterGrid);

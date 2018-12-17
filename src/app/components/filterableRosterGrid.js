@@ -1,12 +1,22 @@
 // @flow
 
 import React, { Component } from "react";
+import { compose } from "redux";
+import { connect } from "react-redux";
+import get from "lodash/get";
 import { Menu, Dropdown, Button, Input, AutoComplete } from "antd";
 import RosterGrid from "./rosterGrid";
+import withFirestore from "../shared/withFirestore";
 import api from "../shared/api.json";
-import getTeam from "../shared/getTeam";
-import teams from "../shared/teams.json";
 import roles from "../shared/roles";
+
+import type { Team } from "../shared/team";
+
+type Props = {
+  teams: {
+    [key: number]: Team
+  }
+};
 
 type State = {
   filteredPlayerName: string,
@@ -22,7 +32,7 @@ const allPlayerNames = api.competitors
 const capitalizeFirstChar = (word: string): string =>
   word.charAt(0).toUpperCase() + word.slice(1);
 
-class FilterableRosterGrid extends Component<*, State> {
+export class FilterableRosterGridComponent extends Component<Props, State> {
   state = {
     filteredPlayerName: "",
     playerNames: allPlayerNames,
@@ -43,21 +53,26 @@ class FilterableRosterGrid extends Component<*, State> {
     option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !==
     -1;
 
-  renderTeamMenu = () => (
-    <Menu>
-      <Menu.Item onClick={() => this.setState({ filteredTeamId: null })}>
-        All Teams
-      </Menu.Item>
-      {teams.map(({ id, name }) => (
-        <Menu.Item
-          key={id}
-          onClick={() => this.setState({ filteredTeamId: id })}
-        >
-          {name}
+  renderTeamMenu = () => {
+    const { teams } = this.props;
+    return (
+      <Menu>
+        <Menu.Item onClick={() => this.setState({ filteredTeamId: null })}>
+          All Teams
         </Menu.Item>
-      ))}
-    </Menu>
-  );
+        {((Object.entries(teams): any): [number, Team][]).map(
+          ([id, { name }]) => (
+            <Menu.Item
+              key={id}
+              onClick={() => this.setState({ filteredTeamId: id })}
+            >
+              {name}
+            </Menu.Item>
+          )
+        )}
+      </Menu>
+    );
+  };
 
   renderPositionMenu = () => (
     <Menu>
@@ -76,6 +91,7 @@ class FilterableRosterGrid extends Component<*, State> {
   );
 
   render() {
+    const { teams } = this.props;
     const {
       filteredTeamId,
       filteredRole,
@@ -94,7 +110,7 @@ class FilterableRosterGrid extends Component<*, State> {
               key="0"
             >
               <Button size="large">
-                {filteredTeamId ? getTeam(filteredTeamId).name : "All Teams"}
+                {filteredTeamId ? teams[filteredTeamId].name : "All Teams"}
               </Button>
             </Dropdown>
             <Dropdown
@@ -139,4 +155,13 @@ class FilterableRosterGrid extends Component<*, State> {
   }
 }
 
-export default FilterableRosterGrid;
+const mapStateToProps = ({ firestore }) => {
+  const teams = get(firestore.data, "teams", []);
+
+  return { teams };
+};
+
+export default compose(
+  connect(mapStateToProps),
+  withFirestore(() => [{ collection: "teams" }])
+)(FilterableRosterGridComponent);

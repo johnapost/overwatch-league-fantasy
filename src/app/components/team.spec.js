@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow } from "enzyme";
-import { Team, mapStateToProps } from "./team";
+import { TeamComponent, mapStateToProps } from "./team";
 import DraftSlot from "./draftSlot";
 import Player from "./player";
 
@@ -28,7 +28,7 @@ const props = {
 
 describe("Team", () => {
   describe("component", () => {
-    const wrapper = shallow(<Team {...props} />);
+    const wrapper = shallow(<TeamComponent {...props} />);
 
     it("should render a DraftSlot component", () => {
       expect(wrapper.find(DraftSlot).length).toBe(1);

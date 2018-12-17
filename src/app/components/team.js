@@ -41,7 +41,7 @@ const mergeDrafted = (
     []
   );
 
-export const Team = ({
+export const TeamComponent = ({
   drafting,
   draftPlace,
   roster,
@@ -91,9 +91,9 @@ export const Team = ({
             />
           ) : (
             <Player
+              {...value}
               key={value.id}
               onClick={createOnClick(index)(value.attributes.role)}
-              {...value}
             />
           )
         )}
@@ -141,4 +141,4 @@ export default compose(
       doc: "first"
     }
   ])
-)(Team);
+)(TeamComponent);

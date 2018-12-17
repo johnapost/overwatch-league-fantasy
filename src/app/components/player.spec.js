@@ -8,7 +8,10 @@ const props = {
   },
   headshot: "headshot.jpg",
   name: "Nina",
-  teamId: 4523,
+  team: {
+    abbreviatedName: "DAL",
+    primaryColor: "ffffff"
+  },
   onClick: jest.fn(),
   role: undefined
 };
