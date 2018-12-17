@@ -7,12 +7,13 @@ import get from "lodash/get";
 import { Menu, Dropdown, Button, Input, AutoComplete } from "antd";
 import RosterGrid from "./rosterGrid";
 import withFirestore from "../shared/withFirestore";
-import api from "../shared/api.json";
 import roles from "../shared/roles";
 
+import type { Player } from "../shared/player";
 import type { Team } from "../shared/team";
 
 type Props = {
+  playerNames: string[],
   teams: {
     [key: number]: Team
   }
@@ -20,14 +21,9 @@ type Props = {
 
 type State = {
   filteredPlayerName: string,
-  playerNames: string[],
   filteredRole: string | null,
   filteredTeamId: number | null
 };
-
-const allPlayerNames = api.competitors
-  .reduce((accum, { competitor: { players } }) => [...accum, ...players], [])
-  .map(({ player: { name } }) => name);
 
 const capitalizeFirstChar = (word: string): string =>
   word.charAt(0).toUpperCase() + word.slice(1);
@@ -35,17 +31,17 @@ const capitalizeFirstChar = (word: string): string =>
 export class FilterableRosterGridComponent extends Component<Props, State> {
   state = {
     filteredPlayerName: "",
-    playerNames: allPlayerNames,
     filteredRole: null,
     filteredTeamId: null
   };
 
   setPlayerName = (filteredPlayerName: string) => {
+    const { playerNames } = this.props;
     this.setState({
       filteredPlayerName
     });
 
-    if (allPlayerNames.find(_playerName => filteredPlayerName === _playerName))
+    if (playerNames.find(_playerName => filteredPlayerName === _playerName))
       this.setState({ filteredRole: null, filteredTeamId: null });
   };
 
@@ -60,11 +56,11 @@ export class FilterableRosterGridComponent extends Component<Props, State> {
         <Menu.Item onClick={() => this.setState({ filteredTeamId: null })}>
           All Teams
         </Menu.Item>
-        {((Object.entries(teams): any): [number, Team][]).map(
+        {((Object.entries(teams): any): [string, Team][]).map(
           ([id, { name }]) => (
             <Menu.Item
               key={id}
-              onClick={() => this.setState({ filteredTeamId: id })}
+              onClick={() => this.setState({ filteredTeamId: Number(id) })}
             >
               {name}
             </Menu.Item>
@@ -91,13 +87,8 @@ export class FilterableRosterGridComponent extends Component<Props, State> {
   );
 
   render() {
-    const { teams } = this.props;
-    const {
-      filteredTeamId,
-      filteredRole,
-      filteredPlayerName,
-      playerNames
-    } = this.state;
+    const { playerNames, teams } = this.props;
+    const { filteredTeamId, filteredRole, filteredPlayerName } = this.state;
 
     return (
       <div>
@@ -156,9 +147,13 @@ export class FilterableRosterGridComponent extends Component<Props, State> {
 }
 
 const mapStateToProps = ({ firestore }) => {
-  const teams = get(firestore.data, "teams", []);
+  const teams = get(firestore.data, "teams", {});
+  const players = get(firestore.data, "players", {});
+  const playerNames = ((Object.values(players): any): Player[]).map(
+    ({ name }) => name
+  );
 
-  return { teams };
+  return { teams, playerNames };
 };
 
 export default compose(

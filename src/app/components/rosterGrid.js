@@ -5,7 +5,6 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import get from "lodash/get";
 import withFirestore from "../shared/withFirestore";
-import api from "../shared/api.json";
 import Player from "./player";
 import { teamDraftSelect } from "../redux/team";
 
@@ -19,19 +18,17 @@ type Props = {
   filteredPlayerName?: string,
   filteredTeamId?: number | null,
   filteredRole?: string | null,
+  players: {
+    [key: number]: PlayerType
+  },
   roster?: Roster,
   teams: {
     [key: number]: Team
   }
 };
 
-const allPlayers = (): Object[] =>
-  api.competitors.reduce(
-    (accum, { competitor: { players } }) => [...accum, ...players],
-    []
-  );
-
 const RosterGrid = ({
+  players,
   drafting,
   draftSelect,
   filteredPlayerName,
@@ -41,27 +38,27 @@ const RosterGrid = ({
   teams
 }: Props) => (
   <div className="wrapper">
-    {allPlayers()
-      .filter(({ team }) =>
-        filteredTeamId ? filteredTeamId === team.id : true
+    {((Object.values(players): any): PlayerType[])
+      .filter(({ teamId }) =>
+        filteredTeamId ? filteredTeamId === teamId : true
       )
-      .filter(({ player: { attributes: { role } } }) =>
+      .filter(({ attributes: { role } }) =>
         filteredRole ? filteredRole.toLowerCase() === role : true
       )
-      .filter(({ player: { name } }) =>
+      .filter(({ name }) =>
         filteredPlayerName
           ? name.toLowerCase().indexOf(filteredPlayerName.toLocaleLowerCase()) >
             -1
           : true
       )
       .filter(
-        ({ player: { id } }) =>
+        ({ id }) =>
           !Object.values(roster).some(
             player => player && ((player: any): PlayerType).id === id
           )
       )
-      .map(({ player, team }) => {
-        const teamAttributes = teams[team.id];
+      .map(player => {
+        const teamAttributes = teams[player.teamId];
         return (
           <Player
             {...player}
@@ -97,10 +94,12 @@ RosterGrid.defaultProps = {
 
 const mapStateToProps = ({ firestore, user: { uid }, team: { roster } }) => {
   const drafter = get(firestore.data, "leagues.first.drafter", "");
-  const teams = get(firestore.data, "teams", []);
+  const teams = get(firestore.data, "teams", {});
+  const players = get(firestore.data, "players", {});
 
   return {
     drafting: drafter === uid,
+    players,
     roster,
     teams
   };
@@ -118,6 +117,9 @@ export default compose(
   withFirestore(() => [
     {
       collection: "teams"
+    },
+    {
+      collection: "players"
     }
   ])
 )(RosterGrid);
