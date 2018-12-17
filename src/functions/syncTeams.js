@@ -15,12 +15,19 @@ export default https.onRequest(async (req, res) => {
   } = await get(`${OVERWATCH_API}teams`);
 
   try {
-    await competitors.map(({ competitor }) =>
-      db
-        .collection("teams")
-        .doc(String(competitor.id))
-        .set(competitor)
-    );
+    const batch = db.batch();
+    competitors.forEach(({ competitor }) => {
+      const teamRef = db.collection("teams").doc(String(competitor.id));
+      // Sync team data
+      batch.set(teamRef, competitor);
+
+      competitor.players.forEach(({ player }) => {
+        const playerRef = db.collection("players").doc(String(player.id));
+        // Sync individual player data
+        batch.set(playerRef, { ...player, teamId: competitor.id });
+      });
+    });
+    await batch.commit();
     await res.send("Teams synced!");
   } catch (error) {
     // eslint-disable-next-line no-console
