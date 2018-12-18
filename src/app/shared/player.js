@@ -16,7 +16,7 @@ export type Player = {
   name: string,
   nationality: string,
   teamId: number,
-  latestStats: {
+  latestStats?: {
     deaths_avg_per_10m: number,
     eliminations_avg_per_10m: number,
     final_blows_avg_per_10m: number,

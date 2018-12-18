@@ -2,7 +2,7 @@ import React from "react";
 import { shallow } from "enzyme";
 import { TeamComponent, mapStateToProps } from "./team";
 import DraftSlot from "./draftSlot";
-import Player from "./player";
+import PlayerCard from "./playerCard";
 
 const props = {
   drafting: false,
@@ -35,7 +35,7 @@ describe("Team", () => {
     });
 
     it("should render a Player component", () => {
-      expect(wrapper.find(Player).length).toBe(1);
+      expect(wrapper.find(PlayerCard).length).toBe(1);
     });
   });
 

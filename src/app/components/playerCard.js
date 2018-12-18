@@ -3,13 +3,13 @@
 import React from "react";
 import TeamLogo from "./teamLogo";
 
-import type { AbbreviatedNames } from "./teamLogo";
+import type { AbbreviatedName } from "./teamLogo";
 import type { Role } from "../shared/roles";
 import type { Player } from "../shared/player";
 
 type Props = Player & {
   team?: {
-    abbreviatedName: AbbreviatedNames,
+    abbreviatedName: AbbreviatedName,
     primaryColor: string
   },
   onClick?: Function,

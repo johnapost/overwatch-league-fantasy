@@ -7,12 +7,12 @@ import get from "lodash/get";
 import withFirestore from "../shared/withFirestore";
 import { teamDraftPlace } from "../redux/team";
 import Header from "./header";
-import Player from "./player";
+import PlayerCard from "./playerCard";
 import DraftSlot from "./draftSlot";
 
 import type { StoreState } from "../shared/makeStore";
 import type { TeamState } from "../redux/team";
-import type { Player as PlayerType } from "../shared/player";
+import type { Player } from "../shared/player";
 import type { Role } from "../shared/roles";
 import type { Roster } from "../shared/roster";
 
@@ -31,12 +31,12 @@ type Props = TeamState & {
 const mergeDrafted = (
   roster: Roster,
   rosterSlots: RosterSlots
-): (Role | PlayerType)[] =>
+): (Role | Player)[] =>
   Object.entries(rosterSlots).reduce(
     (accum, [key, value]) => [
       ...accum,
       // Null roster values are replaced with DraftSlot component
-      roster[key] ? { ...roster[key] } : ((value: any): PlayerType)
+      roster[key] ? { ...roster[key] } : ((value: any): Player)
     ],
     []
   );
@@ -90,7 +90,7 @@ export const TeamComponent = ({
               onClick={createOnClick(index)(value)}
             />
           ) : (
-            <Player
+            <PlayerCard
               {...value}
               key={value.id}
               onClick={createOnClick(index)(value.attributes.role)}

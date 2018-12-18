@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow } from "enzyme";
-import Player from "./player";
+import PlayerCard from "./playerCard";
 
 const props = {
   attributes: {
@@ -17,7 +17,7 @@ const props = {
 };
 
 describe("Player", () => {
-  const wrapper = shallow(<Player {...props} />);
+  const wrapper = shallow(<PlayerCard {...props} />);
 
   beforeEach(() => {
     props.onClick.mockClear();

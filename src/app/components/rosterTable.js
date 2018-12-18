@@ -5,7 +5,7 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import get from "lodash/get";
 import withFirestore from "../shared/withFirestore";
-import PlayerCard from "./playerCard";
+import PlayerRow from "./playerRow";
 import { teamDraftSelect } from "../redux/team";
 
 import type { Player } from "../shared/player";
@@ -27,7 +27,7 @@ type Props = {
   }
 };
 
-const RosterGrid = ({
+const RosterTable = ({
   players,
   drafting,
   draftSelect,
@@ -60,7 +60,7 @@ const RosterGrid = ({
       .map(player => {
         const teamAttributes = teams[player.teamId];
         return (
-          <PlayerCard
+          <PlayerRow
             {...player}
             role={player.attributes.role}
             team={teamAttributes}
@@ -75,17 +75,13 @@ const RosterGrid = ({
       })}
     <style jsx>{`
       .wrapper {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin: 25px;
+        overflow-x: scroll;
       }
     `}</style>
   </div>
 );
 
-RosterGrid.defaultProps = {
+RosterTable.defaultProps = {
   filteredPlayerName: "",
   filteredTeamId: null,
   filteredRole: null,
@@ -122,4 +118,4 @@ export default compose(
       collection: "players"
     }
   ])
-)(RosterGrid);
+)(RosterTable);

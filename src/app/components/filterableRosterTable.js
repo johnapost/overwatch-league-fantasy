@@ -5,7 +5,7 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import get from "lodash/get";
 import { Menu, Dropdown, Button, Input, AutoComplete } from "antd";
-import RosterGrid from "./rosterGrid";
+import RosterTable from "./rosterTable";
 import withFirestore from "../shared/withFirestore";
 import roles from "../shared/roles";
 
@@ -28,7 +28,7 @@ type State = {
 const capitalizeFirstChar = (word: string): string =>
   word.charAt(0).toUpperCase() + word.slice(1);
 
-export class FilterableRosterGridComponent extends Component<Props, State> {
+export class FilterableRosterTableComponent extends Component<Props, State> {
   state = {
     filteredPlayerName: "",
     filteredRole: null,
@@ -125,7 +125,7 @@ export class FilterableRosterGridComponent extends Component<Props, State> {
           </div>
         </Input.Group>
         <div className="roster">
-          <RosterGrid
+          <RosterTable
             filteredPlayerName={filteredPlayerName}
             filteredRole={filteredRole}
             filteredTeamId={filteredTeamId}
@@ -159,4 +159,4 @@ const mapStateToProps = ({ firestore }) => {
 export default compose(
   connect(mapStateToProps),
   withFirestore(() => [{ collection: "teams" }])
-)(FilterableRosterGridComponent);
+)(FilterableRosterTableComponent);

@@ -6,7 +6,7 @@ import Header from "../components/header";
 import Layout from "../components/layout";
 import Chat from "../components/chat";
 import Team from "../components/team";
-import FilterableRosterGrid from "../components/filterableRosterGrid";
+import FilterableRosterTable from "../components/filterableRosterTable";
 
 export default () => (
   <Layout>
@@ -19,7 +19,7 @@ export default () => (
     <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
       <Col md={11}>
         <div className="wrapper">
-          <FilterableRosterGrid />
+          <FilterableRosterTable />
         </div>
       </Col>
       <Col md={13}>
