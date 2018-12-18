@@ -16,6 +16,10 @@
         "function": "syncTeams"
       },
       {
+        "source": "sync/players",
+        "function":"syncPlayers"
+      },
+      {
         "source": "**/**",
         "function": "nextApp"
       }

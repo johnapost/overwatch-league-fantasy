@@ -3,16 +3,13 @@
 import { https } from "firebase-functions";
 import { firestore } from "firebase-admin";
 import { get } from "axios";
-
-const OVERWATCH_API = "https://api.overwatchleague.com/";
-
-const db = firestore();
-db.settings({ timestampsInSnapshots: true });
+import { TEAM_API } from "./endpoints";
 
 export default https.onRequest(async (req, res) => {
+  const db = firestore();
   const {
     data: { competitors }
-  } = await get(`${OVERWATCH_API}teams`);
+  } = await get(TEAM_API);
 
   try {
     const batch = db.batch();
@@ -23,7 +20,7 @@ export default https.onRequest(async (req, res) => {
 
       competitor.players.forEach(({ player }) => {
         const playerRef = db.collection("players").doc(String(player.id));
-        // Sync individual player data
+        // Sync team's player data
         batch.set(playerRef, { ...player, teamId: competitor.id });
       });
     });
@@ -31,7 +28,7 @@ export default https.onRequest(async (req, res) => {
     await res.send("Teams synced!");
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error("Error syncing teams", error);
+    console.error("Error syncing team data", error);
     await res.send(error);
   }
 });
