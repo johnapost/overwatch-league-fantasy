@@ -50,6 +50,7 @@ export default ({
     {latestStats ? (
       <div className="stats">
         <div>{latestStats.eliminations_avg_per_10m.toFixed(2)}</div>
+        <div>{latestStats.deaths_avg_per_10m.toFixed(2)}</div>
         <div>{latestStats.hero_damage_avg_per_10m.toFixed(2)}</div>
         <div>{latestStats.healing_avg_per_10m.toFixed(2)}</div>
       </div>
@@ -58,9 +59,16 @@ export default ({
     )}
     <style jsx>{`
       .container {
+        background: #ffffff;
+        box-shadow: 3px 3px 2px rgb(200, 200, 200);
         display: flex;
         margin: 0 0 5px;
-        box-shadow: 3px 3px 2px rgb(200, 200, 200);
+        transition: margin 0.15s ease-out;
+        position: relative;
+      }
+      .container:hover {
+        margin: 0 10px 5px 10px;
+        z-index: 1;
       }
       .container > div {
         align-items: center;
