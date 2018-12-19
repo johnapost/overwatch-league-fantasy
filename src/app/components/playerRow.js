@@ -29,43 +29,93 @@ export default ({
 }: Props) => (
   <div className="container" onClick={onClick}>
     <div className="profile">
+      {role && (
+        <div className="role">
+          <img src={`static/${role}.svg`} alt={role} title={role} />
+        </div>
+      )}
+      <div className="score">3000</div>
       <div className="headshot">
         <img src={headshot} alt={name} title={name} />
       </div>
-      <div>
-        {team && team.abbreviatedName && (
-          <div className="logo">
-            <TeamLogo team={team.abbreviatedName} height="30" />
-          </div>
-        )}
-        {role && (
-          <div className="role">
-            <img src={`static/${role}.svg`} alt={role} title={role} />
-          </div>
-        )}
-      </div>
     </div>
-    <div>{name}</div>
-    {latestStats && <div>{JSON.stringify(latestStats)}</div>}
+    <div className="name-container">
+      {team && team.abbreviatedName && (
+        <div className="logo">
+          <TeamLogo team={team.abbreviatedName} height="24" width="24" />
+        </div>
+      )}
+      <div className="name">{name}</div>
+    </div>
+    {latestStats ? (
+      <div className="stats">
+        <div>{latestStats.eliminations_avg_per_10m.toFixed(2)}</div>
+        <div>{latestStats.hero_damage_avg_per_10m.toFixed(2)}</div>
+        <div>{latestStats.healing_avg_per_10m.toFixed(2)}</div>
+      </div>
+    ) : (
+      <div className="no-stats">No historical stats</div>
+    )}
     <style jsx>{`
       .container {
         display: flex;
+        margin: 0 0 5px;
+        box-shadow: 3px 3px 2px rgb(200, 200, 200);
       }
       .container > div {
-        width: 150px;
+        align-items: center;
+        display: flex;
         flex-shrink: 0;
       }
       .profile {
-        display: flex;
+        background-color: #${getColor(team)};
+        color: #ffffff;
+        padding: 0 5px;
       }
       .headshot {
-        background-color: #${getColor(team)};
+        margin-left: 10px;
       }
       .headshot img {
-        height: 75px;
+        height: 40px;
+      }
+      .score {
+        font-size: 1.5rem;
+        font-family: "BigNoodleToo";
+        margin-left: 5px;
+        text-shadow: 1px 1px 2px #000000;
+      }
+      .role {
+        transform: skew(-15deg);
       }
       .role img {
-        height: 30px;
+        height: 24px;
+        padding: 0 0 0 5px;
+      }
+      .name-container {
+        display: flex;
+        width: 225px;
+      }
+      .name {
+        font-size: 1.25rem;
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+      .logo {
+        padding: 0 0 7px;
+        margin: 0 5px;
+      }
+      .stats {
+        font-size: 1.25rem;
+      }
+      .stats div {
+        font-family: "BigNoodleToo";
+        font-size: 1.5rem;
+        margin-right: 10px;
+        width: 150px;
+      }
+      .no-stats {
+        font-family: "BigNoodleToo";
+        font-size: 1.5rem;
       }
     `}</style>
   </div>

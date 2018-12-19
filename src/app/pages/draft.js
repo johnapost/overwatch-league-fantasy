@@ -17,12 +17,12 @@ export default () => (
       </Col>
     </Row>
     <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-      <Col md={11}>
+      <Col md={13}>
         <div className="wrapper">
           <FilterableRosterTable />
         </div>
       </Col>
-      <Col md={13}>
+      <Col md={11}>
         <div className="wrapper">
           <Chat />
         </div>
