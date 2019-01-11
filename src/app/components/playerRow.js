@@ -68,15 +68,14 @@ export default ({
     <style jsx>{`
       .container {
         background: #ffffff;
-        box-shadow: 3px 3px 2px rgb(200, 200, 200);
+        box-shadow: 0px 0px 0px rgba(72, 89, 125, 0.95);
         display: inline-flex;
         margin: 0 0 5px;
-        transition: margin 0.15s ease-out;
+        transition: box-shadow 0.15s ease-out;
         position: relative;
       }
       .container:hover {
-        margin: 0 0 5px 10px;
-        z-index: 1;
+        box-shadow: 0px 0px 3px rgb(0, 0, 0);
       }
       .container > div {
         align-items: center;
@@ -90,7 +89,7 @@ export default ({
         padding: 0 5px;
         position: sticky;
         width: 140px;
-        z-index: 3;
+        z-index: 2;
       }
       .headshot {
         margin-left: 10px;

@@ -95,13 +95,17 @@ const RosterTable = ({
           position: relative;
         }
         .header {
+          background: rgba(72, 89, 125, 0.95);
+          box-shadow: 3px 3px 2px rgba(72, 89, 125, 0.5);
+          color: #ffffff;
           display: flex;
           font-family: "BigNoodleToo";
           font-size: 1.5rem;
+          margin: 0 0 5px;
           padding: 0 0 0 365px;
           position: sticky;
           top: 0;
-          z-index: 2;
+          z-index: 3;
         }
         .header div {
           margin-right: 10px;
