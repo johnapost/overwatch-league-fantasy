@@ -50,9 +50,17 @@ export default ({
     {latestStats ? (
       <div className="stats">
         <div>{latestStats.eliminations_avg_per_10m.toFixed(2)}</div>
+        <div>{latestStats.final_blows_avg_per_10m.toFixed(2)}</div>
+        <div>
+          {(
+            latestStats.eliminations_avg_per_10m -
+            latestStats.final_blows_avg_per_10m
+          ).toFixed(2)}
+        </div>
         <div>{latestStats.deaths_avg_per_10m.toFixed(2)}</div>
         <div>{latestStats.hero_damage_avg_per_10m.toFixed(2)}</div>
         <div>{latestStats.healing_avg_per_10m.toFixed(2)}</div>
+        <div>{(latestStats.time_played_total / 3600).toFixed(2)}</div>
       </div>
     ) : (
       <div className="no-stats">No historical stats</div>
@@ -61,13 +69,13 @@ export default ({
       .container {
         background: #ffffff;
         box-shadow: 3px 3px 2px rgb(200, 200, 200);
-        display: flex;
+        display: inline-flex;
         margin: 0 0 5px;
         transition: margin 0.15s ease-out;
         position: relative;
       }
       .container:hover {
-        margin: 0 10px 5px 10px;
+        margin: 0 0 5px 10px;
         z-index: 1;
       }
       .container > div {
@@ -78,7 +86,11 @@ export default ({
       .profile {
         background-color: #${getColor(team)};
         color: #ffffff;
+        left: 0;
         padding: 0 5px;
+        position: sticky;
+        width: 140px;
+        z-index: 3;
       }
       .headshot {
         margin-left: 10px;

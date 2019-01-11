@@ -37,47 +37,78 @@ const RosterTable = ({
   roster,
   teams
 }: Props) => (
-  <div className="wrapper">
-    {((Object.values(players): any): Player[])
-      .filter(({ teamId }) =>
-        filteredTeamId ? filteredTeamId === teamId : true
-      )
-      .filter(({ attributes: { role } }) =>
-        filteredRole ? filteredRole.toLowerCase() === role : true
-      )
-      .filter(({ name }) =>
-        filteredPlayerName
-          ? name.toLowerCase().indexOf(filteredPlayerName.toLocaleLowerCase()) >
-            -1
-          : true
-      )
-      .filter(
-        ({ id }) =>
-          !Object.values(roster).some(
-            player => player && ((player: any): Player).id === id
-          )
-      )
-      .map(player => {
-        const teamAttributes = teams[player.teamId];
-        return (
-          <PlayerRow
-            {...player}
-            role={player.attributes.role}
-            team={teamAttributes}
-            key={player.id}
-            onClick={
-              drafting
-                ? () => draftSelect({ ...player, team: teamAttributes })
-                : () => {}
-            }
-          />
-        );
-      })}
-    <style jsx>{`
-      .wrapper {
-        overflow-x: scroll;
-      }
-    `}</style>
+  <div className="overflow-wrapper">
+    <div className="wrapper">
+      <div className="header">
+        <div>Elims</div>
+        <div>Kills</div>
+        <div>Assists</div>
+        <div>Deaths</div>
+        <div>Damage</div>
+        <div>Healing</div>
+        <div>Hours</div>
+      </div>
+      {((Object.values(players): any): Player[])
+        .filter(({ teamId }) =>
+          filteredTeamId ? filteredTeamId === teamId : true
+        )
+        .filter(({ attributes: { role } }) =>
+          filteredRole ? filteredRole.toLowerCase() === role : true
+        )
+        .filter(({ name }) =>
+          filteredPlayerName
+            ? name
+                .toLowerCase()
+                .indexOf(filteredPlayerName.toLocaleLowerCase()) > -1
+            : true
+        )
+        .filter(
+          ({ id }) =>
+            !Object.values(roster).some(
+              player => player && ((player: any): Player).id === id
+            )
+        )
+        .map(player => {
+          const teamAttributes = teams[player.teamId];
+          return (
+            <PlayerRow
+              {...player}
+              role={player.attributes.role}
+              team={teamAttributes}
+              key={player.id}
+              onClick={
+                drafting
+                  ? () => draftSelect({ ...player, team: teamAttributes })
+                  : () => {}
+              }
+            />
+          );
+        })}
+      <style jsx>{`
+        .overflow-wrapper {
+          overflow: auto;
+        }
+        .wrapper {
+          display: inline-flex;
+          flex-direction: column;
+          padding: 0 20px 20px 0;
+          position: relative;
+        }
+        .header {
+          display: flex;
+          font-family: "BigNoodleToo";
+          font-size: 1.5rem;
+          padding: 0 0 0 365px;
+          position: sticky;
+          top: 0;
+          z-index: 2;
+        }
+        .header div {
+          margin-right: 10px;
+          width: 150px;
+        }
+      `}</style>
+    </div>
   </div>
 );
 
