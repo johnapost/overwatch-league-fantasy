@@ -2,6 +2,7 @@
 
 import React from "react";
 import TeamLogo from "./teamLogo";
+import calcScore from "../shared/calcScore";
 
 import type { AbbreviatedName } from "./teamLogo";
 import type { Role } from "../shared/roles";
@@ -34,7 +35,9 @@ export default ({
           <img src={`static/${role}.svg`} alt={role} title={role} />
         </div>
       )}
-      <div className="score">3000</div>
+      <div className="score">
+        {latestStats && role && calcScore(latestStats, role)}
+      </div>
       <div className="headshot">
         <img src={headshot} alt={name} title={name} />
       </div>
@@ -61,6 +64,7 @@ export default ({
         <div>{latestStats.hero_damage_avg_per_10m.toFixed(2)}</div>
         <div>{latestStats.healing_avg_per_10m.toFixed(2)}</div>
         <div>{(latestStats.time_played_total / 3600).toFixed(2)}</div>
+        <div>{latestStats.ultimates_earned_avg_per_10m.toFixed(2)}</div>
       </div>
     ) : (
       <div className="no-stats">No historical stats</div>

@@ -47,6 +47,7 @@ const RosterTable = ({
         <div>Damage</div>
         <div>Healing</div>
         <div>Hours</div>
+        <div>Ults</div>
       </div>
       {((Object.values(players): any): Player[])
         .filter(({ teamId }) =>
