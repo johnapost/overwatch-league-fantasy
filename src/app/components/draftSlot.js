@@ -17,7 +17,7 @@ export default ({ onClick, role }: Props) => (
     <div className="role">{role}</div>
     <style jsx>{`
       .container {
-        background: #ffffff;
+        background: #000000;
         border: solid 5px #dddde3;
         height: 200px;
         margin: 5px;

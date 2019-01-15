@@ -6,23 +6,24 @@ import Header from "../components/header";
 import Layout from "../components/layout";
 import Chat from "../components/chat";
 import Team from "../components/team";
-import FilterableRosterGrid from "../components/filterableRosterGrid";
+import FilterableRosterTable from "../components/filterableRosterTable";
 
 export default () => (
   <Layout>
     <Row>
-      <Col xs={1} />
       <Col>
-        <Header title="Now Drafting" />
+        <div style={{ margin: "0 25px" }}>
+          <Header title="Now Drafting" />
+        </div>
       </Col>
     </Row>
     <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-      <Col md={11}>
+      <Col md={13}>
         <div className="wrapper">
-          <FilterableRosterGrid />
+          <FilterableRosterTable />
         </div>
       </Col>
-      <Col md={13}>
+      <Col md={11}>
         <div className="wrapper">
           <Chat />
         </div>

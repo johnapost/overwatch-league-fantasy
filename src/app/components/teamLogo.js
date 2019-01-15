@@ -2,7 +2,7 @@
 
 import React from "react";
 
-export type AbbreviatedNames =
+export type AbbreviatedName =
   | "ATL"
   | "BOS"
   | "CDH"
@@ -26,7 +26,7 @@ export type AbbreviatedNames =
 
 type Props = {
   height?: string,
-  team: AbbreviatedNames,
+  team: AbbreviatedName,
   width?: string
 };
 

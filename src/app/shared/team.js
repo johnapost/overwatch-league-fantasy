@@ -1,9 +1,9 @@
 // @flow
 
-import type { AbbreviatedNames } from "../components/teamLogo";
+import type { AbbreviatedName } from "../components/teamLogo";
 
 export type Team = {
-  abbreviatedName: AbbreviatedNames,
+  abbreviatedName: AbbreviatedName,
   addressCountry: string,
   homeLocation: string,
   id: number,

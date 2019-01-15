@@ -5,10 +5,10 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import get from "lodash/get";
 import withFirestore from "../shared/withFirestore";
-import Player from "./player";
+import PlayerCard from "./playerCard";
 import { teamDraftSelect } from "../redux/team";
 
-import type { Player as PlayerType } from "../shared/player";
+import type { Player } from "../shared/player";
 import type { Roster } from "../shared/roster";
 import type { Team } from "../shared/team";
 
@@ -19,7 +19,7 @@ type Props = {
   filteredTeamId?: number | null,
   filteredRole?: string | null,
   players: {
-    [key: number]: PlayerType
+    [key: number]: Player
   },
   roster?: Roster,
   teams: {
@@ -38,7 +38,7 @@ const RosterGrid = ({
   teams
 }: Props) => (
   <div className="wrapper">
-    {((Object.values(players): any): PlayerType[])
+    {((Object.values(players): any): Player[])
       .filter(({ teamId }) =>
         filteredTeamId ? filteredTeamId === teamId : true
       )
@@ -54,13 +54,13 @@ const RosterGrid = ({
       .filter(
         ({ id }) =>
           !Object.values(roster).some(
-            player => player && ((player: any): PlayerType).id === id
+            player => player && ((player: any): Player).id === id
           )
       )
       .map(player => {
         const teamAttributes = teams[player.teamId];
         return (
-          <Player
+          <PlayerCard
             {...player}
             role={player.attributes.role}
             team={teamAttributes}

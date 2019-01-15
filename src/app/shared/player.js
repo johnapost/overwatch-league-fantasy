@@ -2,6 +2,16 @@
 
 import type { Role } from "./roles";
 
+export type Stats = {
+  deaths_avg_per_10m: number,
+  eliminations_avg_per_10m: number,
+  final_blows_avg_per_10m: number,
+  healing_avg_per_10m: number,
+  hero_damage_avg_per_10m: number,
+  time_played_total: number,
+  ultimates_earned_avg_per_10m: number
+};
+
 export type Player = {
   attributes: {
     heroes: string[],
@@ -16,13 +26,5 @@ export type Player = {
   name: string,
   nationality: string,
   teamId: number,
-  latestStats: {
-    deaths_avg_per_10m: number,
-    eliminations_avg_per_10m: number,
-    final_blows_avg_per_10m: number,
-    healing_avg_per_10m: number,
-    hero_damage_avg_per_10m: number,
-    time_played_total: number,
-    ultimates_earned_avg_per_10m: number
-  }
+  latestStats?: Stats
 };

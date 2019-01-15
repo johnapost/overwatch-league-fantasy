@@ -4,12 +4,12 @@ import admin from "firebase-admin";
 import { https } from "firebase-functions";
 import next from "next";
 
-const dev = process.env.NODE_ENV !== "production";
-admin.initializeApp();
-const app = next({ dev, conf: { distDir: "next" } });
-const handle = app.getRequestHandler();
-
 export default https.onRequest((req, res) => {
+  const dev = process.env.NODE_ENV !== "production";
+  admin.initializeApp();
+  const app = next({ dev, conf: { distDir: "next" } });
+  const handle = app.getRequestHandler();
+
   // eslint-disable-next-line no-console
   console.log(`File: ${req.originalUrl}`);
   const url = req.originalUrl.split("?").shift();
