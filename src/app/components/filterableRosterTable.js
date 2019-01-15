@@ -90,59 +90,57 @@ export class FilterableRosterTableComponent extends Component<Props, State> {
     const { playerNames, teams } = this.props;
     const { filteredTeamId, filteredRole, filteredPlayerName } = this.state;
 
-    return (
-      <div>
-        <Input.Group>
-          <div className="filters">
-            <Dropdown
-              overlay={this.renderTeamMenu()}
-              placement="bottomLeft"
-              trigger={["click"]}
-              key="0"
-            >
-              <Button size="large">
-                {filteredTeamId ? teams[filteredTeamId].name : "All Teams"}
-              </Button>
-            </Dropdown>
-            <Dropdown
-              overlay={this.renderPositionMenu()}
-              placement="bottomLeft"
-              trigger={["click"]}
-            >
-              <Button size="large">
-                {(filteredRole && capitalizeFirstChar(filteredRole)) ||
-                  "All Roles"}
-              </Button>
-            </Dropdown>
-            <AutoComplete
-              allowClear
-              dataSource={playerNames}
-              filterOption={this.filterPlayerNames}
-              onChange={this.setPlayerName}
-              placeholder="Player Name"
-              size="large"
-            />
-          </div>
-        </Input.Group>
-        <div className="roster">
-          <RosterTable
-            filteredPlayerName={filteredPlayerName}
-            filteredRole={filteredRole}
-            filteredTeamId={filteredTeamId}
+    return [
+      <Input.Group>
+        <div className="filters">
+          <Dropdown
+            overlay={this.renderPositionMenu()}
+            placement="bottomLeft"
+            trigger={["click"]}
+          >
+            <Button size="medium" style={{ marginRight: "10px" }}>
+              {(filteredRole && capitalizeFirstChar(filteredRole)) ||
+                "All Roles"}
+            </Button>
+          </Dropdown>
+          <Dropdown
+            overlay={this.renderTeamMenu()}
+            placement="bottomLeft"
+            trigger={["click"]}
+            key="0"
+          >
+            <Button size="medium" style={{ marginRight: "10px" }}>
+              {filteredTeamId ? teams[filteredTeamId].name : "All Teams"}
+            </Button>
+          </Dropdown>
+          <AutoComplete
+            allowClear
+            dataSource={playerNames}
+            filterOption={this.filterPlayerNames}
+            onChange={this.setPlayerName}
+            placeholder="Player Name"
+            size="medium"
           />
         </div>
-        <style jsx>{`
-          .filters {
-            display: flex;
-            justify-content: center;
-          }
-          .roster {
-            max-height: calc(100vh - 138px);
-            overflow-y: scroll;
-          }
-        `}</style>
-      </div>
-    );
+      </Input.Group>,
+      <div className="roster">
+        <RosterTable
+          filteredPlayerName={filteredPlayerName}
+          filteredRole={filteredRole}
+          filteredTeamId={filteredTeamId}
+        />
+      </div>,
+      <style jsx>{`
+        .filters {
+          display: flex;
+          justify-content: flex-start;
+        }
+        .roster {
+          max-height: calc(100vh - 138px);
+          overflow-y: scroll;
+        }
+      `}</style>
+    ];
   }
 }
 

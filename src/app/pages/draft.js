@@ -11,9 +11,10 @@ import FilterableRosterTable from "../components/filterableRosterTable";
 export default () => (
   <Layout>
     <Row>
-      <Col xs={1} />
       <Col>
-        <Header title="Now Drafting" />
+        <div style={{ margin: "0 25px" }}>
+          <Header title="Now Drafting" />
+        </div>
       </Col>
     </Row>
     <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
