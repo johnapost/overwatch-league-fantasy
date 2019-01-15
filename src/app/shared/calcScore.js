@@ -23,19 +23,21 @@ const defaultWeighting: ScoreWeights = {
     final_blows_avg_per_10m * 250 +
     assists_avg_per_10m * 125 -
     deaths_avg_per_10m * 60 +
-    hero_damage_avg_per_10m * 0.1 +
+    hero_damage_avg_per_10m / 10 +
     ultimates_earned_avg_per_10m * 50,
   tank: ({
     assists_avg_per_10m,
     deaths_avg_per_10m,
     final_blows_avg_per_10m,
+    healing_avg_per_10m,
     hero_damage_avg_per_10m,
     ultimates_earned_avg_per_10m
   }) =>
-    final_blows_avg_per_10m * 225 +
-    assists_avg_per_10m * 200 -
+    final_blows_avg_per_10m * 200 +
+    assists_avg_per_10m * 175 -
     deaths_avg_per_10m * 30 +
-    hero_damage_avg_per_10m * 0.04 +
+    hero_damage_avg_per_10m / 10 +
+    healing_avg_per_10m / 7 +
     ultimates_earned_avg_per_10m * 125,
   support: ({
     assists_avg_per_10m,

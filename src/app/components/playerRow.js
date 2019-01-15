@@ -2,13 +2,13 @@
 
 import React from "react";
 import TeamLogo from "./teamLogo";
-import calcScore from "../shared/calcScore";
 
 import type { AbbreviatedName } from "./teamLogo";
 import type { Role } from "../shared/roles";
 import type { Player } from "../shared/player";
 
 type Props = Player & {
+  score?: number,
   team?: {
     abbreviatedName: AbbreviatedName,
     primaryColor: string
@@ -26,7 +26,8 @@ export default ({
   name,
   onClick,
   attributes: { role },
-  latestStats
+  latestStats,
+  score
 }: Props) => (
   <div className="container" onClick={onClick}>
     <div className="profile">
@@ -35,9 +36,7 @@ export default ({
           <img src={`static/${role}.svg`} alt={role} title={role} />
         </div>
       )}
-      <div className="score">
-        {latestStats && role && calcScore(latestStats, role)}
-      </div>
+      <div className="score">{score || "0000"}</div>
       <div className="headshot">
         <img src={headshot} alt={name} title={name} />
       </div>
