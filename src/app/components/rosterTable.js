@@ -7,6 +7,7 @@ import get from "lodash/get";
 import withFirestore from "../shared/withFirestore";
 import PlayerRow from "./playerRow";
 import { teamDraftSelect } from "../redux/team";
+import calcScore from "../shared/calcScore";
 
 import type { Player } from "../shared/player";
 import type { Roster } from "../shared/roster";
@@ -47,6 +48,7 @@ const RosterTable = ({
         <div>Damage</div>
         <div>Healing</div>
         <div>Hours</div>
+        <div>Ults</div>
       </div>
       {((Object.values(players): any): Player[])
         .filter(({ teamId }) =>
@@ -68,6 +70,13 @@ const RosterTable = ({
               player => player && ((player: any): Player).id === id
             )
         )
+        .map(player => ({
+          ...player,
+          score: player.latestStats
+            ? calcScore(player.latestStats, player.attributes.role)
+            : 0
+        }))
+        .sort((a, b) => b.score - a.score)
         .map(player => {
           const teamAttributes = teams[player.teamId];
           return (

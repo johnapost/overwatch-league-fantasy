@@ -8,6 +8,7 @@ import type { Role } from "../shared/roles";
 import type { Player } from "../shared/player";
 
 type Props = Player & {
+  score?: number,
   team?: {
     abbreviatedName: AbbreviatedName,
     primaryColor: string
@@ -25,7 +26,8 @@ export default ({
   name,
   onClick,
   attributes: { role },
-  latestStats
+  latestStats,
+  score
 }: Props) => (
   <div className="container" onClick={onClick}>
     <div className="profile">
@@ -34,7 +36,7 @@ export default ({
           <img src={`static/${role}.svg`} alt={role} title={role} />
         </div>
       )}
-      <div className="score">3000</div>
+      <div className="score">{score || "0000"}</div>
       <div className="headshot">
         <img src={headshot} alt={name} title={name} />
       </div>
@@ -61,6 +63,7 @@ export default ({
         <div>{latestStats.hero_damage_avg_per_10m.toFixed(2)}</div>
         <div>{latestStats.healing_avg_per_10m.toFixed(2)}</div>
         <div>{(latestStats.time_played_total / 3600).toFixed(2)}</div>
+        <div>{latestStats.ultimates_earned_avg_per_10m.toFixed(2)}</div>
       </div>
     ) : (
       <div className="no-stats">No historical stats</div>

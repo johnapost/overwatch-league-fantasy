@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow } from "enzyme";
-import PlayerCard from "./playerCard";
+import PlayerRow from "./playerRow";
 
 const props = {
   attributes: {
@@ -11,8 +11,8 @@ const props = {
   onClick: jest.fn()
 };
 
-describe("PlayerCard", () => {
-  const wrapper = shallow(<PlayerCard {...props} />);
+describe("PlayerRow", () => {
+  const wrapper = shallow(<PlayerRow {...props} />);
 
   beforeEach(() => {
     props.onClick.mockClear();

@@ -98,7 +98,7 @@ export class FilterableRosterTableComponent extends Component<Props, State> {
             placement="bottomLeft"
             trigger={["click"]}
           >
-            <Button size="medium" style={{ marginRight: "10px" }}>
+            <Button style={{ marginRight: "10px" }}>
               {(filteredRole && capitalizeFirstChar(filteredRole)) ||
                 "All Roles"}
             </Button>
@@ -109,7 +109,7 @@ export class FilterableRosterTableComponent extends Component<Props, State> {
             trigger={["click"]}
             key="0"
           >
-            <Button size="medium" style={{ marginRight: "10px" }}>
+            <Button style={{ marginRight: "10px" }}>
               {filteredTeamId ? teams[filteredTeamId].name : "All Teams"}
             </Button>
           </Dropdown>
@@ -119,7 +119,6 @@ export class FilterableRosterTableComponent extends Component<Props, State> {
             filterOption={this.filterPlayerNames}
             onChange={this.setPlayerName}
             placeholder="Player Name"
-            size="medium"
           />
         </div>
       </Input.Group>,

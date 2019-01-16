@@ -73,7 +73,7 @@ export default ({
         height: 150px;
       }
       .role {
-        background: #ffffff;
+        background: #000000;
         padding: 2px;
         position: absolute;
         top: 129px;
