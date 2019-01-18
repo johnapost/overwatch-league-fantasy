@@ -48,6 +48,7 @@ const Layout = ({ children, title }: Props) => (
 
       main {
         min-height: 100vh;
+        overflow-x: hidden;
       }
 
       @media (min-device-pixel-ratio: 2) {
