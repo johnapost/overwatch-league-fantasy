@@ -52,7 +52,7 @@ class AuthBar extends Component<Props, State> {
       if (user && user.emailVerified && user.uid) {
         this.setState({ loggedIn: true });
         login(user.uid);
-        return push("/draft");
+        return push("/leagues");
       }
       this.setState({ loggedIn: false });
       logout();
