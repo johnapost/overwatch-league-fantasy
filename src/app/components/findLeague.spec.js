@@ -4,7 +4,9 @@ import { Modal } from "antd";
 import { FindLeagueComponent, mapStateToProps } from "./findLeague";
 
 const props = {
-  displayName: "John again"
+  user: {
+    displayName: "John again"
+  }
 };
 
 describe("FindLeague", () => {
@@ -12,14 +14,14 @@ describe("FindLeague", () => {
     const wrapper = shallow(<FindLeagueComponent {...props} />);
 
     it("should render user displayName", () => {
-      expect(wrapper.find(Modal).prop("title")).toMatch(props.displayName);
+      expect(wrapper.find(Modal).prop("title")).toMatch(props.user.displayName);
     });
   });
 
   describe("mapStateToProps", () => {
     it("should assign displayName", () => {
       expect(
-        mapStateToProps({ user: { displayName: "user" } })
+        mapStateToProps({ user: { displayName: "user", uid: "abc123" } })
       ).toMatchSnapshot();
     });
   });

@@ -4,14 +4,18 @@ import React from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { Modal, Button, Divider, Form, Input } from "antd";
+import CreateLeague from "./createLeague";
+import withFirestore from "../shared/withFirestore";
 
 import type { StoreState } from "../shared/makeStore";
 
 type Props = {
-  displayName: string
+  user: {
+    displayName: string
+  }
 };
 
-export const FindLeagueComponent = ({ displayName }: Props) => (
+export const FindLeagueComponent = ({ user: { displayName } }: Props) => (
   <Modal
     title={`Welcome, ${displayName}`}
     visible
@@ -32,14 +36,7 @@ export const FindLeagueComponent = ({ displayName }: Props) => (
       </Form.Item>
     </Form>
     <Divider />
-    <Form layout="inline">
-      <Form.Item>
-        <Input placeholder="League name" />
-      </Form.Item>
-      <Form.Item>
-        <Button>Create a league</Button>
-      </Form.Item>
-    </Form>
+    <CreateLeague />
     <style jsx>{`
       p {
         margin: 10px 0 30px;
@@ -48,8 +45,26 @@ export const FindLeagueComponent = ({ displayName }: Props) => (
   </Modal>
 );
 
-export const mapStateToProps = ({ user: { displayName } }: StoreState) => ({
-  displayName
+export const mapStateToProps = ({
+  user: { displayName, uid }
+}: StoreState) => ({
+  user: {
+    displayName,
+    uid
+  }
 });
 
-export default compose(connect(mapStateToProps))(FindLeagueComponent);
+export default compose(
+  connect(mapStateToProps),
+  withFirestore(({ user: { uid } }) =>
+    uid
+      ? [
+          {
+            collection: "leagues",
+            where: [["leagueUsers", "array-contains", uid]]
+          }
+        ]
+      : []
+  ),
+  Form.create()
+)(FindLeagueComponent);

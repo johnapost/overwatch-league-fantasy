@@ -2,6 +2,9 @@
 
 exports[`FindLeague mapStateToProps should assign displayName 1`] = `
 Object {
-  "displayName": "user",
+  "user": Object {
+    "displayName": "user",
+    "uid": "abc123",
+  },
 }
 `;
