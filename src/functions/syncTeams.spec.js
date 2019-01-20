@@ -19,7 +19,7 @@ describe("syncTeams", () => {
     consoleErrorSpy.mockReset();
   });
 
-  fit("should sync player data", async () => {
+  it("should sync player data", async () => {
     firestore.mockImplementation(() => ({
       batch: () => ({ commit: jest.fn(), set: setSpy }),
       collection: () => ({ doc: jest.fn() })
