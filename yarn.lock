@@ -4835,10 +4835,10 @@ firebase-functions@^2.1.0:
     jsonwebtoken "^8.2.1"
     lodash "^4.6.1"
 
-firebase-tools@^6.1.1:
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-6.1.1.tgz#94a57f2d22de618431cc1235606d5958abf37aeb"
-  integrity sha512-0UOdv2BTadzCwuskoYSOAZnXy0K09AyMnVAO2eCEcikZcRimrAzzQMXiUFcRLUxav/V1gDMxjv3RgLE6gKC5jw==
+firebase-tools@^6.3.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-6.3.1.tgz#9a3e12a3215da2adc1df885ba32ddd6eac08bd43"
+  integrity sha512-wBlW1ad+kDQrwU5/SfTXkEe7xwt48oXskV4lHDCaOw/7PfGamuTA38aYpp+jisYCBgEj1275Heet5m62OOr6RQ==
   dependencies:
     JSONStream "^1.2.1"
     archiver "^2.1.1"
