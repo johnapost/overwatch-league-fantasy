@@ -10,7 +10,6 @@
     "copy-deps": "cpx \"*{package.json,yarn.lock}\" \"dist/functions\"",
     "deploy": "firebase deploy",
     "dev": "next src/app",
-    "firebase-login": "firebase login",
     "sort": "sort-package-json",
     "test": "jest",
     "type-check": "flow",

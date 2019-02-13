@@ -30,9 +30,9 @@ const Layout = ({ children, title }: Props) => (
       />
     </Head>
     <div className="container">
-      <header>
+      {/* <header>
         <AuthBar />
-      </header>
+      </header> */}
       <main>{children}</main>
     </div>
     <Footer />
