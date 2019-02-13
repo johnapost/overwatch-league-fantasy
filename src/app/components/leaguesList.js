@@ -3,14 +3,26 @@
 import React from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
-import { Modal, Button, Divider, Form, Input } from "antd";
+import {
+  Button,
+  Col,
+  Collapse,
+  Divider,
+  Form,
+  Input,
+  Modal,
+  Row,
+  List,
+  Spin
+} from "antd";
 import CreateLeague from "./createLeague";
 import withFirestore from "../shared/withFirestore";
 
 import type { StoreState } from "../shared/makeStore";
+import type { League } from "../shared/league";
 
 type Props = {
-  leagues: Object[],
+  leagues: [string, League][] | null,
   user: {
     displayName: string
   }
@@ -19,11 +31,51 @@ type Props = {
 export const LeaguesListComponent = ({
   user: { displayName },
   leagues
-}: Props) => (
-  <div>
-    {leagues.length ? (
-      <div>{JSON.stringify(leagues)}</div>
-    ) : (
+}: Props) => {
+  // Loading
+  if (!leagues || !displayName) return <Spin size="large" />;
+  // Belongs to at least one league
+  if (leagues && leagues.length)
+    return (
+      <>
+        <Row>
+          <Col sm={6} md={4} />
+          <Col sm={12} md={16}>
+            <div className="wrapper">
+              <Collapse>
+                {leagues.map(([id, league]) => (
+                  <Collapse.Panel
+                    key={id}
+                    bordered={false}
+                    header={league.name}
+                    showArrow={false}
+                  >
+                    <div>
+                      Teams:
+                      <List
+                        bordered
+                        dataSource={league.leagueUsers}
+                        renderItem={item => (
+                          <List.Item>Team Name, Owner: {item}</List.Item>
+                        )}
+                      />
+                    </div>
+                  </Collapse.Panel>
+                ))}
+              </Collapse>
+            </div>
+          </Col>
+        </Row>
+        <style jsx>{`
+          .wrapper {
+            margin: 50px 0;
+          }
+        `}</style>
+      </>
+    );
+  // Belongs to no league
+  return (
+    <>
       <Modal
         title={`Welcome, ${displayName}`}
         visible
@@ -46,27 +98,27 @@ export const LeaguesListComponent = ({
         <Divider />
         <CreateLeague />
       </Modal>
-    )}
-    <style jsx>{`
-      p {
-        margin: 10px 0 30px;
-      }
-    `}</style>
-  </div>
-);
+      <style jsx>{`
+        p {
+          margin: 10px 0 30px;
+        }
+      `}</style>
+    </>
+  );
+};
 
 const filterMyLeagues = (
   uid: string | null,
   leagues: Object
-): [string, Object][] =>
+): [string, League][] | null =>
   (uid &&
     leagues &&
-    ((Object.entries(leagues): any): Object[]).reduce(
+    ((Object.entries(leagues): any): League[]).reduce(
       (accum, [key, value]) =>
         value.leagueUsers.includes(uid) ? [...accum, [key, value]] : accum,
       []
     )) ||
-  [];
+  null;
 
 export const mapStateToProps = ({
   firestore: {

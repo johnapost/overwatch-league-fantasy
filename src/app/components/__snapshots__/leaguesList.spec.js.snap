@@ -2,7 +2,7 @@
 
 exports[`FindLeague mapStateToProps should assign user data 1`] = `
 Object {
-  "leagues": Array [],
+  "leagues": null,
   "user": Object {
     "displayName": "user",
     "uid": "abc123",
