@@ -1,12 +1,10 @@
 // @flow
 
-import admin from "firebase-admin";
 import { https } from "firebase-functions";
 import next from "next";
 
 export default https.onRequest((req, res) => {
   const dev = process.env.NODE_ENV !== "production";
-  admin.initializeApp();
   const app = next({ dev, conf: { distDir: "next" } });
   const handle = app.getRequestHandler();
 
