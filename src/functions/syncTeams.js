@@ -21,7 +21,11 @@ export default https.onRequest(async (req, res) => {
       competitor.players.forEach(({ player }) => {
         const playerRef = db.collection("players").doc(String(player.id));
         // Sync team's player data
-        batch.set(playerRef, { ...player, teamId: competitor.id });
+        batch.set(
+          playerRef,
+          { ...player, teamId: competitor.id },
+          { merge: true }
+        );
       });
     });
     await batch.commit();
