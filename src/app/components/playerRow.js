@@ -25,8 +25,8 @@ export default ({
   headshot,
   name,
   onClick,
-  attributes: { role },
   latestStats,
+  role,
   score
 }: Props) => (
   <div className="container" onClick={onClick}>

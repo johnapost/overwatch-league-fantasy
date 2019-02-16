@@ -4,7 +4,6 @@ import React from "react";
 import TeamLogo from "./teamLogo";
 
 import type { AbbreviatedName } from "./teamLogo";
-import type { Role } from "../shared/roles";
 import type { Player } from "../shared/player";
 
 type Props = Player & {
@@ -12,20 +11,13 @@ type Props = Player & {
     abbreviatedName: AbbreviatedName,
     primaryColor: string
   },
-  onClick?: Function,
-  role?: Role
+  onClick?: Function
 };
 
 const getColor = team =>
   team && team.primaryColor ? team.primaryColor : "ffffff";
 
-export default ({
-  team,
-  headshot,
-  name,
-  onClick,
-  attributes: { role }
-}: Props) => (
+export default ({ team, headshot, name, onClick, role }: Props) => (
   <div className="container" onClick={onClick}>
     <div className="background" />
     <div className="headshot">

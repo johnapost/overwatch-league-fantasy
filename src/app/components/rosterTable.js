@@ -54,7 +54,7 @@ const RosterTable = ({
         .filter(({ teamId }) =>
           filteredTeamId ? filteredTeamId === teamId : true
         )
-        .filter(({ attributes: { role } }) =>
+        .filter(({ role }) =>
           filteredRole ? filteredRole.toLowerCase() === role : true
         )
         .filter(({ name }) =>
@@ -73,7 +73,7 @@ const RosterTable = ({
         .map(player => ({
           ...player,
           score: player.latestStats
-            ? calcScore(player.latestStats, player.attributes.role)
+            ? calcScore(player.latestStats, player.role)
             : 0
         }))
         .sort((a, b) => b.score - a.score)
@@ -82,7 +82,7 @@ const RosterTable = ({
           return (
             <PlayerRow
               {...player}
-              role={player.attributes.role}
+              role={player.role}
               team={teamAttributes}
               key={player.id}
               onClick={
