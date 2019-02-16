@@ -69,10 +69,10 @@ export const TeamComponent = ({
     if (
       // Guard against off-role picks
       selectedPlayer &&
-      selectedPlayer.role !== role &&
+      selectedPlayer.attributes.role !== role &&
       // But, flex roles can go wherever they want
       role !== "flex" &&
-      selectedPlayer.role !== "flex"
+      selectedPlayer.attributes.role !== "flex"
     )
       return;
     draftPlace(index);
@@ -93,7 +93,7 @@ export const TeamComponent = ({
             <PlayerCard
               {...value}
               key={value.id}
-              onClick={createOnClick(index)(value.role)}
+              onClick={createOnClick(index)(value.attributes.role)}
             />
           )
         )}

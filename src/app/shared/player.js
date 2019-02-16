@@ -13,13 +13,18 @@ export type Stats = {
 };
 
 export type Player = {
+  attributes: {
+    heroes: string[],
+    player_number: number,
+    preferred_slot: string,
+    role: Role
+  },
   familyName: string,
   givenName: string,
   headshot: string,
   id: string,
-  latestStats?: Stats,
   name: string,
   nationality: string,
-  role: Role,
-  teamId: number
+  teamId: number,
+  latestStats?: Stats
 };
