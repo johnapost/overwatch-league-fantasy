@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer should render 1`] = `"<footer class=\\"jsx-1140642571\\"><div class=\\"ant-row\\"><div class=\\"ant-col-sm-6 ant-col-md-4\\"></div><div class=\\"ant-col-sm-12 ant-col-md-16\\"><p class=\\"jsx-1140642571\\">Special thanks to Overwatch and the Overwatch League for existing.</p><p class=\\"jsx-1140642571\\">All trademarks belong to their owners.</p></div></div></footer>"`;

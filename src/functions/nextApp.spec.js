@@ -2,7 +2,6 @@ import next from "next";
 import nextApp from "./nextApp";
 
 jest.mock("firebase-functions", () => ({ https: { onRequest: fn => fn } }));
-jest.mock("firebase-admin");
 jest.mock("next");
 
 describe("nextApp", () => {

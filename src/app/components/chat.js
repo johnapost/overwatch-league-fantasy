@@ -179,15 +179,15 @@ const filterUniqueUserIds = (messages: Object) =>
     )
   ];
 
-const mapStateToProps = ({ firestore, user: { uid } }) => {
-  const rawMessages = get(firestore.data, "leagues.first.messages");
+const mapStateToProps = ({ firestore: { data }, user: { uid } }) => {
+  const rawMessages = get(data, "leagues.first.messages");
 
   return {
-    leagueName: get(firestore.data, "leagues.first.name"),
-    messages: mapMessagesToUsers(firestore.data.users, rawMessages),
+    leagueName: get(data, "leagues.first.name"),
+    messages: mapMessagesToUsers(data.users, rawMessages),
     uniqueUserIds: filterUniqueUserIds(rawMessages),
     user: {
-      ...get(firestore.data, `users.${uid}`),
+      ...get(data, `users.${uid}`),
       uid
     }
   };

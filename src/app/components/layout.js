@@ -11,7 +11,7 @@ type Props = {
 };
 
 const Layout = ({ children, title }: Props) => (
-  <div>
+  <>
     <Head>
       <title>{title}</title>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -30,9 +30,9 @@ const Layout = ({ children, title }: Props) => (
       />
     </Head>
     <div className="container">
-      <header>
+      {/* <header>
         <AuthBar />
-      </header>
+      </header> */}
       <main>{children}</main>
     </div>
     <Footer />
@@ -48,6 +48,7 @@ const Layout = ({ children, title }: Props) => (
 
       main {
         min-height: 100vh;
+        overflow-x: hidden;
       }
 
       @media (min-device-pixel-ratio: 2) {
@@ -145,7 +146,7 @@ const Layout = ({ children, title }: Props) => (
         text-align: left;
       }
     `}</style>
-  </div>
+  </>
 );
 
 Layout.defaultProps = {

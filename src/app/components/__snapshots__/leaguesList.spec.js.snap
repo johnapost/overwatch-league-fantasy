@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FindLeague mapStateToProps should assign user data 1`] = `
+Object {
+  "leagues": null,
+  "user": Object {
+    "displayName": "user",
+    "uid": "abc123",
+  },
+}
+`;
+
+exports[`FindLeague mapStateToProps should filter and map leagues 1`] = `
+Object {
+  "leagues": Array [
+    Array [
+      "1",
+      Object {
+        "leagueUsers": "abc123",
+      },
+    ],
+    Array [
+      "3",
+      Object {
+        "leagueUsers": "abc123",
+      },
+    ],
+  ],
+  "user": Object {
+    "displayName": undefined,
+    "uid": "abc123",
+  },
+}
+`;

@@ -15,8 +15,8 @@ type Props = {
   uid: string
 };
 
-class ProfileForm extends Component<Props> {
-  handleSubmit = e => {
+export class ProfileForm extends Component<Props> {
+  handleSubmit = (e: Event) => {
     e.preventDefault();
     const {
       firestore,
@@ -25,9 +25,7 @@ class ProfileForm extends Component<Props> {
       uid
     } = this.props;
 
-    if (!isLoaded(firestore)) {
-      return;
-    }
+    if (!isLoaded(firestore)) return;
 
     const closeMessage = message.loading("Updating display name..", 0);
 
@@ -88,4 +86,7 @@ class ProfileForm extends Component<Props> {
   }
 }
 
-export default compose(withFirestore(), Form.create())(ProfileForm);
+export default compose(
+  withFirestore(),
+  Form.create()
+)(ProfileForm);

@@ -4835,10 +4835,10 @@ firebase-functions@^2.1.0:
     jsonwebtoken "^8.2.1"
     lodash "^4.6.1"
 
-firebase-tools@^6.1.1:
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-6.1.1.tgz#94a57f2d22de618431cc1235606d5958abf37aeb"
-  integrity sha512-0UOdv2BTadzCwuskoYSOAZnXy0K09AyMnVAO2eCEcikZcRimrAzzQMXiUFcRLUxav/V1gDMxjv3RgLE6gKC5jw==
+firebase-tools@^6.3.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-6.3.1.tgz#9a3e12a3215da2adc1df885ba32ddd6eac08bd43"
+  integrity sha512-wBlW1ad+kDQrwU5/SfTXkEe7xwt48oXskV4lHDCaOw/7PfGamuTA38aYpp+jisYCBgEj1275Heet5m62OOr6RQ==
   dependencies:
     JSONStream "^1.2.1"
     archiver "^2.1.1"
@@ -9735,10 +9735,10 @@ reduce-reducers@0.4.3:
   resolved "https://registry.yarnpkg.com/reduce-reducers/-/reduce-reducers-0.4.3.tgz#8e052618801cd8fc2714b4915adaa8937eb6d66c"
   integrity sha512-+CNMnI8QhgVMtAt54uQs3kUxC3Sybpa7Y63HR14uGLgI9/QR5ggHvpxwhGGe3wmx5V91YwqQIblN9k5lspAmGw==
 
-redux-firestore@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/redux-firestore/-/redux-firestore-0.6.0.tgz#802c75aae6adece3c49f9d6fccc5f18899aa4caf"
-  integrity sha512-OLT8M+Hkkq/I4UeiNUdWQA22gbs79N4mZ8LRnt+bv015H0IgfXiyk148XZAkwcYOVG97lYci34g5vt/iXdX/xQ==
+redux-firestore@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/redux-firestore/-/redux-firestore-0.6.3.tgz#7032a0197f21c2287fd991e3189f4008cbe40f69"
+  integrity sha512-mvmhs+Fa3QvxxvpV+gSbHvMf8TT+D7V8O6JU0zNxYSc8tNbkdI1sLHBRXIx9i3Xcv1vpZoKtFJrnd+L2i9IADQ==
   dependencies:
     immer "1.5.0"
     lodash "^4.17.11"
