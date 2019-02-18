@@ -1,6 +1,6 @@
 // @flow
 
-import schedule from "./schedule.json";
+import schedule from "./schedule";
 
 export default (now: number, season: string, stage: number): number | null => {
   const {
