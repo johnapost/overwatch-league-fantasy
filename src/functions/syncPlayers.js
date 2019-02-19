@@ -4,7 +4,7 @@ import { https } from "firebase-functions";
 import { firestore } from "firebase-admin";
 import { get } from "axios";
 import { PLAYER_API } from "./endpoints";
-import getWeek from "./shared/getWeek";
+// import getWeek from "./shared/getWeek";
 
 const season = "2019";
 const stage = 0;
@@ -17,18 +17,23 @@ export default https.onRequest(async (req, res) => {
 
   try {
     const batch = db.batch();
-    const week = getWeek(Date.now(), season, stage);
+    // const week = getWeek(Date.now(), season, stage);
+    const week = 0;
     if (week === null) throw new Error("No week found! Can't save stats!");
-    data.forEach(player => {
-      const { playerId } = player;
+    data.forEach(playerStats => {
+      const { playerId } = playerStats;
       const playerRef = db.collection("players").doc(String(playerId));
       const runningStatsRef = db
         .collection("runningStats")
         .doc(`${playerId}-${season}-${stage}-${week}`);
       // Sync player data
-      batch.set(playerRef, { latestStats: player }, { merge: true });
+      batch.set(playerRef, { latestStats: playerStats }, { merge: true });
       // Sync runningStats data
-      batch.set(runningStatsRef, player, { merge: true });
+      batch.set(
+        runningStatsRef,
+        { season, stage, week, stats: playerStats },
+        { merge: true }
+      );
     });
     await batch.commit();
     await res.send("Player data synced!");
