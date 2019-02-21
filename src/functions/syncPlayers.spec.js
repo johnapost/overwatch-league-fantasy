@@ -1,10 +1,14 @@
 import { firestore } from "firebase-admin";
 import { get } from "axios";
 import syncPlayers from "./syncPlayers";
+import getStage from "./shared/getStage";
+import getWeek from "./shared/getWeek";
 
 jest.mock("firebase-functions", () => ({ https: { onRequest: fn => fn } }));
 jest.mock("firebase-admin", () => ({ firestore: jest.fn() }));
 jest.mock("axios", () => ({ get: jest.fn() }));
+jest.mock("./shared/getStage");
+jest.mock("./shared/getWeek");
 
 describe("syncPlayers", () => {
   const sendSpy = jest.fn();
@@ -14,31 +18,37 @@ describe("syncPlayers", () => {
   beforeEach(() => {
     // eslint-disable-next-line no-console
     console.error = consoleErrorSpy;
-    sendSpy.mockReset();
-    setSpy.mockReset();
-    consoleErrorSpy.mockReset();
+    jest.resetAllMocks();
   });
 
   it("should sync player data", async () => {
+    const docSpy = jest.fn();
+    const collectionSpy = jest.fn(() => ({ doc: docSpy }));
     firestore.mockImplementation(() => ({
       batch: () => ({ commit: jest.fn(), set: setSpy }),
-      collection: () => ({ doc: jest.fn() })
+      collection: collectionSpy
     }));
     get.mockImplementation(() => ({
       data: { data: [{ playerId: 1 }, { playerId: 2 }, { playerId: 3 }] }
     }));
+    getStage.mockImplementation(() => 0);
+    getWeek.mockImplementation(() => 0);
     const req = {};
     const res = {
       send: sendSpy
     };
     await syncPlayers(req, res);
-    expect(setSpy).toHaveBeenCalledTimes(3);
+    expect(collectionSpy).toHaveBeenCalledWith("runningStats");
+    expect(docSpy).toHaveBeenCalledWith("1-2019-0-0");
+    expect(setSpy).toHaveBeenCalledTimes(6);
     expect(sendSpy).toHaveBeenCalledTimes(1);
     expect(sendSpy).toHaveBeenCalledWith("Player data synced!");
   });
 
   it("should send errors", async () => {
-    firestore.mockImplementation(() => ({ firestore: jest.fn() }));
+    firestore.mockImplementation(() => ({
+      batch: () => ({ commit: jest.fn(), set: setSpy })
+    }));
     get.mockImplementation(() => ({ data: { data: null } }));
     const req = {};
     const res = {
