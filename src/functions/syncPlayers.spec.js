@@ -1,11 +1,13 @@
 import { firestore } from "firebase-admin";
 import { get } from "axios";
 import syncPlayers from "./syncPlayers";
+import getStage from "./shared/getStage";
 import getWeek from "./shared/getWeek";
 
 jest.mock("firebase-functions", () => ({ https: { onRequest: fn => fn } }));
 jest.mock("firebase-admin", () => ({ firestore: jest.fn() }));
 jest.mock("axios", () => ({ get: jest.fn() }));
+jest.mock("./shared/getStage");
 jest.mock("./shared/getWeek");
 
 describe("syncPlayers", () => {
@@ -29,6 +31,7 @@ describe("syncPlayers", () => {
     get.mockImplementation(() => ({
       data: { data: [{ playerId: 1 }, { playerId: 2 }, { playerId: 3 }] }
     }));
+    getStage.mockImplementation(() => 0);
     getWeek.mockImplementation(() => 0);
     const req = {};
     const res = {

@@ -2,7 +2,7 @@
 
 import schedule from "./schedule";
 
-export default (now: number, season: string, stage: number): number | null => {
+export default (now: number, season: number, stage: number): number | null => {
   const {
     seasons: {
       [season]: {
