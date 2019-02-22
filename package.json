@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "build-app": "NODE_ENV=production next build src/app",
+    "build-app": "cross-env NODE_ENV=production next build src/app",
     "build-fns": "babel \"src/functions\" --out-dir \"dist/functions\"",
     "build-public": "cpx \"src/public/**/*.*\" \"dist/public\" -C && cpx \"src/app/static/**/*.*\" \"dist/public/static\"",
     "clean": "rimraf dist",
@@ -63,6 +63,7 @@
     "babel-jest": "^23.6.0",
     "codecov": "^3.1.0",
     "cpx": "^1.5.0",
+    "cross-env": "^5.2.0",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
     "eslint": "^5.9.0",
