@@ -74,6 +74,7 @@ export class CreateLeagueComponent extends Component<Props, State> {
         drafter: null,
         leagueUsers: [uid],
         name,
+        ownerUser: uid,
         rosterSlots
       }
     );
