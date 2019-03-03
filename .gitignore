@@ -5,5 +5,5 @@
 *.log
 dist
 node_modules
-secrets.json
+secrets*.json
 coverage

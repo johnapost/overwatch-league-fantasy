@@ -8,7 +8,8 @@ import "firebase/firestore";
 import "firebase/auth";
 import user from "../redux/user";
 import team from "../redux/team";
-import { apiKey, authDomain, projectId } from "../secrets.json";
+import productionConfig from "../secrets.json";
+import stagingConfig from "../secrets-staging.json";
 
 import type { TeamState } from "../redux/team";
 import type { UserState } from "../redux/user";
@@ -20,7 +21,8 @@ export type StoreState = {
 };
 
 // Firebase setup
-const firebaseConfig = { apiKey, authDomain, projectId };
+const firebaseConfig =
+  process.env.NODE_ENV === "production" ? productionConfig : stagingConfig;
 const rrfConfig = { userProfile: "users", useFirestoreForProfile: true };
 
 // Redux setup

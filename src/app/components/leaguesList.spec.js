@@ -13,9 +13,7 @@ const props = {
 describe("FindLeague", () => {
   describe("component", () => {
     describe("while loading", () => {
-      const wrapper = shallow(
-        <LeaguesListComponent {...props} leagues={null} />
-      );
+      const wrapper = shallow(<LeaguesListComponent {...props} user={{}} />);
       it("should render Spin", () => {
         expect(wrapper.find(Spin).length).toBe(1);
       });

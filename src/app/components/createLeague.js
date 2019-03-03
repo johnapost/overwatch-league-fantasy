@@ -11,6 +11,7 @@ import withFirestore from "../shared/withFirestore";
 import type { StoreState } from "../shared/makeStore";
 
 type Props = {
+  firebase: Object,
   firestore: Object,
   form: Object,
   user: Object
@@ -60,24 +61,29 @@ export class CreateLeagueComponent extends Component<Props, State> {
       });
   };
 
-  createLeague = (name: string) => {
+  createLeague = async (name: string) => {
     const {
-      firestore,
+      firebase: { firestore },
       user: { uid }
     } = this.props;
-    firestore.set(
+    const db = firestore();
+    const batch = db.batch();
+    const leagueId = uuid();
+    batch.set(db.collection("leagues").doc(leagueId), {
+      drafter: null,
+      leagueUsers: [uid],
+      name,
+      ownerUser: uid,
+      rosterSlots
+    });
+    batch.set(
+      db.collection("users").doc(uid),
       {
-        collection: "leagues",
-        doc: uuid()
+        userLeagues: [leagueId]
       },
-      {
-        drafter: null,
-        leagueUsers: [uid],
-        name,
-        ownerUser: uid,
-        rosterSlots
-      }
+      { merge: true }
     );
+    await batch.commit();
   };
 
   render() {
