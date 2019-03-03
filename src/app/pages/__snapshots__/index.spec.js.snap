@@ -1,25 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Index should render fine 1`] = `
-"<div class=\\"container\\"><main><div class=\\"ant-row\\"><div class=\\"ant-col-sm-6 ant-col-md-4\\"></div><div class=\\"ant-col-sm-12 ant-col-md-16\\"><div class=\\"jsx-2964576322 wrapper\\"><div class=\\"ant-card ant-card-bordered\\"><div class=\\"ant-card-body\\">This site is a work in progress and is not ready for usage at all! Any data is subject to deletion while work continues.</div></div></div></div></div><div class=\\"jsx-2964576322 table-wrapper\\"><div class=\\"ant-row table\\"><div class=\\"ant-col-md-4\\"></div><div class=\\"ant-col-md-16\\"></div></div></div></main></div><footer class=\\"jsx-1140642571\\"><div class=\\"ant-row\\"><div class=\\"ant-col-sm-6 ant-col-md-4\\"></div><div class=\\"ant-col-sm-12 ant-col-md-16\\"><p class=\\"jsx-1140642571\\">Special thanks to Overwatch and the Overwatch League for existing.</p><p class=\\"jsx-1140642571\\">All trademarks belong to their owners.</p></div></div></footer><style>
-      .container {
-        background-image: url(static/diamond_upholstery.png);
-        background-attachment: fixed;
+"<div class=\\"ant-row\\"><div class=\\"ant-col-sm-6 ant-col-md-4\\"></div><div class=\\"ant-col-sm-12 ant-col-md-16\\"><div class=\\"wrapper\\"><div class=\\"ant-card ant-card-bordered\\"><div class=\\"ant-card-body\\">This site is a work in progress and is not ready for usage at all! Any data is subject to deletion while work continues.</div></div></div></div></div><div class=\\"table-wrapper\\"><div class=\\"ant-row table\\"><div class=\\"ant-col-md-4\\"></div><div class=\\"ant-col-md-16\\"></div></div></div><style>
+      .wrapper {
+        margin: 50px 0;
       }
-
-      header {
-        height: 59px;
-      }
-
-      main {
-        min-height: 100vh;
-        overflow-x: hidden;
-      }
-
-      @media (min-device-pixel-ratio: 2) {
-        .container {
-          background-image: url(static/diamond_upholstery_@2x.png);
-        }
+      .table-wrapper {
+        margin: 0 0 50px;
       }
     </style>"
 `;
