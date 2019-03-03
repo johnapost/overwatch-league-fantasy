@@ -14,24 +14,25 @@ type Props = {
   users: [string, User][] | null
 };
 
-export const LeaguePanelComponent = ({ id, users }: Props) => (
-  <List
-    bordered
-    dataSource={users}
-    itemLayout="vertical"
-    renderItem={([userId, user]) => (
-      <>
-        <List.Item key={`${id}-${userId}`}>
-          <List.Item.Meta
-            title="Team Name"
-            description={`Managed by: ${user.displayName}`}
-          />
-          Roster goes here
-        </List.Item>
-      </>
-    )}
-  />
-);
+export const LeaguePanelComponent = ({ id, users }: Props) =>
+  users && (
+    <List
+      bordered
+      dataSource={users}
+      itemLayout="vertical"
+      renderItem={([userId, user]) => (
+        <>
+          <List.Item key={`${id}-${userId}`}>
+            <List.Item.Meta
+              title="Team Name"
+              description={`Managed by: ${user.displayName}`}
+            />
+            Roster goes here
+          </List.Item>
+        </>
+      )}
+    />
+  );
 
 const filterLeagueUsers = (
   users: {
