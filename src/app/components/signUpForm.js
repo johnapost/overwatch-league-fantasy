@@ -66,6 +66,7 @@ class SignUpForm extends Component<Props> {
         .then(() => {
           finishSubmitting();
           message.success("Successfully signed up!");
+          message.info("Check your email for an activation link", 0);
         })
         .catch(({ code, message: errorMessage }) => {
           finishSubmitting();
