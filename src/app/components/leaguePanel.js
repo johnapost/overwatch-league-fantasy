@@ -56,20 +56,22 @@ export class LeaguePanelComponent extends Component<Props, State> {
       newInviteLink
     );
 
-    this.setState({
-      creatingLink: false,
-      latestInviteLink: inviteLinkId,
-      modalVisible: true
+    // Effectively an async setState
+    return new Promise(resolve => {
+      this.setState(
+        {
+          creatingLink: false,
+          latestInviteLink: inviteLinkId,
+          modalVisible: true
+        },
+        resolve
+      );
     });
   };
 
-  openModal = () => {
-    this.setState({ modalVisible: true });
-  };
+  openModal = async () => this.setState({ modalVisible: true });
 
-  closeModal = () => {
-    this.setState({ modalVisible: false });
-  };
+  closeModal = async () => this.setState({ modalVisible: false });
 
   renderModal = () => {
     const { league } = this.props;
@@ -93,6 +95,7 @@ export class LeaguePanelComponent extends Component<Props, State> {
             <Input value={formattedLink} />
           </Form.Item>
           <Button
+            name="copy-button"
             type="primary"
             onClick={() => {
               clipboardCopy(formattedLink);
@@ -116,6 +119,7 @@ export class LeaguePanelComponent extends Component<Props, State> {
         {uid === league.ownerUser && (
           <>
             <Button
+              name="invite-button"
               type="primary"
               disabled={creatingLink}
               onClick={latestInviteLink ? this.openModal : this.createLink}
