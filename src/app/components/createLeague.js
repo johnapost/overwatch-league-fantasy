@@ -102,11 +102,9 @@ export class CreateLeagueComponent extends Component<Props, State> {
             />
           )}
         </Form.Item>
-        <Form.Item>
-          <Button disabled={checkingLeague} onClick={this.checkLeague}>
-            Create a league
-          </Button>
-        </Form.Item>
+        <Button disabled={checkingLeague} onClick={this.checkLeague}>
+          Create a league
+        </Button>
       </Form>
     );
   }

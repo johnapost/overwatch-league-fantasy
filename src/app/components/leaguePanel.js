@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import clipboardCopy from "clipboard-copy";
-import { List, Icon, Button, Divider, Modal, Input } from "antd";
+import { List, Icon, Button, Divider, Modal, Input, Form } from "antd";
 import uuid from "uuid/v4";
 import withFirestore from "../shared/withFirestore";
 
@@ -51,7 +51,6 @@ export class LeaguePanelComponent extends Component<Props, State> {
       createdAt: firestoreDep.FieldValue.serverTimestamp()
     };
 
-    // TODO: Delete old invite links (createdAt > 1day)
     await firestore.set(
       { collection: "inviteLinks", doc: inviteLinkId },
       newInviteLink
@@ -73,28 +72,35 @@ export class LeaguePanelComponent extends Component<Props, State> {
   };
 
   renderModal = () => {
+    const { league } = this.props;
     const { latestInviteLink, modalVisible } = this.state;
+    if (!latestInviteLink || typeof window === "undefined") return null;
+
+    const formattedLink = `${
+      window.location.origin
+    }/invite/${latestInviteLink}`;
     return (
       <Modal
+        title={`Share this invite link to ${league.name}`}
         visible={modalVisible}
         footer={null}
         autoFocusButton={null}
         closable
         onCancel={this.closeModal}
       >
-        <Input value={latestInviteLink} />
-        {typeof window !== "undefined" && (
+        <Form>
+          <Form.Item>
+            <Input value={formattedLink} />
+          </Form.Item>
           <Button
             type="primary"
             onClick={() => {
-              clipboardCopy(
-                `${window.location.origin}/invite/${latestInviteLink}`
-              );
+              clipboardCopy(formattedLink);
             }}
           >
             Copy link
           </Button>
-        )}
+        </Form>
       </Modal>
     );
   };
@@ -102,6 +108,9 @@ export class LeaguePanelComponent extends Component<Props, State> {
   render() {
     const { id, league, uid, users } = this.props;
     const { creatingLink, latestInviteLink } = this.state;
+
+    // TODO: Delete old invite links (createdAt > 1day) in render
+
     return (
       <>
         {uid === league.ownerUser && (
