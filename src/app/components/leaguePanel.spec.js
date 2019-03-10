@@ -83,7 +83,7 @@ describe("LeaguePanel", () => {
             .setState({ latestInviteLink: "hhh4", modalVisible: true });
           wrapper.find({ name: "copy-button" }).simulate("click");
           expect(clipboardCopy).toHaveBeenCalledWith(
-            "http://localhost/invite/hhh4"
+            "http://localhost/?invite=hhh4"
           );
         });
 

@@ -3,9 +3,10 @@
 
 import React, { Component } from "react";
 import { compose } from "redux";
-import { isLoaded, withFirebase } from "react-redux-firebase";
+import { isLoaded } from "react-redux-firebase";
 import { Form, Button, Input, message } from "antd";
 import { withRouter } from "next/router";
+import withFirestore from "../shared/withFirestore";
 import hasErrors from "../shared/hasErrors";
 
 type Props = {
@@ -119,6 +120,6 @@ class LoginForm extends Component<Props> {
 
 export default compose(
   withRouter,
-  withFirebase,
+  withFirestore(),
   Form.create()
 )(LoginForm);

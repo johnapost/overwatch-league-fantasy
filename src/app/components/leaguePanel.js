@@ -80,7 +80,7 @@ export class LeaguePanelComponent extends Component<Props, State> {
 
     const formattedLink = `${
       window.location.origin
-    }/invite/${latestInviteLink}`;
+    }/?invite=${latestInviteLink}`;
     return (
       <Modal
         title={`Share this invite link to ${league.name}`}

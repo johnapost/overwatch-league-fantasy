@@ -3,7 +3,7 @@
 import React, { Component } from "react";
 import { Form, Input, Button, message } from "antd";
 import { compose } from "redux";
-import { isLoaded, withFirebase } from "react-redux-firebase";
+import { isLoaded } from "react-redux-firebase";
 import { withRouter } from "next/router";
 import withFirestore from "../shared/withFirestore";
 import hasErrors from "../shared/hasErrors";
@@ -17,7 +17,7 @@ type Props = {
   setDisabled: (bool: boolean) => void
 };
 
-class SignUpForm extends Component<Props> {
+class SignUpFormComponent extends Component<Props> {
   handleSubmit = e => {
     e.preventDefault();
     const {
@@ -120,7 +120,6 @@ class SignUpForm extends Component<Props> {
 
 export default compose(
   withRouter,
-  withFirebase,
   withFirestore(),
   Form.create()
-)(SignUpForm);
+)(SignUpFormComponent);

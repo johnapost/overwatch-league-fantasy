@@ -4,18 +4,23 @@ import React, { Component } from "react";
 import { Form, Modal, message } from "antd";
 import { compose } from "redux";
 import { connect } from "react-redux";
-import { withFirebase } from "react-redux-firebase";
 import { withRouter } from "next/router";
 import { userLogin, userLogout } from "../redux/user";
+import withFirestore from "../shared/withFirestore";
 import LoginForm from "./loginForm";
 import SignUpForm from "./signUpForm";
-import ProfileMenu from "./profileMenu";
+import ProfileMenuComponent from "./profileMenu";
+
+import type { InviteLink } from "../shared/inviteLink";
+import type { StoreState } from "../shared/makeStore";
 
 type Props = {
   firebase: Object,
+  firestore: Object,
   login: (user: Object) => void,
   logout: Function,
-  router: Object
+  router: Object,
+  uid: string
 };
 
 type State = {
@@ -37,7 +42,7 @@ class AuthBar extends Component<Props, State> {
     const {
       firebase,
       router: {
-        query: { mode, oobCode },
+        query: { mode, oobCode, invite },
         push
       },
       login,
@@ -59,10 +64,20 @@ class AuthBar extends Component<Props, State> {
       return push("/");
     });
 
+    // Pass to verifyEmail
     if (mode === "verifyEmail" && oobCode) {
       const closeMessage = message.loading("Verifying email..", 0);
-      this.verifyEmail(oobCode, closeMessage);
+      return this.verifyEmail(closeMessage);
     }
+
+    // Pass to verifyInvite
+    if (invite) {
+      const closeMessage = message.loading("Verifying invite..", 0);
+      return this.verifyInvite(closeMessage);
+    }
+
+    // Catch-all no-op
+    return () => {};
   }
 
   componentWillUnmount() {
@@ -73,8 +88,13 @@ class AuthBar extends Component<Props, State> {
 
   setDisabled = bool => this.setState({ disabled: bool });
 
-  verifyEmail = async (oobCode: string, closeMessage: Function) => {
-    const { firebase } = this.props;
+  verifyEmail = async (closeMessage: Function) => {
+    const {
+      firebase,
+      router: {
+        query: { oobCode }
+      }
+    } = this.props;
     const auth = await firebase.auth();
     auth
       .applyActionCode(oobCode)
@@ -87,8 +107,50 @@ class AuthBar extends Component<Props, State> {
         // eslint-disable-next-line no-console
         console.error(code, message);
       })
+      .then(closeMessage);
+  };
+
+  verifyInvite = async (closeMessage: Function) => {
+    const {
+      firebase,
+      firestore,
+      router: {
+        query: { invite }
+      },
+      uid
+    } = this.props;
+    const { loggedIn } = this.state;
+
+    if (!loggedIn) return;
+
+    // Get league ref
+    const link = await firestore.get({
+      collection: "inviteLinks",
+      doc: invite
+    });
+    const { leagueId }: InviteLink = link.data();
+
+    // Get league name
+    const league = await firestore.get({
+      collection: "leagues",
+      doc: leagueId
+    });
+    const { name }: League = league.data();
+
+    // Update league with current user
+    firestore
+      .update(
+        {
+          collection: "leagues",
+          doc: leagueId
+        },
+        {
+          leagueUsers: firebase.firestore.FieldValue.arrayUnion(uid)
+        }
+      )
+      .then(closeMessage)
       .then(() => {
-        closeMessage();
+        message.success(`Successfully accepted invite to ${name}`);
       });
   };
 
@@ -123,7 +185,7 @@ class AuthBar extends Component<Props, State> {
 
     return (
       <div className="container">
-        {loggedIn ? <ProfileMenu /> : renderLoggedOut}
+        {loggedIn ? <ProfileMenuComponent /> : renderLoggedOut}
         <style jsx>{`
           .container {
             background: ${loggedIn ? "transparent" : "#FFFFFF"};
@@ -142,6 +204,10 @@ class AuthBar extends Component<Props, State> {
   }
 }
 
+export const mapStateToProps = ({ user: { uid } }: StoreState) => ({
+  uid
+});
+
 const mapDispatchToProps = { login: userLogin, logout: userLogout };
 
 export default compose(
@@ -150,6 +216,6 @@ export default compose(
     mapDispatchToProps
   ),
   withRouter,
-  withFirebase,
+  withFirestore(),
   Form.create()
 )(AuthBar);
