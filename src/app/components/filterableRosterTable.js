@@ -9,6 +9,7 @@ import RosterTable from "./rosterTable";
 import withFirestore from "../shared/withFirestore";
 import roles from "../shared/roles";
 
+import type { StoreState } from "../shared/makeStore";
 import type { Player } from "../shared/player";
 import type { Team } from "../shared/team";
 
@@ -123,7 +124,6 @@ export class FilterableRosterTableComponent extends Component<Props, State> {
             />
           </div>
         </Input.Group>
-        ,
         <div className="roster">
           <RosterTable
             filteredPlayerName={filteredPlayerName}
@@ -146,7 +146,7 @@ export class FilterableRosterTableComponent extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = ({ firestore }) => {
+const mapStateToProps = ({ firestore }: StoreState) => {
   const teams = get(firestore.data, "teams", {});
   const players = get(firestore.data, "players", {});
   const playerNames = ((Object.values(players): any): Player[]).map(
