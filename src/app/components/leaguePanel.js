@@ -73,7 +73,7 @@ export class LeaguePanelComponent extends Component<Props, State> {
 
   closeModal = async () => this.setState({ modalVisible: false });
 
-  renderModal = () => {
+  renderInviteModal = () => {
     const { league } = this.props;
     const { latestInviteLink, modalVisible } = this.state;
     if (!latestInviteLink || typeof window === "undefined") return null;
@@ -127,10 +127,11 @@ export class LeaguePanelComponent extends Component<Props, State> {
               <Icon type={creatingLink ? "loading" : "user-add"} />
               Invite people
             </Button>
-            {this.renderModal()}
+            {this.renderInviteModal()}
           </>
         )}
         <Divider />
+        {/* TODO: League owner can delete unverified users eventually */}
         {users && (
           <List
             bordered

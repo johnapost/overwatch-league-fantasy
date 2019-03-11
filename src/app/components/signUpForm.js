@@ -14,6 +14,7 @@ type Props = {
   firestore: Object,
   form: Object,
   hideSignUpModal: Function,
+  inviteLinkCallback: Function | null,
   setDisabled: (bool: boolean) => void
 };
 
@@ -25,6 +26,7 @@ class SignUpFormComponent extends Component<Props> {
       firestore,
       form: { validateFields },
       hideSignUpModal,
+      inviteLinkCallback,
       setDisabled
     } = this.props;
 
@@ -39,6 +41,8 @@ class SignUpFormComponent extends Component<Props> {
       setDisabled(false);
       closeMessage();
       hideSignUpModal();
+
+      if (inviteLinkCallback) inviteLinkCallback();
     };
 
     validateFields(async (err, { displayName, email, password }) => {

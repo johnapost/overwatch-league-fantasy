@@ -13,6 +13,7 @@ type Props = {
   disabled: boolean,
   firebase: Object,
   form: Object,
+  inviteLinkCallback: Function | null,
   router: Object,
   setDisabled: (bool: boolean) => void,
   showSignUpModal: Function
@@ -32,6 +33,7 @@ class LoginForm extends Component<Props> {
     const {
       firebase,
       form: { validateFields },
+      inviteLinkCallback,
       setDisabled
     } = this.props;
 
@@ -45,6 +47,8 @@ class LoginForm extends Component<Props> {
     const finishSubmitting = () => {
       setDisabled(false);
       closeMessage();
+
+      if (inviteLinkCallback) inviteLinkCallback();
     };
 
     validateFields((err, { email, password }) => {

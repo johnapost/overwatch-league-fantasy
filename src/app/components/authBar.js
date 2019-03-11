@@ -19,13 +19,13 @@ type Props = {
   firestore: Object,
   login: (user: Object) => void,
   logout: Function,
-  router: Object,
-  uid: string
+  router: Object
 };
 
 type State = {
   disabled: boolean,
   loggedIn: boolean,
+  onSignUp: Function | null,
   showSignUpModal: boolean
 };
 
@@ -33,6 +33,7 @@ class AuthBar extends Component<Props, State> {
   state = {
     disabled: false,
     loggedIn: false,
+    inviteLinkCallback: null,
     showSignUpModal: false
   };
 
@@ -57,24 +58,36 @@ class AuthBar extends Component<Props, State> {
       if (user && user.emailVerified && user.uid) {
         this.setState({ loggedIn: true });
         login(user.uid);
-        return push("/leagues");
+
+        // Pass to consumeInvite
+        if (invite) return this.consumeInvite(invite, user.uid);
+
+        return push({ pathname: "/leagues", query: {} });
       }
+
       this.setState({ loggedIn: false });
       logout();
-      return push("/");
+
+      // Handle unauthed user with invite link
+      if (invite) {
+        const closeMessage = message.info(
+          "Sign up or login to accept league invite",
+          0
+        );
+
+        this.setState({
+          inviteLinkCallback: () => {
+            // TODO: Assign user to league
+            closeMessage();
+          }
+        });
+      }
+
+      return push({ pathname: "/", query: {} });
     });
 
     // Pass to verifyEmail
-    if (mode === "verifyEmail" && oobCode) {
-      const closeMessage = message.loading("Verifying email..", 0);
-      return this.verifyEmail(closeMessage);
-    }
-
-    // Pass to verifyInvite
-    if (invite) {
-      const closeMessage = message.loading("Verifying invite..", 0);
-      return this.verifyInvite(closeMessage);
-    }
+    if (mode === "verifyEmail" && oobCode) return this.verifyEmail();
 
     // Catch-all no-op
     return () => {};
@@ -88,13 +101,15 @@ class AuthBar extends Component<Props, State> {
 
   setDisabled = bool => this.setState({ disabled: bool });
 
-  verifyEmail = async (closeMessage: Function) => {
+  verifyEmail = async () => {
     const {
       firebase,
       router: {
         query: { oobCode }
       }
     } = this.props;
+    const closeMessage = message.loading("Verifying email..", 0);
+
     const auth = await firebase.auth();
     auth
       .applyActionCode(oobCode)
@@ -110,18 +125,9 @@ class AuthBar extends Component<Props, State> {
       .then(closeMessage);
   };
 
-  verifyInvite = async (closeMessage: Function) => {
-    const {
-      firebase,
-      firestore,
-      router: {
-        query: { invite }
-      },
-      uid
-    } = this.props;
-    const { loggedIn } = this.state;
-
-    if (!loggedIn) return;
+  consumeInvite = async (invite: string, uid: string) => {
+    const { firebase, firestore } = this.props;
+    const closeMessage = message.loading("Verifying invite..", 0);
 
     // Get league ref
     const link = await firestore.get({
@@ -136,6 +142,9 @@ class AuthBar extends Component<Props, State> {
       doc: leagueId
     });
     const { name }: League = league.data();
+
+    if (!link.exists || !league.exists)
+      message.error("Invite link invalid! Please check again");
 
     // Update league with current user
     firestore
@@ -156,8 +165,15 @@ class AuthBar extends Component<Props, State> {
 
   hideSignUpModal = () => this.setState({ showSignUpModal: false });
 
+  showSignUpModal = () => this.setState({ showSignUpModal: true });
+
   render() {
-    const { disabled, showSignUpModal, loggedIn } = this.state;
+    const {
+      disabled,
+      showSignUpModal,
+      loggedIn,
+      inviteLinkCallback
+    } = this.state;
 
     const renderLoggedOut = (
       <div>
@@ -165,7 +181,8 @@ class AuthBar extends Component<Props, State> {
         {/* TODO: Handle resetting password */}
         <LoginForm
           disabled={disabled || showSignUpModal}
-          showSignUpModal={() => this.setState({ showSignUpModal: true })}
+          showSignUpModal={this.showSignUpModal}
+          inviteLinkCallback={inviteLinkCallback}
           setDisabled={this.setDisabled}
         />
         <Modal
@@ -177,6 +194,7 @@ class AuthBar extends Component<Props, State> {
           <SignUpForm
             disabled={disabled}
             hideSignUpModal={this.hideSignUpModal}
+            inviteLinkCallback={inviteLinkCallback}
             setDisabled={this.setDisabled}
           />
         </Modal>
