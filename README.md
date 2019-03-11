@@ -31,7 +31,7 @@ This is [https://overwatch-league-fantasy.com](https://overwatch-league-fantasy.
   * Scheduled syncing
 * League Management
   * ~~User-created leagues~~
-  * Invite links
+  * ~~Invite links~~
   * Start/end drafts
   * Customizable stat weights
 * Matches
