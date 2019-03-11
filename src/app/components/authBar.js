@@ -12,7 +12,6 @@ import SignUpForm from "./signUpForm";
 import ProfileMenuComponent from "./profileMenu";
 
 import type { InviteLink } from "../shared/inviteLink";
-import type { StoreState } from "../shared/makeStore";
 
 type Props = {
   firebase: Object,
@@ -52,6 +51,14 @@ class AuthBar extends Component<Props, State> {
 
     // Add auth change listener
     const auth = await firebase.auth();
+    let closeInviteMessage = () => {};
+
+    if (invite)
+      closeInviteMessage = message.info(
+        "Sign up or login to accept league invite",
+        0
+      );
+
     this.authObserver = auth.onAuthStateChanged(user => {
       // TODO: Create a user resource if it does not exist
       // TODO: Handle logged in and not verified
@@ -60,7 +67,7 @@ class AuthBar extends Component<Props, State> {
         login(user.uid);
 
         // Pass to consumeInvite
-        if (invite) return this.consumeInvite(invite, user.uid);
+        if (invite) this.consumeInvite(closeInviteMessage, invite, user.uid);
 
         return push({ pathname: "/leagues", query: {} });
       }
@@ -70,15 +77,9 @@ class AuthBar extends Component<Props, State> {
 
       // Handle unauthed user with invite link
       if (invite) {
-        const closeMessage = message.info(
-          "Sign up or login to accept league invite",
-          0
-        );
-
         this.setState({
-          inviteLinkCallback: () => {
-            // TODO: Assign user to league
-            closeMessage();
+          inviteLinkCallback: (uid: string) => {
+            this.consumeInvite(closeInviteMessage, invite, uid, false);
           }
         });
       }
@@ -125,9 +126,22 @@ class AuthBar extends Component<Props, State> {
       .then(closeMessage);
   };
 
-  consumeInvite = async (invite: string, uid: string) => {
-    const { firebase, firestore } = this.props;
-    const closeMessage = message.loading("Verifying invite..", 0);
+  consumeInvite = async (
+    inviteLinkMessage: Function,
+    invite: string,
+    uid: string,
+    showMessage: boolean = true
+  ) => {
+    const {
+      firebase: { firestore: firestoreDep },
+      firestore
+    } = this.props;
+    const db = firestoreDep();
+    const batch = db.batch();
+
+    inviteLinkMessage();
+    let closeMessage;
+    if (showMessage) closeMessage = message.loading("Verifying invite..", 0);
 
     // Get league ref
     const link = await firestore.get({
@@ -147,20 +161,20 @@ class AuthBar extends Component<Props, State> {
       message.error("Invite link invalid! Please check again");
 
     // Update league with current user
-    firestore
-      .update(
-        {
-          collection: "leagues",
-          doc: leagueId
-        },
-        {
-          leagueUsers: firebase.firestore.FieldValue.arrayUnion(uid)
-        }
-      )
-      .then(closeMessage)
-      .then(() => {
-        message.success(`Successfully accepted invite to ${name}`);
-      });
+    batch.update(db.collection("leagues").doc(leagueId), {
+      leagueUsers: firestoreDep.FieldValue.arrayUnion(uid)
+    });
+
+    // Update user with league
+    batch.update(db.collection("users").doc(uid), {
+      userLeagues: firestoreDep.FieldValue.arrayUnion(leagueId)
+    });
+
+    return batch.commit().then(() => {
+      if (!showMessage) return;
+      closeMessage();
+      message.success(`Successfully accepted invite to ${name}`);
+    });
   };
 
   hideSignUpModal = () => this.setState({ showSignUpModal: false });
@@ -182,7 +196,6 @@ class AuthBar extends Component<Props, State> {
         <LoginForm
           disabled={disabled || showSignUpModal}
           showSignUpModal={this.showSignUpModal}
-          inviteLinkCallback={inviteLinkCallback}
           setDisabled={this.setDisabled}
         />
         <Modal
@@ -221,10 +234,6 @@ class AuthBar extends Component<Props, State> {
     );
   }
 }
-
-export const mapStateToProps = ({ user: { uid } }: StoreState) => ({
-  uid
-});
 
 const mapDispatchToProps = { login: userLogin, logout: userLogout };
 

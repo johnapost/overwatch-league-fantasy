@@ -45,6 +45,7 @@ export const LeaguesListComponent = ({
               <Collapse>
                 {leagues.map(([id, league]) => (
                   <Collapse.Panel
+                    key={id}
                     bordered={false}
                     header={league.name}
                     showArrow={false}

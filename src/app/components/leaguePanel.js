@@ -128,10 +128,10 @@ export class LeaguePanelComponent extends Component<Props, State> {
               Invite people
             </Button>
             {this.renderInviteModal()}
+            {/* TODO: League owner can delete unverified users eventually */}
+            <Divider />
           </>
         )}
-        <Divider />
-        {/* TODO: League owner can delete unverified users eventually */}
         {users && (
           <List
             bordered

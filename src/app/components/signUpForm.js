@@ -41,8 +41,6 @@ class SignUpFormComponent extends Component<Props> {
       setDisabled(false);
       closeMessage();
       hideSignUpModal();
-
-      if (inviteLinkCallback) inviteLinkCallback();
     };
 
     validateFields(async (err, { displayName, email, password }) => {
@@ -57,7 +55,7 @@ class SignUpFormComponent extends Component<Props> {
         .createUserWithEmailAndPassword(email, password)
         .then(async ({ user }) => {
           user.sendEmailVerification();
-          firestore.set(
+          await firestore.set(
             {
               collection: "users",
               doc: user.uid
@@ -66,9 +64,13 @@ class SignUpFormComponent extends Component<Props> {
               displayName
             }
           );
+          return user.uid;
         })
-        .then(() => {
+        // Successful signup
+        .then(uid => {
           finishSubmitting();
+          // Handle invite link
+          if (inviteLinkCallback) inviteLinkCallback(uid);
           message.success("Successfully signed up!");
           message.info("Check your email for an activation link", 0);
         })

@@ -76,14 +76,10 @@ export class CreateLeagueComponent extends Component<Props, State> {
       ownerUser: uid,
       rosterSlots
     });
-    batch.set(
-      db.collection("users").doc(uid),
-      {
-        userLeagues: [leagueId]
-      },
-      { merge: true }
-    );
-    await batch.commit();
+    batch.update(db.collection("users").doc(uid), {
+      userLeagues: [leagueId]
+    });
+    return batch.commit();
   };
 
   render() {
