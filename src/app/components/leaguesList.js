@@ -20,12 +20,11 @@ import LeaguePanel from "./leaguePanel";
 
 import type { StoreState } from "../shared/makeStore";
 import type { League } from "../shared/league";
+import type { UserState } from "../redux/user";
 
 type Props = {
   leagues: [string, League][] | null,
-  user: {
-    displayName: string
-  }
+  user: UserState
 };
 
 export const LeaguesListComponent = ({

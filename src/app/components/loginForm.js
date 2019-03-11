@@ -18,7 +18,7 @@ type Props = {
   showSignUpModal: Function
 };
 
-class LoginForm extends Component<Props> {
+export class LoginFormComponent extends Component<Props> {
   emailEl: ?HTMLElement = null;
 
   componentDidMount() {
@@ -122,4 +122,4 @@ export default compose(
   withRouter,
   withFirestore(),
   Form.create()
-)(LoginForm);
+)(LoginFormComponent);

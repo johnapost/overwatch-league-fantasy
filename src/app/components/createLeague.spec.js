@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import { Button, Input } from "antd";
-import { CreateLeagueComponent } from "./createLeague";
+import { CreateLeagueComponent, mapStateToProps } from "./createLeague";
 
 describe("CreateLeague", () => {
   describe("component", () => {
@@ -35,6 +35,16 @@ describe("CreateLeague", () => {
           wrapper.instance().checkLeague
         );
       });
+    });
+  });
+
+  describe("mapStateToProps", () => {
+    it("should assign user data", () => {
+      expect(
+        mapStateToProps({
+          user: { displayName: "user", uid: "abc123" }
+        })
+      ).toMatchSnapshot();
     });
   });
 });

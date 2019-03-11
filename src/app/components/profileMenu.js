@@ -27,7 +27,7 @@ class ProfileMenuComponent extends Component<Props, State> {
 
   menuActions = ({ key }: Object) => {
     switch (key) {
-      case "setDisplayName":
+      case "showProfileModal":
         return this.setState({ showProfileModal: true });
       case "signOut":
         return this.signOut();
@@ -56,7 +56,7 @@ class ProfileMenuComponent extends Component<Props, State> {
 
     const menu = (
       <Menu onClick={this.menuActions}>
-        <Menu.Item key="setDisplayName">Edit profile</Menu.Item>
+        <Menu.Item key="showProfileModal">Edit profile</Menu.Item>
         <Menu.Item key="signOut">Sign out</Menu.Item>
       </Menu>
     );

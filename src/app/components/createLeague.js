@@ -9,12 +9,13 @@ import rosterSlots from "../shared/roster";
 import withFirestore from "../shared/withFirestore";
 
 import type { StoreState } from "../shared/makeStore";
+import type { UserState } from "../redux/user";
 
 type Props = {
   firebase: Object,
   firestore: Object,
   form: Object,
-  user: Object
+  user: UserState
 };
 
 type State = {
@@ -63,10 +64,10 @@ export class CreateLeagueComponent extends Component<Props, State> {
 
   createLeague = async (name: string) => {
     const {
-      firebase: { firestore },
+      firebase: { firestore: firestoreDep },
       user: { uid }
     } = this.props;
-    const db = firestore();
+    const db = firestoreDep();
     const batch = db.batch();
     const leagueId = uuid();
     batch.set(db.collection("leagues").doc(leagueId), {

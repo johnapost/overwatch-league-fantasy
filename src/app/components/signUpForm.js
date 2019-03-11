@@ -18,7 +18,7 @@ type Props = {
   setDisabled: (bool: boolean) => void
 };
 
-class SignUpFormComponent extends Component<Props> {
+export class SignUpFormComponent extends Component<Props> {
   handleSubmit = e => {
     e.preventDefault();
     const {
