@@ -12,15 +12,6 @@ export default https.onRequest((req, res) => {
   console.log(`File: ${req.originalUrl}`);
   const url = req.originalUrl.split("?").shift();
   switch (url) {
-    // Handle auth email actions
-    case "/auth": {
-      const {
-        query: { mode, oobCode }
-      } = req;
-      return app
-        .prepare()
-        .then(() => res.redirect(`/?mode=${mode}&oobCode=${oobCode}`));
-    }
     default:
       return app.prepare().then(() => handle(req, res));
   }

@@ -6,15 +6,13 @@ import { connect } from "react-redux";
 import get from "lodash/get";
 import withFirestore from "../shared/withFirestore";
 import PlayerCard from "./playerCard";
-import { teamDraftSelect } from "../redux/team";
 
+import type { StoreState } from "../shared/makeStore";
 import type { Player } from "../shared/player";
 import type { Roster } from "../shared/roster";
 import type { Team } from "../shared/team";
 
 type Props = {
-  drafting: boolean,
-  draftSelect: typeof teamDraftSelect,
   filteredPlayerName?: string,
   filteredTeamId?: number | null,
   filteredRole?: string | null,
@@ -29,8 +27,6 @@ type Props = {
 
 const RosterGrid = ({
   players,
-  drafting,
-  draftSelect,
   filteredPlayerName,
   filteredRole,
   filteredTeamId,
@@ -65,11 +61,6 @@ const RosterGrid = ({
             role={player.attributes.role}
             team={teamAttributes}
             key={player.id}
-            onClick={
-              drafting
-                ? () => draftSelect({ ...player, team: teamAttributes })
-                : () => {}
-            }
           />
         );
       })}
@@ -92,28 +83,19 @@ RosterGrid.defaultProps = {
   roster: {}
 };
 
-const mapStateToProps = ({ firestore, user: { uid }, team: { roster } }) => {
-  const drafter = get(firestore.data, "leagues.first.drafter", "");
+const mapStateToProps = ({ firestore, team: { roster } }: StoreState) => {
   const teams = get(firestore.data, "teams", {});
   const players = get(firestore.data, "players", {});
 
   return {
-    drafting: drafter === uid,
     players,
     roster,
     teams
   };
 };
 
-const mapDispatchProps = {
-  draftSelect: teamDraftSelect
-};
-
 export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchProps
-  ),
+  connect(mapStateToProps),
   withFirestore(() => [
     {
       collection: "teams"

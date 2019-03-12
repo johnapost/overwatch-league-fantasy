@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import { Form, Button } from "antd";
-import { ProfileForm } from "./profileForm";
+import { ProfileFormComponent } from "./profileForm";
 import hasErrors from "../shared/hasErrors";
 
 jest.mock("../shared/hasErrors");
@@ -27,18 +27,20 @@ describe("ProfileForm", () => {
     hasErrors.mockImplementation(() => false);
   });
 
-  it("should not be submittable if there are validation errors", () => {
-    hasErrors.mockImplementation(() => true);
-    const wrapper = shallow(<ProfileForm {...props} />);
-    const button = wrapper.find(Button);
-    expect(button.prop("disabled")).toBe(true);
-  });
+  describe("component", () => {
+    it("should not be submittable if there are validation errors", () => {
+      hasErrors.mockImplementation(() => true);
+      const wrapper = shallow(<ProfileFormComponent {...props} />);
+      const button = wrapper.find(Button);
+      expect(button.prop("disabled")).toBe(true);
+    });
 
-  it("should finish submitting if an error occurs", () => {
-    validateFields.mockImplementation(fn => fn({}, {}));
-    const wrapper = shallow(<ProfileForm {...props} />);
-    const form = wrapper.find(Form);
-    form.simulate("submit", { preventDefault: jest.fn() });
-    expect(hideProfileModal).toHaveBeenCalledTimes(1);
+    it("should finish submitting if an error occurs", () => {
+      validateFields.mockImplementation(fn => fn({}, {}));
+      const wrapper = shallow(<ProfileFormComponent {...props} />);
+      const form = wrapper.find(Form);
+      form.simulate("submit", { preventDefault: jest.fn() });
+      expect(hideProfileModal).toHaveBeenCalledTimes(1);
+    });
   });
 });

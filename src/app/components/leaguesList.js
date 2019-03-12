@@ -12,20 +12,19 @@ import {
   Input,
   Modal,
   Row,
-  List,
   Spin
 } from "antd";
 import CreateLeague from "./createLeague";
 import withFirestore from "../shared/withFirestore";
+import LeaguePanel from "./leaguePanel";
 
 import type { StoreState } from "../shared/makeStore";
 import type { League } from "../shared/league";
+import type { UserState } from "../redux/user";
 
 type Props = {
   leagues: [string, League][] | null,
-  user: {
-    displayName: string
-  }
+  user: UserState
 };
 
 export const LeaguesListComponent = ({
@@ -33,7 +32,7 @@ export const LeaguesListComponent = ({
   leagues
 }: Props) => {
   // Loading
-  if (!leagues || !displayName) return <Spin size="large" />;
+  if (!displayName) return <Spin size="large" />;
   // Belongs to at least one league
   if (leagues && leagues.length)
     return (
@@ -50,16 +49,7 @@ export const LeaguesListComponent = ({
                     header={league.name}
                     showArrow={false}
                   >
-                    <div>
-                      Teams:
-                      <List
-                        bordered
-                        dataSource={league.leagueUsers}
-                        renderItem={item => (
-                          <List.Item>Team Name, Owner: {item}</List.Item>
-                        )}
-                      />
-                    </div>
+                    <LeaguePanel id={id} league={league} key={id} />
                   </Collapse.Panel>
                 ))}
               </Collapse>

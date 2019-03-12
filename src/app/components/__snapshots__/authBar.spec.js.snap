@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuthBar component should render fine 1`] = `"<div class=\\"jsx-608718140 container\\"><div></div></div>"`;

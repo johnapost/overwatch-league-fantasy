@@ -3,7 +3,7 @@
 import React, { Component } from "react";
 import { Form, Input, Button, message } from "antd";
 import { compose } from "redux";
-import { isLoaded, withFirebase } from "react-redux-firebase";
+import { isLoaded } from "react-redux-firebase";
 import { withRouter } from "next/router";
 import withFirestore from "../shared/withFirestore";
 import hasErrors from "../shared/hasErrors";
@@ -14,17 +14,19 @@ type Props = {
   firestore: Object,
   form: Object,
   hideSignUpModal: Function,
+  inviteLinkCallback: Function | null,
   setDisabled: (bool: boolean) => void
 };
 
-class SignUpForm extends Component<Props> {
-  handleSubmit = e => {
+export class SignUpFormComponent extends Component<Props> {
+  handleSubmit = (e: SyntheticEvent<*>) => {
     e.preventDefault();
     const {
       firebase,
       firestore,
       form: { validateFields },
       hideSignUpModal,
+      inviteLinkCallback,
       setDisabled
     } = this.props;
 
@@ -53,7 +55,7 @@ class SignUpForm extends Component<Props> {
         .createUserWithEmailAndPassword(email, password)
         .then(async ({ user }) => {
           user.sendEmailVerification();
-          firestore.set(
+          await firestore.set(
             {
               collection: "users",
               doc: user.uid
@@ -62,10 +64,15 @@ class SignUpForm extends Component<Props> {
               displayName
             }
           );
+          return user.uid;
         })
-        .then(() => {
+        // Successful signup
+        .then(uid => {
           finishSubmitting();
+          // Handle invite link
+          if (inviteLinkCallback) inviteLinkCallback(uid);
           message.success("Successfully signed up!");
+          message.info("Check your email for an activation link", 0);
         })
         .catch(({ code, message: errorMessage }) => {
           finishSubmitting();
@@ -119,7 +126,6 @@ class SignUpForm extends Component<Props> {
 
 export default compose(
   withRouter,
-  withFirebase,
   withFirestore(),
   Form.create()
-)(SignUpForm);
+)(SignUpFormComponent);

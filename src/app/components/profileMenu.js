@@ -4,7 +4,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { Button, Dropdown, Menu, Modal } from "antd";
-import { isLoaded, withFirebase } from "react-redux-firebase";
+import { isLoaded } from "react-redux-firebase";
+import withFirestore from "../shared/withFirestore";
 import ProfileForm from "./profileForm";
 
 type Props = {
@@ -19,14 +20,14 @@ type State = {
   showProfileModal: boolean
 };
 
-class ProfileMenu extends Component<Props, State> {
+class ProfileMenuComponent extends Component<Props, State> {
   state = {
     showProfileModal: false
   };
 
   menuActions = ({ key }: Object) => {
     switch (key) {
-      case "setDisplayName":
+      case "showProfileModal":
         return this.setState({ showProfileModal: true });
       case "signOut":
         return this.signOut();
@@ -51,10 +52,11 @@ class ProfileMenu extends Component<Props, State> {
     const {
       user: { displayName, uid }
     } = this.props;
+    const { showProfileModal } = this.state;
 
     const menu = (
       <Menu onClick={this.menuActions}>
-        <Menu.Item key="setDisplayName">Edit profile</Menu.Item>
+        <Menu.Item key="showProfileModal">Edit profile</Menu.Item>
         <Menu.Item key="signOut">Sign out</Menu.Item>
       </Menu>
     );
@@ -68,7 +70,7 @@ class ProfileMenu extends Component<Props, State> {
           footer={null}
           onCancel={this.hideProfileModal}
           title="Update Profile"
-          visible={this.state.showProfileModal}
+          visible={showProfileModal}
         >
           <ProfileForm
             hideProfileModal={this.hideProfileModal}
@@ -85,5 +87,5 @@ const mapStateToProps = ({ user }) => ({ user });
 
 export default compose(
   connect(mapStateToProps),
-  withFirebase
-)(ProfileMenu);
+  withFirestore()
+)(ProfileMenuComponent);

@@ -4,7 +4,6 @@ import React, { Component } from "react";
 import { Input, Timeline, Card, Form } from "antd";
 import uuid from "uuid/v4";
 import get from "lodash/get";
-import { firestore as firestoreDep } from "firebase";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { isLoaded } from "react-redux-firebase";
@@ -37,39 +36,39 @@ class Chat extends Component<Props, State> {
     sendingMessage: false
   };
 
+  timelineEl: ?HTMLElement = null;
+
   componentDidMount() {
     this.scrollToLatest();
   }
 
   componentWillReceiveProps({ uniqueUserIds: nextIds }) {
-    if (!this.props.uniqueUserIds && nextIds) {
+    const { uniqueUserIds } = this.props;
+    if (!uniqueUserIds && nextIds) {
       this.setUserListeners(nextIds);
     } else if (nextIds) {
       this.setUserListeners(
-        nextIds.filter(
-          id =>
-            this.props.uniqueUserIds && !this.props.uniqueUserIds.includes(id)
-        )
+        nextIds.filter(id => uniqueUserIds && !uniqueUserIds.includes(id))
       );
     }
   }
 
   componentDidUpdate({ messages: prevMessages }) {
-    if (this.props.messages !== prevMessages) {
+    const { messages } = this.props;
+    if (messages !== prevMessages) {
       this.scrollToLatest();
     }
   }
 
   setUserListeners = ids => {
-    this.props.firestore.setListeners(
+    const { firestore } = this.props;
+    firestore.setListeners(
       ids.map(id => ({
         collection: "users",
         doc: id
       }))
     );
   };
-
-  timelineEl: ?HTMLElement = null;
 
   scrollToLatest = () => {
     if (this.timelineEl) {
@@ -100,7 +99,7 @@ class Chat extends Component<Props, State> {
           message,
           userRef: firebase.firestore().doc(`users/${user.uid}`),
           userId: user.uid,
-          timestamp: firestoreDep.FieldValue.serverTimestamp()
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }
       )
       .then(() => {

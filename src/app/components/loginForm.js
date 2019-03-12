@@ -3,9 +3,10 @@
 
 import React, { Component } from "react";
 import { compose } from "redux";
-import { isLoaded, withFirebase } from "react-redux-firebase";
+import { isLoaded } from "react-redux-firebase";
 import { Form, Button, Input, message } from "antd";
 import { withRouter } from "next/router";
+import withFirestore from "../shared/withFirestore";
 import hasErrors from "../shared/hasErrors";
 
 type Props = {
@@ -17,7 +18,7 @@ type Props = {
   showSignUpModal: Function
 };
 
-class LoginForm extends Component<Props> {
+export class LoginFormComponent extends Component<Props> {
   emailEl: ?HTMLElement = null;
 
   componentDidMount() {
@@ -26,7 +27,7 @@ class LoginForm extends Component<Props> {
     }
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e: SyntheticEvent<*>) => {
     e.preventDefault();
     const {
       firebase,
@@ -55,13 +56,13 @@ class LoginForm extends Component<Props> {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
+        // Successful login
+        .then(finishSubmitting)
         .catch(({ code, message: errorMessage }) => {
+          finishSubmitting();
           message.error(errorMessage);
           // eslint-disable-next-line no-console
           console.error(code, errorMessage);
-        })
-        .then(() => {
-          finishSubmitting();
         });
     });
   };
@@ -119,6 +120,6 @@ class LoginForm extends Component<Props> {
 
 export default compose(
   withRouter,
-  withFirebase,
+  withFirestore(),
   Form.create()
-)(LoginForm);
+)(LoginFormComponent);

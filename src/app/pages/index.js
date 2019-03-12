@@ -2,11 +2,10 @@
 
 import React from "react";
 import { Row, Col, Card } from "antd";
-import Layout from "../components/layout";
 import FilterableRosterTable from "../components/filterableRosterTable";
 
 export default () => (
-  <Layout>
+  <>
     <Row>
       <Col sm={6} md={4} />
       <Col sm={12} md={16}>
@@ -34,5 +33,5 @@ export default () => (
         margin: 0 0 50px;
       }
     `}</style>
-  </Layout>
+  </>
 );

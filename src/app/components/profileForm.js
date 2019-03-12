@@ -15,7 +15,7 @@ type Props = {
   uid: string
 };
 
-export class ProfileForm extends Component<Props> {
+export class ProfileFormComponent extends Component<Props> {
   handleSubmit = (e: Event) => {
     e.preventDefault();
     const {
@@ -89,4 +89,4 @@ export class ProfileForm extends Component<Props> {
 export default compose(
   withFirestore(),
   Form.create()
-)(ProfileForm);
+)(ProfileFormComponent);

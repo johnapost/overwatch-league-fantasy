@@ -19,22 +19,6 @@ describe("nextApp", () => {
     redirectSpy.mockReset();
   });
 
-  it("should handle auth email actions", () => {
-    const req = {
-      originalUrl: "/auth?",
-      query: {
-        mode: "mode",
-        oobCode: "oobCode"
-      }
-    };
-    const res = {
-      redirect: redirectSpy
-    };
-    nextApp(req, res);
-    expect(redirectSpy).toHaveBeenCalledTimes(1);
-    expect(redirectSpy).toHaveBeenCalledWith(`/?mode=mode&oobCode=oobCode`);
-  });
-
   it("should handle app routes", () => {
     const req = {
       originalUrl: "/"

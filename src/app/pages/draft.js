@@ -3,13 +3,12 @@
 import React from "react";
 import { Row, Col } from "antd";
 import Header from "../components/header";
-import Layout from "../components/layout";
 import Chat from "../components/chat";
 import Team from "../components/team";
 import FilterableRosterTable from "../components/filterableRosterTable";
 
 export default () => (
-  <Layout>
+  <>
     <Row>
       <Col>
         <div className="wrapper">
@@ -43,5 +42,5 @@ export default () => (
         margin: 25px;
       }
     `}</style>
-  </Layout>
+  </>
 );
