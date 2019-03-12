@@ -19,7 +19,7 @@ type Props = {
 };
 
 export class SignUpFormComponent extends Component<Props> {
-  handleSubmit = e => {
+  handleSubmit = (e: SyntheticEvent<*>) => {
     e.preventDefault();
     const {
       firebase,

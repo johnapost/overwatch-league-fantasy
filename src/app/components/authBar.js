@@ -9,9 +9,10 @@ import { userLogin, userLogout } from "../redux/user";
 import withFirestore from "../shared/withFirestore";
 import LoginForm from "./loginForm";
 import SignUpForm from "./signUpForm";
-import ProfileMenuComponent from "./profileMenu";
+import ProfileMenu from "./profileMenu";
 
 import type { InviteLink } from "../shared/inviteLink";
+import type { League } from "../shared/league";
 
 type Props = {
   firebase: Object,
@@ -24,11 +25,11 @@ type Props = {
 type State = {
   disabled: boolean,
   loggedIn: boolean,
-  onSignUp: Function | null,
+  inviteLinkCallback: Function | null,
   showSignUpModal: boolean
 };
 
-class AuthBar extends Component<Props, State> {
+export class AuthBarComponent extends Component<Props, State> {
   state = {
     disabled: false,
     loggedIn: false,
@@ -100,7 +101,7 @@ class AuthBar extends Component<Props, State> {
     }
   }
 
-  setDisabled = bool => this.setState({ disabled: bool });
+  setDisabled = (bool: boolean) => this.setState({ disabled: bool });
 
   verifyEmail = async () => {
     const {
@@ -216,7 +217,7 @@ class AuthBar extends Component<Props, State> {
 
     return (
       <div className="container">
-        {loggedIn ? <ProfileMenuComponent /> : renderLoggedOut}
+        {loggedIn ? <ProfileMenu /> : renderLoggedOut}
         <style jsx>{`
           .container {
             background: ${loggedIn ? "transparent" : "#FFFFFF"};
@@ -245,4 +246,4 @@ export default compose(
   withRouter,
   withFirestore(),
   Form.create()
-)(AuthBar);
+)(AuthBarComponent);
